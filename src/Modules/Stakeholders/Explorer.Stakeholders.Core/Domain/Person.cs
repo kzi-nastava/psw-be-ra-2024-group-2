@@ -1,14 +1,21 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Mail;
 
 namespace Explorer.Stakeholders.Core.Domain;
 
 public class Person : Entity
 {
-    public long UserId { get; init; }
-    public string Name { get; init; }
-    public string Surname { get; init; }
-    public string Email { get; init; }
+    public long UserId { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public string Email { get; set; }
+    public string? Biography { get; set; }
+    public string? Moto { get; set; }
+    public long? ImageId { get; set; }
+
+    public User User { get; set; }
+    public Image? Image { get; set; }
 
     public Person(long userId, string name, string surname, string email)
     {
@@ -19,11 +26,35 @@ public class Person : Entity
         Validate();
     }
 
+    public Person(long userId, string name, string surname, string email, string biography, string moto, long imageId)
+    {
+        UserId = userId;
+        Name = name;
+        Surname = surname;
+        Email = email;
+        Biography = biography;
+        Moto = moto;
+        ImageId = imageId;
+        Validate();
+    }
+
     private void Validate()
     {
         if (UserId == 0) throw new ArgumentException("Invalid UserId");
         if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name");
         if (string.IsNullOrWhiteSpace(Surname)) throw new ArgumentException("Invalid Surname");
         if (!MailAddress.TryCreate(Email, out _)) throw new ArgumentException("Invalid Email");
+    }
+
+    public void Update(Person newPerson, Image updatedImage)
+    {
+        UserId = newPerson.UserId;
+        Name = newPerson.Name;
+        Surname = newPerson.Surname;
+        Email = newPerson.Email;
+        Biography = newPerson.Biography;
+        Moto = newPerson.Moto;
+        ImageId = newPerson.ImageId;
+        Validate();
     }
 }
