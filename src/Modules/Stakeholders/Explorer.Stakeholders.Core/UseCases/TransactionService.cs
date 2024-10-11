@@ -9,7 +9,7 @@ public class TransactionService : ITransactionService
 
     public TransactionService(ITransactionRepository transactionRepository)
     {
-        this._transactionRepository = transactionRepository;
+        _transactionRepository = transactionRepository;
     }
     public void BeginTransaction()
     {

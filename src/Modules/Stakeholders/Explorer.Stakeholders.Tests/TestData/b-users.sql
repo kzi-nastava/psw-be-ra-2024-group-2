@@ -21,3 +21,8 @@ VALUES (-22, 'turista2@gmail.com', 'turista2', 2, true);
 INSERT INTO stakeholders."Users"(
     "Id", "Username", "Password", "Role", "IsActive")
 VALUES (-23, 'turista3@gmail.com', 'turista3', 2, true);
+
+INSERT INTO stakeholders."Users"(
+	"Id", "Username", "Password", "Role", "IsActive")
+VALUES (-31, 'nenad', '123', 1, true),
+	   (-32, 'nikola', '123', 1, true);

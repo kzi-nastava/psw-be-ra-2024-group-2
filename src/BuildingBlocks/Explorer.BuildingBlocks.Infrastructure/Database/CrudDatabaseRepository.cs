@@ -27,7 +27,7 @@ public class CrudDatabaseRepository<TEntity, TDbContext> : ICrudRepository<TEnti
     public TEntity Get(long id)
     {
         var entity = _dbSet.IncludeRelatedEntities().FirstOrDefault(t => t.Id ==id);
-        if (entity == null) throw new KeyNotFoundException("Not found: " + id);
+        if (entity == null) throw new KeyNotFoundException("404: Not found: " + id);
         return entity;
     }
 

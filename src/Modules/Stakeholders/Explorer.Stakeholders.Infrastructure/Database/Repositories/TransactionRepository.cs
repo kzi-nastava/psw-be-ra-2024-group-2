@@ -25,6 +25,11 @@ public class TransactionRepository : ITransactionRepository
         _dbContext.Database.CommitTransaction();
     }
 
+    public bool HasActiveTransacation()
+    {
+        return _dbContext.Database.CurrentTransaction != null;
+    }
+
     public void RollbackTransaction()
     {
         _dbContext.Database.RollbackTransaction();

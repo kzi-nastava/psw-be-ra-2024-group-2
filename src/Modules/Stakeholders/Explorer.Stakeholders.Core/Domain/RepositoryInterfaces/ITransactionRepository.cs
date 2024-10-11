@@ -10,5 +10,6 @@ public interface ITransactionRepository
 {
     void BeginTransaction();
     void CommitTransaction();
+    bool HasActiveTransacation();
     void RollbackTransaction();
 }

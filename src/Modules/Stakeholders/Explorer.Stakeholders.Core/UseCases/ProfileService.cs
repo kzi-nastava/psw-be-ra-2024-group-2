@@ -30,32 +30,29 @@ public class ProfileService : CrudService<ProfileDto, Person>, IProfileService
 
     public Result<ProfileDto> Get(long personId)
     {
-        var person = _personRepository.Get(personId);
-
-        if (person == null)
+        try
         {
-            return Result.Fail(new Error("Person not found"));
-        }
+            var person = _personRepository.Get(personId);
 
-        return MapToDto(person);
+            return MapToDto(person);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
     }
 
     public Result<ProfileDto> Update(long personId, ProfileDto profile)
     {
-        var person = _personRepository.Get(personId);
-
-        if (person == null)
-        {
-            return Result.Fail(new Error("Person not found"));
-        }
-
-        if(profile.Image == null)
-        {
-            return Result.Fail(new Error("Image is required"));
-        }
-
         try
         {
+            var person = _personRepository.Get(personId);
+
+            if (profile.Image == null)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError("Image is required");
+            }
+
             // First: Start a transaction
             _transactionRepository.BeginTransaction();
 
@@ -87,7 +84,7 @@ public class ProfileService : CrudService<ProfileDto, Person>, IProfileService
 
             var newPerson = _personRepository.Update(person);
 
-            if(newPerson.Id != personId)
+            if (newPerson.Id != personId)
             {
                 throw new ArgumentException("PersonId does not match the updated person");
             }
@@ -98,12 +95,19 @@ public class ProfileService : CrudService<ProfileDto, Person>, IProfileService
             // Sixth: Create the new DTO to return
             return MapToDto(newPerson);
         }
+        catch (KeyNotFoundException e)
+        {
+            // If user or person is not found, rollback the transaction
+            if(_transactionRepository.HasActiveTransacation()) _transactionRepository.RollbackTransaction();
+
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
         catch (ArgumentException e)
         {
             // If something goes wrong, rollback the transaction
-            _transactionRepository.RollbackTransaction();
+            if (_transactionRepository.HasActiveTransacation()) _transactionRepository.RollbackTransaction();
 
-            return Result.Fail(new Error(e.Message));
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
     }
 }

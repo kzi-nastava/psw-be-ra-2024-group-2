@@ -32,5 +32,3 @@ namespace Explorer.API.Controllers
         }
     }
 }
-
-
