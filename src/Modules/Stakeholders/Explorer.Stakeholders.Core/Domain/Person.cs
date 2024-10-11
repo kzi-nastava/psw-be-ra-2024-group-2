@@ -1,5 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Mail;
 
 namespace Explorer.Stakeholders.Core.Domain;
@@ -44,17 +43,5 @@ public class Person : Entity
         if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name");
         if (string.IsNullOrWhiteSpace(Surname)) throw new ArgumentException("Invalid Surname");
         if (!MailAddress.TryCreate(Email, out _)) throw new ArgumentException("Invalid Email");
-    }
-
-    public void Update(Person newPerson, Image updatedImage)
-    {
-        UserId = newPerson.UserId;
-        Name = newPerson.Name;
-        Surname = newPerson.Surname;
-        Email = newPerson.Email;
-        Biography = newPerson.Biography;
-        Moto = newPerson.Moto;
-        ImageId = newPerson.ImageId;
-        Validate();
     }
 }
