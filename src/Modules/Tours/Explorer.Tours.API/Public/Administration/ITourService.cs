@@ -10,7 +10,6 @@ namespace Explorer.Tours.API.Public.Administration;
 
 public interface ITourService
 {
-    Result<TourDto> AddEquipment(int tourId, EquipmentDto equipment);
-    Result<TourDto> RemoveEquipment(EquipmentDto equipment);
-    Result<TourDto> Get(int tourId);
+    Result<TourDto> AddEquipment(long tourId, EquipmentDto equipment, long userId);
+    Result<TourDto> RemoveEquipment(long tourId, EquipmentDto equipment, long userId);
 }
