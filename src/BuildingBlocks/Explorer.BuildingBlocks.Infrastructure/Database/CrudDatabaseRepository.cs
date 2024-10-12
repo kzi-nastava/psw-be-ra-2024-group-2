@@ -19,15 +19,15 @@ public class CrudDatabaseRepository<TEntity, TDbContext> : ICrudRepository<TEnti
 
     public PagedResult<TEntity> GetPaged(int page, int pageSize)
     {
-        var task = _dbSet.GetPagedById(page, pageSize);
+        var task = _dbSet.IncludeRelatedEntities().GetPagedById(page, pageSize);
         task.Wait();
         return task.Result;
     }
 
     public TEntity Get(long id)
     {
-        var entity = _dbSet.Find(id);
-        if (entity == null) throw new KeyNotFoundException("Not found: " + id);
+        var entity = _dbSet.IncludeRelatedEntities().FirstOrDefault(t => t.Id ==id);
+        if (entity == null) throw new KeyNotFoundException("404: Not found: " + id);
         return entity;
     }
 
