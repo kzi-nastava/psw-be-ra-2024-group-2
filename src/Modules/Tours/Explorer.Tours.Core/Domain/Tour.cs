@@ -6,11 +6,12 @@ namespace Explorer.Tours.Core.Domain;
 public class Tour : Entity
 {
     public long UserId { get; private set; }
-    public List<int> Equipment { get; private set; } = new List<int>();
+    public List<Equipment> Equipment { get; private set; } = new List<Equipment>();
 
-    public Tour(long userId, List<int> equipment)
+    public Tour() { }
+
+    public Tour(long userId)
     {
         UserId = userId;
-        Equipment = equipment;
     }
 }

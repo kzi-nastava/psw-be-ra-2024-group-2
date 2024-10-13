@@ -16,10 +16,9 @@ namespace Explorer.API.Controllers.Tourist
             _tourService = tourService;
         }
 
-        [HttpPut("updateEquipment")]
+        [HttpPut("equipment")]
         public ActionResult<TourDto> UpdateEquipment([FromBody] TourDto tour)
         {
-
             var result = _tourService.UpdateTour(tour, User.PersonId());
             return CreateResponse(result);
         }

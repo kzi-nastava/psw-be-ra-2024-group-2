@@ -7,9 +7,9 @@ using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases.Administration;
 
+
 public class TourService : CrudService<TourDto,Tour>, ITourService
 {
-
     private readonly ICrudRepository<Tour> _tourRepository;
     private readonly ICrudRepository<Equipment> _equipmentRepository;
 
@@ -63,18 +63,18 @@ public class TourService : CrudService<TourDto,Tour>, ITourService
     //    }
     //}
 
-    public Result<TourDto> UpdateTour(TourDto tourToUpdate, long userId)
+    public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
     {
         try
         {
-            if (tourToUpdate.UserId == userId)
+            if (tourDto.UserId == userId)
             {
+                Tour tour = _tourRepository.Get(tourDto.Id);
 
-                Tour tour = _tourRepository.Get(tourToUpdate.Id);
-
-                foreach (int a in tourToUpdate.Equipment)
+                foreach (var elementid in tourDto.Equipment)
                 {
-                    tour.Equipment.Add(a);
+                    var newEquipment = _equipmentRepository.Get(elementid);
+                    tour.Equipment.Add(newEquipment);
                 }
 
                 _tourRepository.Update(tour);
@@ -90,5 +90,4 @@ public class TourService : CrudService<TourDto,Tour>, ITourService
             return Result.Fail(FailureCode.NotFound).WithError("Tour or equipment doesn't exist !");
         }
     }
-     
 }
