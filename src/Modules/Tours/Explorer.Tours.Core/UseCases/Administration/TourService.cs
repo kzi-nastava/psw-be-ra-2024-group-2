@@ -73,7 +73,15 @@ public class TourService : CrudService<TourDto,Tour>, ITourService
 
                 foreach (var elementid in tourDto.Equipment)
                 {
-                    var newEquipment = _equipmentRepository.Get(elementid);
+                    foreach(var equipment in tour.Equipment) 
+                    {
+
+                        if (equipment.Id == elementid)
+                        {
+                            return Result.Fail(FailureCode.InvalidArgument).WithError("Equipment is already in the tour!");
+                        }
+                    }
+                    var newEquipment = _equipmentRepository.Get(elementid);                 
                     tour.Equipment.Add(newEquipment);
                 }
 
