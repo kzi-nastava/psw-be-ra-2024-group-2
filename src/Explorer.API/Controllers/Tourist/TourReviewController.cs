@@ -1,13 +1,15 @@
-﻿using Explorer.Tours.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.UseCases.Administration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Numerics;
 
 namespace Explorer.API.Controllers.Tourist
 {
     [Authorize(Policy = "touristPolicy")]
-    [Route("api/tourReviews")]
+    [Route("api/tour/reviews")]
     public class TourReviewController : BaseApiController
     {
         private readonly ITourReviewService _tourReviewService;
@@ -24,5 +26,11 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("paged/{tourId}")]
+        public ActionResult<PagedResult<TourReviewDto>> GetPagedByTourId(int tourId)
+        {
+            var result = _tourReviewService.GetPagedByTourId(tourId, 1, int.MaxValue);
+            return CreateResponse(result);
+        }
     }
 }

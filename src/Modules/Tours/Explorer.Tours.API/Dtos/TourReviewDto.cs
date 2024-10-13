@@ -12,13 +12,15 @@ namespace Explorer.Tours.API.Dtos
 
         public string? Comment { get; set; }
 
-        public int UserId { get; set; }
+        public long UserId { get; set; }
+
+        public long TourId { get; set; }
 
         public DateOnly ReviewDate { get; set; }
 
         public DateOnly VisitDate { get; set; }
 
-        public int TourId { get; set; } 
+        //public int TourId { get; set; } 
 
     }
 }

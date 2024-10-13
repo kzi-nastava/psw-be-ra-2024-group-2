@@ -2,6 +2,7 @@
 using Explorer.Stakeholders.Core.Domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
@@ -16,19 +17,20 @@ namespace Explorer.Tours.Core.Domain
 
         public string Comment { get; set; }
 
-        public User User { get; set; }
+        public long UserId { get; set; }
 
+        public long TourId { get; set; }
         public DateOnly ReviewDate { get; set; }
 
         public DateOnly VisitDate { get; set; }
 
-        //public Tour tour { get; set; } waiting for tour implementation
 
-        public TourReview(int grade, string comment, User user, DateOnly reviewDate, DateOnly visitDate)
+        public TourReview(int grade, string comment, long userId, long tourId, DateOnly reviewDate, DateOnly visitDate)
         {
             Grade = grade;
             Comment = comment;
-            User = user;    
+            UserId = userId;  
+            TourId = tourId;
             ReviewDate = reviewDate;
             VisitDate = visitDate;
             Validate();
@@ -37,7 +39,6 @@ namespace Explorer.Tours.Core.Domain
         private void Validate()
         {
             if (Grade < 1 || Grade > 5) throw new ArgumentException("Invalid grade");
-            if (User is null) throw new ArgumentException("Invalid user");
         }
 
     }
