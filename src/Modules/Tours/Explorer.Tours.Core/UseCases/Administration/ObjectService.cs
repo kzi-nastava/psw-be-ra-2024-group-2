@@ -22,7 +22,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         public Result<ObjectDto> CreateObject(ObjectDto tourObject)
         {
-            TourObject tourObj = _objectRepository.Get(tourObject.Id);
+            TourObject tourObj = MapToDomain(tourObject);
             TourObject newObject = _objectRepository.Create(tourObj);
             return MapToDto(newObject);
         }
