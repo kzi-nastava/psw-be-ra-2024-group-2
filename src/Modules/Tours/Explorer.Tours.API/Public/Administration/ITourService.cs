@@ -11,7 +11,8 @@ namespace Explorer.Tours.API.Public.Administration
 {
     public interface ITourService
     {
-        Result<TourDto> Create(TourDto dto);
+        Result<TourDto> CreateTour(TourDto dto, int userId);
         PagedResult<TourDto> GetAllByUserId(int userId);
+
     }
 }
