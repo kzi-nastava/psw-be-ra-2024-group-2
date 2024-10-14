@@ -8,13 +8,14 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Explorer.Tours.Core.Domain
 {
-    public class TourInvite : Entity
+    public class ClubInvite : Entity
     {
         public long OwnerId { get; set; }
         public long TouristId { get; set; }
+        public long ClubId { get; set; }
         public DateTime Date { get; set; }
         public TourInviteStatus Status { get; set; }
-        public TourInvite(long ownerId,long touristId,DateTime date,TourInviteStatus status) {
+        public ClubInvite(long ownerId,long touristId,DateTime date,TourInviteStatus status) {
             OwnerId = ownerId;
             TouristId = touristId;
             Date = date;
@@ -26,6 +27,7 @@ namespace Explorer.Tours.Core.Domain
         {
             if (OwnerId < 0) throw new ArgumentException("Has to have a club owner");
             if (TouristId < 0) throw new ArgumentException("Has to have a tourist to invite");
+            if (ClubId < 0) throw new ArgumentException("Has to have a club");
             if (Date.Year < 1823) throw new ArgumentException("Computers weren't even made that year"); 
             if (!Enum.IsDefined(typeof(TourInviteStatus), Status)) throw new ArgumentException("Status is not valid");
 

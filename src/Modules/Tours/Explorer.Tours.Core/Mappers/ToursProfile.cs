@@ -12,5 +12,6 @@ public class ToursProfile : Profile
         CreateMap<Tour, TourDto>()
             .ForMember(dest => dest.Equipment, opt => opt.MapFrom(src => src.Equipment.Select(e => e.Id)));
         CreateMap<ClubDto, Club>().ReverseMap();
+        CreateMap<ClubInviteDTO,ClubInvite>().ReverseMap();
     }
 }

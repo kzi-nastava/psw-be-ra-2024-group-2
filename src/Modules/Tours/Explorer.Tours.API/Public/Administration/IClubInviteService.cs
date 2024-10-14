@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.API.Public.Administration
 {
-    public interface ITourInviteService
+    public interface IClubInviteService
     {
-        Result<TourInviteDTO> Invite(TourInviteDTO dto);
-        Result<TourInviteDTO> Remove(TourInviteDTO dto);
+        Result<ClubInviteDTO> Invite(ClubInviteDTO dto);
+        Result<ClubInviteDTO> Remove(ClubInviteDTO dto);
     }
 }
