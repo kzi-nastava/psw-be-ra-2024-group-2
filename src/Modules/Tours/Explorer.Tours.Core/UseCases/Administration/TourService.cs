@@ -19,79 +19,29 @@ public class TourService : CrudService<TourDto,Tour>, ITourService
         _equipmentRepository = equipmentRepository;
     }
 
-    //public Result<TourDto> AddEquipment(long tourId, EquipmentDto equipment, long userId)
-    //{
-    //    try
-    //    { 
-    //            var tour = _tourRepository.Get(tourId);
-    //            if(tour.UserId == userId)
-    //            {
-    //                //tour.Equipment.Add(new Equipment(equipment.Name, equipment.Description));
-    //                _tourRepository.Update(tour);
-    //                return MapToDto(tour);
-    //            }
-    //            else
-    //            {
-    //                return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add equipment to this tour");
-    //            }
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        return Result.Fail(FailureCode.NotFound).WithError("Tour doesn't exist!");
-    //    }       
-    //}
-
-    //public Result<TourDto> RemoveEquipment(long tourId, EquipmentDto equipment, long userId)
-    //{
-    //    try 
-    //    {
-    //        var tour = _tourRepository.Get(tourId);
-    //        if (tour.UserId == userId)
-    //        {
-    //            //tour.Equipment.Remove(new Equipment(equipment.Name, equipment.Description));
-    //            _tourRepository.Update(tour);
-    //            return MapToDto(tour);
-    //        }
-    //        else
-    //        {
-    //            return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to remove equipment from this tour");
-    //        }
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        return Result.Fail(FailureCode.NotFound).WithError("Tour doesn't exist!");
-    //    }
-    //}
-
     public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
     {
         try
         {
-            if (tourDto.UserId == userId)
+            if(tourDto.UserId != userId)
+                return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add equipment to this tour");
+
+            Tour tour = _tourRepository.Get(tourDto.Id);
+
+            foreach (var elementId in tourDto.Equipment)
             {
-                Tour tour = _tourRepository.Get(tourDto.Id);
-
-                foreach (var elementid in tourDto.Equipment)
+                if (tour.Equipment.Any(e => e.Id == elementId))
                 {
-                    foreach(var equipment in tour.Equipment) 
-                    {
-
-                        if (equipment.Id == elementid)
-                        {
-                            return Result.Fail(FailureCode.InvalidArgument).WithError("Equipment is already in the tour!");
-                        }
-                    }
-                    var newEquipment = _equipmentRepository.Get(elementid);                 
-                    tour.Equipment.Add(newEquipment);
+                    return Result.Fail(FailureCode.InvalidArgument)
+                                 .WithError("Equipment is already in the tour!");
                 }
 
-                _tourRepository.Update(tour);
-                return MapToDto(tour);
+                var newEquipment = _equipmentRepository.Get(elementId);
+                tour.Equipment.Add(newEquipment);
             }
-            else
-            {
-                return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add equipment to this tour");
-            }
+
+            _tourRepository.Update(tour);
+            return MapToDto(tour);
         }
         catch (Exception e)
         {

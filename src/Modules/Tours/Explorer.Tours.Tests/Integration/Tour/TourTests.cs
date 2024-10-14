@@ -25,7 +25,7 @@ public class TourTests : BaseToursIntegrationTest
     public TourTests(ToursTestFactory factory) : base(factory) { }
 
     [Fact]
-    public void UpdateEquipment()
+    public void UpdateEquipment_successful_updates_tour_equipment()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -56,7 +56,7 @@ public class TourTests : BaseToursIntegrationTest
     }
 
     [Fact]
-    public void AddAlreadyInsertedEquipment()
+    public void UpdateEquipment_unsuccessful_existing_equiment()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -87,7 +87,7 @@ public class TourTests : BaseToursIntegrationTest
     }
 
     [Fact]
-    public void FakeUserAddEquipment()
+    public void UpdateEquipment_unsuccessful_unauthorized_user()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -110,7 +110,7 @@ public class TourTests : BaseToursIntegrationTest
     }
 
     [Fact]
-    public void AddNonExistentEquipment()
+    public void UpdateEquipment_unsuccessful_equipment_not_exist()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
