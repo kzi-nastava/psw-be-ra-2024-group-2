@@ -26,35 +26,41 @@ namespace Explorer.Tours.Core.UseCases.Administration
             _equipmentRepository = equipmentRepository;
         }
 
-        public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
+       public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
+{
+    try
+    {
+        if(tourDto.UserId != userId)
+            return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add equipment to this tour");
+
+        Tour tour = _tourRepository.Get(tourDto.Id);
+
+        foreach (var elementId in tourDto.Equipment)
         {
-            try
+            if (tour.Equipment.Any(e => e.Id == elementId))
             {
-                if (tourDto.UserId != userId)
-                    return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add equipment to this tour");
-
-                Tour tour = _tourRepository.Get(tourDto.Id);
-
-                foreach (var elementId in tourDto.Equipment)
-                {
-                    if (tour.Equipment.Any(e => e.Id == elementId))
-                    {
-                        return Result.Fail(FailureCode.InvalidArgument)
-                                     .WithError("Equipment is already in the tour!");
-                    }
-
-                    var newEquipment = _equipmentRepository.Get(elementId);
-                    tour.Equipment.Add(newEquipment);
-                }
-
-                _tourRepository.Update(tour);
-                return MapToDto(tour);
+                return Result.Fail(FailureCode.InvalidArgument)
+                             .WithError("Equipment is already in the tour!");
             }
-            catch (Exception e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError("Tour or equipment doesn't exist !");
-            }
+
         }
+
+        tour.Equipment.Clear();
+
+        foreach (var elementId in tourDto.Equipment)
+        {
+            var newEquipment = _equipmentRepository.Get(elementId);
+            tour.Equipment.Add(newEquipment);
+        }
+
+        _tourRepository.Update(tour);
+        return MapToDto(tour);
+    }
+    catch (Exception e)
+    {
+        return Result.Fail(FailureCode.NotFound).WithError("Tour or equipment doesn't exist !");
+    }
+}
         public Result<TourDto> CreateTour(TourDto dto, int userId)
         {
 
