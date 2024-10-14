@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Explorer.Tours.API.Dtos;
 
-namespace Explorer.Tours.API.Dtos
-{
 public class TourDto
 {
         public int Id { get; set; }
@@ -42,4 +40,4 @@ public class TourDto
             Hard
         }
     }
-}
+

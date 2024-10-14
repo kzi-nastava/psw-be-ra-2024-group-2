@@ -35,8 +35,14 @@ public class TourTests : BaseToursIntegrationTest
         {
             Id = -1,
             UserId = -1,
-            Equipment = {-1, -3}
-        
+            Equipment = {-1, -3},
+            Name = "Kusla",
+            Description = "Opis",
+            Difficulty = 0,
+            Tag = 0,
+            Status = 0,
+            Price = 0
+
         };
 
         //Act
@@ -74,7 +80,14 @@ public class TourTests : BaseToursIntegrationTest
         {
             Id = -3,
             UserId = -2,
-            Equipment = { -1 }
+            Equipment = { -1 },
+            Name = "Stefan",
+            Description = "Opis",
+            Difficulty = 0,
+            Tag = 0,
+            Status = 0,
+            Price = 0
+
 
         };
 
@@ -97,7 +110,13 @@ public class TourTests : BaseToursIntegrationTest
         {
             Id = -1,
             UserId = -1,
-            Equipment = { -1, -3 }
+            Equipment = { -1, -3 },
+            Name = "Gala",
+            Description = "Opis",
+            Difficulty = 0,
+            Tag = 0,
+            Status = 0,
+            Price = 0
 
         };
 
@@ -120,7 +139,13 @@ public class TourTests : BaseToursIntegrationTest
         {
             Id = -1,
             UserId = -2,
-            Equipment = {-20 }
+            Equipment = {-20 },
+            Name = "Miha",
+            Description = "Opis",
+            Difficulty = 0,
+            Tag = 0,
+            Status = 0,
+            Price = 0
 
         };
 
