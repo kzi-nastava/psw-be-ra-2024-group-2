@@ -28,4 +28,6 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
     }
+   
+    
 }
