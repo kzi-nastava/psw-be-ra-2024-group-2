@@ -10,7 +10,7 @@ using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
 using FluentResults;
 
-namespace Explorer.Tours.Core.UseCases.Administration
+namespace Explorer.Tours.Core.UseCases.Author
 {
     public class CheckpointService : CrudService<CheckpointDto, Checkpoint>, ICheckpointService
     {

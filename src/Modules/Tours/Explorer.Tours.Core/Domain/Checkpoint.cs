@@ -15,6 +15,7 @@ namespace Explorer.Tours.Core.Domain
         public string Name { get; private set; }      
         public string Description { get; private set; }    
         public int? PhotoId { get; private set; }
+        
 
         public Checkpoint(double latitude, double longitude, string name, string description, int? photoId)
         {
