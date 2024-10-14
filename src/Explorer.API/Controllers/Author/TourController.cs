@@ -27,7 +27,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<TourDto>> GetAllByTourId()
+        public ActionResult<PagedResult<TourDto>> GetAllByUserId()
         {
             var allTours = _tourService.GetAllByUserId(User.UserId());
             return CreateResponse(allTours.ToResult());
