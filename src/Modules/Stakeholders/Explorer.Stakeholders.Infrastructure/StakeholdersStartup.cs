@@ -26,13 +26,18 @@ public static class StakeholdersStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<ITransactionService, TransactionService>();
+        services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, StakeholdersContext>));
+        services.AddScoped(typeof(ITransactionRepository), typeof(TransactionRepository));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
+        services.AddScoped<IImageRepository, ImageRepository>();
 
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
