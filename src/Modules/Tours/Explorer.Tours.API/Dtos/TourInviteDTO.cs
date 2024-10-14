@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Explorer.Tours.API.Dtos
+{
+    public class TourInviteDTO
+    {
+        public long OwnerId { get; set; }
+        public long TouristId { get; set; }
+        public DateTime Date { get; set; }
+        public TourInviteStatus Status { get; set; }
+        public long UserId { get; set; }
+    }
+    public enum TourInviteStatus
+    {
+        Pending,
+        Accepted,
+        Rejected
+    }
+}
