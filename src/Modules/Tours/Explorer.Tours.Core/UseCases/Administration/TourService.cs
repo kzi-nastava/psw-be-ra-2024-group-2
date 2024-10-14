@@ -36,6 +36,12 @@ public class TourService : CrudService<TourDto,Tour>, ITourService
                                  .WithError("Equipment is already in the tour!");
                 }
 
+            }
+
+            tour.Equipment.Clear();
+
+            foreach (var elementId in tourDto.Equipment)
+            {
                 var newEquipment = _equipmentRepository.Get(elementId);
                 tour.Equipment.Add(newEquipment);
             }
