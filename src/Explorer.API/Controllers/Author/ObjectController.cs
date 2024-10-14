@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers.Author
 {
     [Authorize(Policy = "authorPolicy")]
-    [Route("api/author/object")]
+    [Route("api/author/tourObject")]
     public class ObjectController : BaseApiController
     {
         private readonly IObjectService _objectService;
@@ -17,7 +17,7 @@ namespace Explorer.API.Controllers.Author
             _objectService = objectService;
         }
 
-        [HttpPost("objectCreation")]
+        [HttpPost]
         public ActionResult<ObjectDto> CreateObject([FromBody] ObjectDto tourObject)
         {
             var result = _objectService.CreateObject(tourObject);
