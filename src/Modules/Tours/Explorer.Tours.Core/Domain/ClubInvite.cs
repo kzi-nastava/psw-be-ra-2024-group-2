@@ -25,9 +25,6 @@ namespace Explorer.Tours.Core.Domain
 
         private void Validate()
         {
-            if (OwnerId < 0) throw new ArgumentException("Has to have a club owner");
-            if (TouristId < 0) throw new ArgumentException("Has to have a tourist to invite");
-            if (ClubId < 0) throw new ArgumentException("Has to have a club");
             if (Date.Year < 1823) throw new ArgumentException("Computers weren't even made that year"); 
             if (!Enum.IsDefined(typeof(TourInviteStatus), Status)) throw new ArgumentException("Status is not valid");
 
