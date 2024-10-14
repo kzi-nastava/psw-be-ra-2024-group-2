@@ -14,16 +14,18 @@ namespace Explorer.Tours.Core.Domain
     {
 
 
-        public int UserId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public TourDifficulty Difficulty { get; set; }
-        public TourTag Tag { get; set; }                   
-        public TourStatus Status { get; set; }
-        public double Price { get; set; }
-        
+        public long UserId { get; private set; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public TourDifficulty Difficulty { get; private set; }
+        public TourTag Tag { get; private set; }                   
+        public TourStatus Status { get; private set; }
+        public double Price { get; private set; }
+        public List<Equipment> Equipment { get; private set; } = new List<Equipment>();
 
-       public Tour(int userId, string name, string description, TourDifficulty difficulty, TourTag tag, TourStatus status, double price)
+
+
+        public Tour(long userId, string name, string description, TourDifficulty difficulty, TourTag tag, TourStatus status, double price)
        {
             UserId = userId;
             Name = name;
@@ -48,12 +50,11 @@ namespace Explorer.Tours.Core.Domain
     }
 
     public enum TourStatus
-    {
+     {
         Draft,
         Published,
         Archived
     }
-
 
     public enum TourTag 
     {
@@ -65,7 +66,7 @@ namespace Explorer.Tours.Core.Domain
     }
 
     public enum TourDifficulty
-    {
+    { 
         Easy,
         Moderate,
         Hard

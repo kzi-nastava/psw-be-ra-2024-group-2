@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Tours.API.Public.Administration
+namespace Explorer.Tours.API.Public.Administration;
+
+public interface ITourService
 {
-    public interface ITourService
-    {
+        Result<TourDto> UpdateTour(TourDto tourDto, long userId);
         Result<TourDto> CreateTour(TourDto dto, int userId);
         PagedResult<TourDto> GetAllByUserId(int userId);
 
-    }
+    
 }

@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Author
 {
-
-    [Authorize(Policy = "AuthorPolicy")]
+    [Authorize(Policy = "authorPolicy")]
     [Route("api/author/tour")]
     public class TourController : BaseApiController
     {
@@ -18,6 +17,13 @@ namespace Explorer.API.Controllers.Author
         public TourController(ITourService tourService)
         {
             _tourService = tourService;
+        }
+
+        [HttpPut("equipment")]
+        public ActionResult<TourDto> UpdateEquipment([FromBody] TourDto tour)
+        {
+            var result = _tourService.UpdateTour(tour, User.PersonId());
+            return CreateResponse(result);
         }
 
         [HttpGet]

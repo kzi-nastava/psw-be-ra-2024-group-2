@@ -6,6 +6,7 @@ public class Equipment : Entity
 {
     public string Name { get; init; }
     public string? Description { get; init; }
+    public List<Tour> Tours { get; private set; } = new List<Tour>();
 
     public Equipment(string name, string? description)
     {
