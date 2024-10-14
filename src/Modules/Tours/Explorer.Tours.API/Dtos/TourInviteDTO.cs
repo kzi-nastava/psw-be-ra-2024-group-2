@@ -8,8 +8,10 @@ namespace Explorer.Tours.API.Dtos
 {
     public class TourInviteDTO
     {
+        public long Id { get; set; }
         public long OwnerId { get; set; }
         public long TouristId { get; set; }
+        //public long ClubId { get; set; }
         public DateTime Date { get; set; }
         public TourInviteStatus Status { get; set; }
         public long UserId { get; set; }

@@ -11,5 +11,6 @@ namespace Explorer.Tours.API.Public.Administration
     public interface ITourInviteService
     {
         Result<TourInviteDTO> Invite(TourInviteDTO dto);
+        Result<TourInviteDTO> Remove(TourInviteDTO dto);
     }
 }

@@ -23,12 +23,23 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             var pagedResult = _tourInviteRepository.GetPaged(1, int.MaxValue);
             List<TourInvite> inviteList = pagedResult.Results.ToList();
-            if (inviteList.Where(t => t.OwnerId == dto.OwnerId && t.TouristId == dto.TouristId).ToList().Count >0)
+            if (inviteList.Where(t => t.OwnerId == dto.OwnerId && t.TouristId == dto.TouristId).ToList().Count > 0)
             {
                 return Result.Fail("Invite to this club already exists.");
             }
             TourInvite invite = _tourInviteRepository.Create(MapToDomain(dto));
             return MapToDto(invite);
+        }
+        public Result<TourInviteDTO> Remove(TourInviteDTO dto)
+        {
+            var pagedResult = _tourInviteRepository.GetPaged(1, int.MaxValue);
+            List<TourInvite> inviteList = pagedResult.Results.ToList();
+            if (inviteList.Where(t => t.OwnerId == dto.OwnerId && t.TouristId == dto.TouristId).ToList().Count == 0)
+            {
+                return Result.Fail("This person is not a part of this club.");
+            }
+            _tourInviteRepository.Delete(dto.Id);
+            return Result.Ok(dto);
         }
     }
 }
