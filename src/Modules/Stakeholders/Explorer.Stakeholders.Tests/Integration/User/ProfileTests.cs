@@ -127,31 +127,61 @@ public class ProfileTests : BaseStakeholdersIntegrationTest
     }
 
     [Fact]
-    public void Update_returns_error_if_image_is_missing()
+    public void Update_returns_conflict_if_username_already_exists()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var controller = CreateController(scope, "-11");
 
-        var profileDto = new ProfileDto
+        var profile1Dto = new ProfileDto
         {
             Username = "newUsername",
             Name = "John",
             LastName = "Doe",
-            Email = "john.doe@example.com",
+            Email = "profile@gmail.com",
             Biography = "New bio",
             Moto = "New moto",
-            Image = null // Image is missing
+            Image = new ImageDto
+            {
+                Data = "new data for this idk",
+                UploadedAt = DateTime.UtcNow,
+                MimeType = "image/jpeg"
+            }
+        };
+
+        var profile2Dto = new ProfileDto
+        {
+            Username = "newUsername",
+            Name = "Jane",
+            LastName = "Doe",
+            Email = "profile2@gmail.com",
+            Biography = "New bio",
+            Moto = "New moto",
+            Image = new ImageDto
+            {
+                Data = "new data for this idk",
+                UploadedAt = DateTime.UtcNow,
+                MimeType = "image/jpeg"
+            }
         };
 
         // Act
-        var result = controller.Update(profileDto);
+        var result1 = controller.Update(profile1Dto);
+
+        // Arrange new controller
+        controller = CreateController(scope, "-12");
+
+        var result2 = controller.Update(profile2Dto);
 
         // Assert
-        Assert.NotNull(result);
-        var badRequestResult = Assert.IsType<ObjectResult>(result.Result);
-        Assert.Equal(400, badRequestResult.StatusCode);
+        Assert.NotNull(result1);
+        var okResult1 = Assert.IsType<OkObjectResult>(result1.Result);
+        Assert.Equal(200, okResult1.StatusCode);
+
+        Assert.NotNull(result2);
+        var conflictResult = Assert.IsType<ObjectResult>(result2.Result);
+        Assert.Equal(409, conflictResult.StatusCode);
     }
 
     [Fact]

@@ -6,6 +6,7 @@ namespace Explorer.Tours.Infrastructure.Database;
 public class ToursContext : DbContext
 {
     public DbSet<Equipment> Equipment { get; set; }
+    public DbSet<Tour> Tours { get; set; }
     public DbSet<TourIssueReport> TourIssueReports { get; set; }
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
@@ -14,4 +15,5 @@ public class ToursContext : DbContext
     {
         modelBuilder.HasDefaultSchema("tours");
     }
+
 }
