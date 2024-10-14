@@ -52,6 +52,8 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         public override Result<TourReviewDto> Create(TourReviewDto dto)
         {
+
+
             TourReview review = new TourReview();
 
             review.Grade = dto.Grade;
@@ -93,9 +95,13 @@ namespace Explorer.Tours.Core.UseCases.Administration
        
             // Return the result
             return MapToDto(review);
+        }
+        
+        public void ValidateDto(TourReviewDto tourReviewDto) 
+        {
+            
+        }
 
-
-        }   
 
     }
 }
