@@ -8,6 +8,7 @@ namespace Explorer.Tours.Infrastructure.Database;
 public class ToursContext : DbContext
 {
     public DbSet<Equipment> Equipment { get; set; }
+    public DbSet<Tour> Tours { get; set; }
     public DbSet<TourReview> TourReview { get; set; }
     public DbSet<Image> Images { get; set; }
 
@@ -25,4 +26,5 @@ public class ToursContext : DbContext
 
 
     }
+
 }
