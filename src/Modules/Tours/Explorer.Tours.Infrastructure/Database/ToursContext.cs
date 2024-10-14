@@ -9,6 +9,7 @@ public class ToursContext : DbContext
 {
     public DbSet<Equipment> Equipment { get; set; }
     public DbSet<TourReview> TourReview { get; set; }
+    public DbSet<Image> Images { get; set; }
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
@@ -16,7 +17,12 @@ public class ToursContext : DbContext
     {
         modelBuilder.HasDefaultSchema("tours");
 
-        
+        modelBuilder.Entity<TourReview>()
+            .HasOne(p => p.Image)
+            .WithOne()
+            .HasForeignKey<TourReview>(s => s.ImageId)
+            .OnDelete(DeleteBehavior.SetNull);
+
 
     }
 }

@@ -1,4 +1,5 @@
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
@@ -37,7 +38,7 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, StakeholdersContext>));
         services.AddScoped(typeof(ITransactionRepository), typeof(TransactionRepository));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
-        services.AddScoped<IImageRepository, ImageRepository>();
+        services.AddScoped<IImageRepository, ImageRepository<StakeholdersContext>>();
 
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
