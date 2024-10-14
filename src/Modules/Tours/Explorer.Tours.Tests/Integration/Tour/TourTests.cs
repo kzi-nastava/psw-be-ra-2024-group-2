@@ -85,6 +85,45 @@ public class TourTests : BaseToursIntegrationTest
         result.StatusCode.ShouldBe(400);
 
     }
+    [Fact]
+    public void UpdateEquipment_successful_remove_equiment()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope, "-2");
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        var equipment = dbContext.Equipment.FirstOrDefault(i => i.Id == -2);
+        var tour = dbContext.Tours.Include(t => t.Equipment).FirstOrDefault(t => t.Id == -3);
+
+
+        tour.Equipment.Add(equipment);
+        dbContext.SaveChanges();
+
+        var newEntity = new TourDto
+        {
+            Id = -3,
+            UserId = -2,
+            Equipment = { }
+
+        };
+
+        //Act
+        var result = (ObjectResult)controller.UpdateEquipment(newEntity).Result;
+
+        //Assert - Response
+        result.StatusCode.ShouldBe(200);
+
+        //Assert - Database
+        var storedEntity = dbContext.Tours
+            .Where(i => i.Id == newEntity.Id)
+            .ToList()
+            .FirstOrDefault(i => IsEquipmentEqual(i.Equipment, newEntity.Equipment));
+
+        storedEntity.ShouldNotBeNull();
+        storedEntity.Equipment.Count.ShouldBe(0);
+
+    }
 
     [Fact]
     public void UpdateEquipment_unsuccessful_unauthorized_user()
