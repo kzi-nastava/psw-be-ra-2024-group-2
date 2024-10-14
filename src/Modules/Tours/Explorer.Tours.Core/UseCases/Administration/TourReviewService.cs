@@ -19,14 +19,15 @@ namespace Explorer.Tours.Core.UseCases.Administration
     {
         private readonly IImageRepository _imageRepository;
         private readonly ICrudRepository<TourReview> _reviewRepository;
+        private readonly ICrudRepository<Tour> _tourRepository;
 
 
         public TourReviewService(ICrudRepository<TourReview> repository, IMapper mapper, IImageRepository imageRepository, 
-                                    ICrudRepository<TourReview> reviewRepository) : base(repository, mapper)
+                                    ICrudRepository<TourReview> reviewRepository, ICrudRepository<Tour> tourRepository) : base(repository, mapper)
         {
             _imageRepository = imageRepository;
             _reviewRepository = reviewRepository;
-
+            _tourRepository = tourRepository;
         }
 
         public Result<PagedResult<TourReviewDto>> GetPagedByTourId(int tourId, int page, int pageSize)
@@ -45,63 +46,68 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 .ToList();
 
             // Step 3: Create a new PagedResult based on filtered data
-            var filteredPagedResult = new PagedResult<TourReviewDto>(filteredReviews, pageSize);
+            var filteredPagedResult = new PagedResult<TourReviewDto>(filteredReviews, filteredReviews.Count);
 
             return Result.Ok(filteredPagedResult);
         }
 
         public override Result<TourReviewDto> Create(TourReviewDto dto)
         {
-
-
-            TourReview review = new TourReview();
-
-            review.Grade = dto.Grade;
-            review.Comment = dto.Comment;
-            review.UserId = dto.UserId;
-            review.TourId = dto.TourId;
-            review.ReviewDate = dto.ReviewDate;
-            review.VisitDate = dto.VisitDate;
-
-            // Create the image and save it
-            if (dto.Image != null && !_imageRepository.Exists(dto.Image.Data))
+            try
             {
-                // If the profile has an image, create a new image object with the data from the profile
-                var newImage = new Image(
-                    dto.Image.Data,
-                    dto.Image.UploadedAt,
-                    dto.Image.MimeType
-                );
+                _tourRepository.Get(dto.TourId);
+                
+                if(dto.Grade < 1 || dto.Grade > 5)
+                    return Result.Fail(FailureCode.InvalidArgument).WithError("Nonexistant tour Id"); //400
 
-                // Save the new image to the repository
-                _imageRepository.Create(newImage);
+                TourReview review = new TourReview();
 
-                // Update the person with the new image
-                review.ImageId = newImage.Id;
-                review.Image = newImage;
+                review.Grade = dto.Grade;
+                review.Comment = dto.Comment;
+                review.UserId = dto.UserId;
+                review.TourId = dto.TourId;
+                review.ReviewDate = dto.ReviewDate;
+                review.VisitDate = dto.VisitDate;
+
+                // Create the image and save it
+                if (dto.Image != null && !_imageRepository.Exists(dto.Image.Data))
+                {
+                    // If the profile has an image, create a new image object with the data from the profile
+                    var newImage = new Image(
+                        dto.Image.Data,
+                        dto.Image.UploadedAt,
+                        dto.Image.MimeType
+                    );
+
+                    // Save the new image to the repository
+                    _imageRepository.Create(newImage);
+
+                    // Update the person with the new image
+                    review.ImageId = newImage.Id;
+                    review.Image = newImage;
+                }
+                else if (dto.Image != null && _imageRepository.Exists(dto.Image.Data))
+                {
+                    // If the image already exists, get the image from the repository
+                    var image = _imageRepository.GetByData(dto.Image.Data);
+
+                    // Update the person with the existing image
+                    review.ImageId = image.Id;
+                    review.Image = image;
+                }
+
+                _reviewRepository.Create(review);
+
+
+                // Return the result
+                return MapToDto(review);
             }
-            else if (dto.Image != null && _imageRepository.Exists(dto.Image.Data))
+            catch(Exception ex) 
             {
-                // If the image already exists, get the image from the repository
-                var image = _imageRepository.GetByData(dto.Image.Data);
-
-                // Update the person with the existing image
-                review.ImageId = image.Id;
-                review.Image = image;
+                return Result.Fail(FailureCode.NotFound).WithError("Nonexistant tour Id"); //404
             }
-
-             _reviewRepository.Create(review);
-
-       
-            // Return the result
-            return MapToDto(review);
-        }
+        } 
         
-        public void ValidateDto(TourReviewDto tourReviewDto) 
-        {
-            
-        }
-
-
+        
     }
 }

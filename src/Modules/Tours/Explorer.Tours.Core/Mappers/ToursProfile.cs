@@ -64,4 +64,6 @@ public class ToursProfile : Profile
             _ => throw new ArgumentException("MimeType is not valid")
         };
     }
+   
+    
 }
