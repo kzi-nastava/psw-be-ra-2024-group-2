@@ -29,8 +29,6 @@ namespace Explorer.Tours.Core.Domain
             if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Invalid Description.");
             if (string.IsNullOrWhiteSpace(priority)) throw new ArgumentException("Invalid Priority.");
 
-            if (userId < 0) throw new ArgumentException("UserID cannot be negative.");
-            if (tourId < 0) throw new ArgumentException("TourID cannot be negative.");
 
             Category = category;
             Description = description;

@@ -15,16 +15,20 @@ namespace Explorer.Tours.Core.UseCases.Administration
     public class TourIssueReportService : CrudService<TourIssueReportDto, TourIssueReport>, ITourIssueReportService
     {
         private readonly ICrudRepository<TourIssueReport> _tourIssueReportRepository;
-        public TourIssueReportService(ICrudRepository<TourIssueReport> repository, IMapper mapper) : base(repository, mapper)
+        private readonly ICrudRepository<Tour> _tourRepository;
+        public TourIssueReportService(ICrudRepository<TourIssueReport> repository, ICrudRepository<Tour> tourRepository, IMapper mapper) : base(repository, mapper)
         {
             _tourIssueReportRepository = repository;
+            _tourRepository = tourRepository;
         }
 
         public Result<TourIssueReportDto> Create(long userId, long tourId, TourIssueReportDto tourIssueReport)
         {
             try
             {
+                var tour = _tourRepository.Get(tourId);
                 var pagedResult = base.GetPaged(1, int.MaxValue);
+
 
                 if (pagedResult.IsFailed)
                 {
