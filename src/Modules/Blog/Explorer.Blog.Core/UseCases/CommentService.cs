@@ -1,0 +1,56 @@
+﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Blog.API.Dtos;
+using Explorer.Blog.API.Public;
+using Explorer.Blog.Core.Domain;
+using FluentResults;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Explorer.Blog.Core.UseCases
+{
+    public class CommentService : ICommentService
+    {
+        private readonly ICrudRepository<Comment> repository;
+        private readonly IMapper mapper;
+
+        public CommentService(ICrudRepository<Comment> repository, IMapper mapper)
+        {
+            this.repository = repository;
+            this.mapper = mapper;
+        }
+
+        public Result<CommentDTO> Create(CommentDTO commentDto)
+        {
+            var comment = mapper.Map<Comment>(commentDto);
+            var result = repository.Create(comment);
+            return Result.Ok(mapper.Map<CommentDTO>(result));
+        }
+
+        public Result<CommentDTO> Update(CommentDTO commentDto)
+        {
+            var comment = mapper.Map<Comment>(commentDto);
+            var result = repository.Update(comment);
+            return Result.Ok(mapper.Map<CommentDTO>(result));
+        }
+
+        public Result Delete(long commentId)
+        {
+            repository.Delete(commentId);
+            return Result.Ok();
+        }
+
+        public Result<CommentDTO> GetById(long commentId)
+        {
+            var result = repository.Get(commentId);
+            return result != null ? Result.Ok(mapper.Map<CommentDTO>(result)) : Result.Fail("Comment not found");
+        }
+
+        public Result<IEnumerable<CommentDTO>> GetByBlogId(long blogId)
+        {
+            var comments = repository.GetPaged(1, int.MaxValue).Results;
+            var filteredComments = comments.Where(c => c.BlogId == blogId);
+            return Result.Ok(mapper.Map<IEnumerable<CommentDTO>>(filteredComments));
+        }
+    }
+}
