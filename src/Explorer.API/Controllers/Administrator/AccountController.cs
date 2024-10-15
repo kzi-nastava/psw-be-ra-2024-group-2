@@ -11,7 +11,7 @@ using System.Security.Claims;
 namespace Explorer.API.Controllers.Administrator
 {
     [Authorize(Policy = "administratorPolicy")]
-    [Route("api/administrator")]
+    [Route("api/administrator/account")]
     public class AccountController : BaseApiController
     {
         private readonly IAccountService _accountService;

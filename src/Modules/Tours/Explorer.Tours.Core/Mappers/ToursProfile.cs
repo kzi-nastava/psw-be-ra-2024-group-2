@@ -43,32 +43,11 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
 
-        //CreateMap<EquipmentDto, Equipment>().ReverseMap();
-        /*CreateMap<ObjectDto, TourObject>()
-            .ForMember(dest => dest.Image, opt => opt.MapFrom(src =>
-                src.Image != null
-                    ? new Image(src.Image.Data, src.Image.UploadedAt, GetMimeTypeDenormalized(src.Image.MimeType))
-                    : null))
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => Enum.Parse<ObjectCategory>(src.Category)))
-            .ForMember(dest => dest.ImageId, opt => opt.Ignore())
-            .ConstructUsing(src => new TourObject(src.Name, src.Description, Enum.Parse<ObjectCategory>(src.Category)))
-            .ReverseMap() // Automatically reverse the mapping to ObjectDto
-            .ForMember(dest => dest.Image, opt => opt.MapFrom(src =>
-                src.Image != null
-                    ? new ObjectImageDto
-                    {
-                        Data = src.Image.Data,
-                        UploadedAt = src.Image.UploadedAt,
-                        MimeType = src.Image.GetMimeTypeNormalized
-                    }
-                    : null))
-            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()));*/
-
-        /*CreateMap<ObjectImageDto, Image>()
-            .ConstructUsing(src => new Image(src.Data, src.UploadedAt, GetMimeTypeDenormalized(src.MimeType)))
-            .ReverseMap()
-            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));*/ // Normalize the MIME type on reverse mapping
+        
+    
+        CreateMap<ClubDto, Club>().ReverseMap();
+        CreateMap<ClubInviteDTO,ClubInvite>().ReverseMap();
     }
+   
     
 }
