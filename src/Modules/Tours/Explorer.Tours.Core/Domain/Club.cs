@@ -12,7 +12,7 @@ namespace Explorer.Tours.Core.Domain
         public string Name { get; set; }
         public string? Description { get; set; }
         public int? ImageId { get; set; }
-        public int OwnerId { get; set; }
+        public int? OwnerId { get; set; }
         public Club(string name, string description, int? imageId, int ownerId)
         {
             Name = name;

@@ -34,14 +34,26 @@ namespace Explorer.Tours.Core.UseCases.Tourist
             _imageRepository = imageRepository;
             _mapper = mapper;
         }
-
         public Result<ClubDto> Create(int UserId, ClubDto clubDto)
         {
-            var club = _mapper.Map<Club>(clubDto);
-            club.OwnerId = UserId;
-            var result = _clubRepository.Create(club);
-            return Result.Ok(_mapper.Map<ClubDto>(result));
+            if (string.IsNullOrWhiteSpace(clubDto.Name))
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError("Name is required");
+            }
+
+            try
+            {
+                var club = _mapper.Map<Club>(clubDto);
+                club.OwnerId = UserId;
+                var result = _clubRepository.Create(club);
+                return Result.Ok(_mapper.Map<ClubDto>(result));
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<ClubDto>("An error occurred while creating the club: " + ex.Message);
+            }
         }
+
 
         public Result<ClubDto> Update(int id, ClubDto clubDto)
         {
@@ -54,6 +66,11 @@ namespace Explorer.Tours.Core.UseCases.Tourist
                     return Result.Fail(FailureCode.NotFound).WithError("Club not found");
                 }
 
+                if (string.IsNullOrWhiteSpace(clubDto.Name))
+                {
+                    return Result.Fail(FailureCode.InvalidArgument).WithError("Name is required");
+                }
+
                 var existingClub = _clubRepository.Get(id);
                 if (existingClub != null && existingClub.Id != id)
                 {
@@ -64,6 +81,7 @@ namespace Explorer.Tours.Core.UseCases.Tourist
 
                 club.Name = clubDto.Name;
                 club.Description = clubDto.Description;
+                club.OwnerId = clubDto.OwnerId;
 
                 if (clubDto.ImageId.HasValue)
                 {
@@ -99,6 +117,17 @@ namespace Explorer.Tours.Core.UseCases.Tourist
 
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
+        }
+
+        public PagedResult<ClubDto> GetAll()
+        {
+            var allClubs = _clubRepository.GetPaged(1, int.MaxValue);
+
+            var filteredClubs = allClubs.Results
+                .Select(club => MapToDto(club))
+                .ToList();
+
+            return new PagedResult<ClubDto>(filteredClubs, filteredClubs.Count());
         }
     }
 }

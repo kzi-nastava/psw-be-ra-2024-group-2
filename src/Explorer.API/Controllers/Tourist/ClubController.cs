@@ -2,13 +2,14 @@
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.Core.Domain;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist
 {
-    //[Authorize(Policy = "touristPolicy")]
+    [Authorize(Policy = "touristPolicy")]
     [Route("api/tourist/club")]
     public class ClubController : BaseApiController
     {
@@ -17,6 +18,13 @@ namespace Explorer.API.Controllers.Tourist
         public ClubController(IClubService clubService)
         {
             _clubService = clubService;
+        }
+
+        [HttpGet]
+        public ActionResult<List<ClubDto>> GetAll()
+        {
+            var result = _clubService.GetAll();
+            return CreateResponse(result.ToResult());
         }
 
         [HttpPost]

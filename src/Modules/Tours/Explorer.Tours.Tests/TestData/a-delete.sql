@@ -5,3 +5,4 @@ DELETE FROM tours."TourReview";
 DELETE FROM tours."Images";
 DELETE FROM tours."EquipmentTour";
 DELETE FROM tours."TourIssueReports";
+DELETE FROM tours."Club";
