@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
@@ -28,10 +29,25 @@ namespace Explorer.Tours.Core.UseCases.Author
         {
             try
             {
-                /*_tourRepository.Get(dto.TourId);
+                if (dto.Latitude < -90 || dto.Latitude > 90)
+                {
+                    throw new ArgumentException("Latitude must be between -90 and 90 degrees.");
+                }
 
-                if (dto.Grade < 1 || dto.Grade > 5)
-                    return Result.Fail(FailureCode.InvalidArgument).WithError("Nonexistant tour Id"); //400 */
+                if (dto.Longitude < -180 || dto.Longitude > 180)
+                {
+                    throw new ArgumentException("Longitude must be between -180 and 180 degrees.");
+                }
+
+                if (string.IsNullOrWhiteSpace(dto.Name))
+                {
+                    throw new ArgumentException("Name cannot be null or empty.");
+                }
+
+                if (string.IsNullOrWhiteSpace(dto.Description))
+                {
+                    throw new ArgumentException("Description cannot be null or empty.");
+                }
 
                 Checkpoint checkpoint = new Checkpoint();
 
@@ -40,12 +56,6 @@ namespace Explorer.Tours.Core.UseCases.Author
                 checkpoint.Name = dto.Name;
                 checkpoint.Description = dto.Description;
                 checkpoint.Longitude = dto.Longitude;
-
-                /*review.Comment = dto.Comment;
-                review.UserId = dto.UserId;
-                review.TourId = dto.TourId;
-                review.ReviewDate = dto.ReviewDate;
-                review.VisitDate = dto.VisitDate;*/
 
                 // Create the image and save it
                 if (dto.Image != null && !_imageRepository.Exists(dto.Image.Data))
@@ -74,15 +84,19 @@ namespace Explorer.Tours.Core.UseCases.Author
                     checkpoint.Image = image;
                 }
 
+                /*if(_checkpointRepository.Create(checkpoint) == null)
+                {
+                    return Result.Fail(FailureCode.NotFound).WithError("Nonexistant checkpoint Id"); //404
+                }*/
                 _checkpointRepository.Create(checkpoint);
-
 
                 // Return the result
                 return MapToDto(checkpoint);
             }
             catch (Exception ex)
             {
-                return Result.Fail(FailureCode.NotFound).WithError("Nonexistant tour Id"); //404
+                return Result.Fail(FailureCode.Conflict).WithError("Checkpoint data non valid");
+
             }
         }
     }
