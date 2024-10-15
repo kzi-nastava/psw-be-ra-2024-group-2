@@ -15,8 +15,8 @@ namespace Explorer.Tours.Core.Domain
         public string Name { get; private set; }
         public string? Description { get; private set; }
         public ObjectCategory Category { get; private set; }
-        public long? ImageId { get; private set; }
-        public Image? Image { get; private set; }
+        public long? ImageId { get;  set; }
+        public Image? Image { get;  set; }
 
     public TourObject(string name, string description, ObjectCategory category, long imageId)
         {   
@@ -34,22 +34,30 @@ namespace Explorer.Tours.Core.Domain
             Category = category;
             Validate();
         }
-       /* public string GetObjectCategorzNormalized => ObjectCategory switch
+        public TourObject(string name, string description, string category)
+        {
+            Name = name;
+            Description = description;
+            Category = GetObjectCategoryDenormalized(category);
+            Validate();
+        }
+
+        public string GetObjectCategoryNormalized => Category switch
         {
             ObjectCategory.WC => "WC",
             ObjectCategory.Restaurant => "Restaurant",
             ObjectCategory.Parking => "Parking",
-            _ => throw new ArgumentException("MimeType is not valid")
+            _ => throw new ArgumentException("Category is not valid")
         };
 
-
-        private ObjectCategory GetObjectCategoryDenormalized(string category) => ObjectCategory switch
+        public ObjectCategory GetObjectCategoryDenormalized(string category) => category switch
         {
-            "WC" => MimeType.Jpeg,
-            "Resta" => MimeType.Png,
-            "image/gif" => MimeType.Gif,
-            _ => throw new ArgumentException("MimeType is not valid")
-        };*/
+            "WC" => ObjectCategory.WC,
+            "Restaurant" => ObjectCategory.Restaurant,
+            "Parking" => ObjectCategory.Parking,
+            _ => throw new ArgumentException("Category is not valid")
+        };
+
         private void Validate()
         {
             if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name.");

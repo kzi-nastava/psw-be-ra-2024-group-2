@@ -36,7 +36,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 Category = "Restaurant",
                 Image = new ObjectImageDto
                 {
-                    Data = "new data for this idk",
+                    Data = "new data for this jjhkjhjghfhgfhgdffgsfdsidk",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 }
@@ -68,7 +68,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 Description = "Restoran na Skadarliji, poznat po ukusnim specjalitetima domace kuhinje.",
                 Image = new ObjectImageDto
                 {
-                    Data = "new data for this idk",
+                    Data = "new data for this idkkkkk",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 }
@@ -95,7 +95,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 Description = "Restoran na Skadarliji, poznat po ukusnim specjalitetima domace kuhinje.",
                 Image = new ObjectImageDto
                 {
-                    Data = "new data for this idk",
+                    Data = "new data for ttttthis idk",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 }
@@ -121,7 +121,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 Description = "Restoran na Skadarliji, poznat po ukusnim specjalitetima domace kuhinje.",
                 Image = new ObjectImageDto
                 {
-                    Data = "new data for this idk",
+                    Data = "new daaaata for this idk",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 }
@@ -148,7 +148,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 Description = "Restoran na Skadarliji, poznat po ukusnim specjalitetima domace kuhinje.",
                 Image = new ObjectImageDto
                 {
-                    Data = "new data for this idk",
+                    Data = "new datttta for this idk",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 }
