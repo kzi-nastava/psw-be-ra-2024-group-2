@@ -38,7 +38,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 Comment = "string",
                 Image = new TourImageDto
                 {
-                    Data = "new data for this idk",
+                    Data = "new dataas gala",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 },
