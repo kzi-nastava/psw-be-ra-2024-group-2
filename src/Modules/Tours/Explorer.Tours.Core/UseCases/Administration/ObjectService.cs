@@ -19,12 +19,5 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             _objectRepository = repository;
         }
-
-        public Result<ObjectDto> CreateObject(ObjectDto tourObject)
-        {
-            TourObject tourObj = MapToDomain(tourObject);
-            TourObject newObject = _objectRepository.Create(tourObj);
-            return MapToDto(newObject);
-        }
     }
 }

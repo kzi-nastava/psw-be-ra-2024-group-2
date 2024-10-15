@@ -24,6 +24,7 @@ namespace Explorer.Tours.Core.Domain
             Description = description;
             Category = category;
             ImageId = imageId;
+            Validate();
         }
 
     public TourObject(string name, string description, ObjectCategory category)

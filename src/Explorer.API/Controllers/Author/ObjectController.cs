@@ -20,7 +20,7 @@ namespace Explorer.API.Controllers.Author
         [HttpPost]
         public ActionResult<ObjectDto> CreateObject([FromBody] ObjectDto tourObject)
         {
-            var result = _objectService.CreateObject(tourObject);
+            var result = _objectService.Create(tourObject);
             return CreateResponse(result);
         }
     }

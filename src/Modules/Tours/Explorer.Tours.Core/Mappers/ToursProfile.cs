@@ -33,6 +33,7 @@ public class ToursProfile : Profile
                 src.Image != null
                     ? new Image(src.Image.Data, src.Image.UploadedAt, GetMimeTypeDenormalized(src.Image.MimeType))
                     : null))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Category, opt => opt.MapFrom(src => Enum.Parse<ObjectCategory>(src.Category)))
             .ForMember(dest => dest.ImageId, opt => opt.Ignore())
             .ConstructUsing(src => new TourObject(src.Name, src.Description, Enum.Parse<ObjectCategory>(src.Category)))

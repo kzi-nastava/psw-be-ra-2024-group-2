@@ -10,6 +10,6 @@ namespace Explorer.Tours.API.Public.Administration
 {
     public interface IObjectService
     {
-        Result<ObjectDto> CreateObject(ObjectDto tourObject);
+        Result<ObjectDto> Create(ObjectDto tourObject);
     }
 }
