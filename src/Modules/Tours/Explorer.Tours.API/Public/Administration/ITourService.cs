@@ -1,4 +1,5 @@
-﻿using Explorer.Tours.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,9 @@ namespace Explorer.Tours.API.Public.Administration;
 
 public interface ITourService
 {
-    //Result<TourDto> AddEquipment(long tourId, EquipmentDto equipment, long userId);
-    //Result<TourDto> RemoveEquipment(long tourId, EquipmentDto equipment, long userId);
-    Result<TourDto> UpdateTour(TourDto tourDto, long userId);
+        Result<TourDto> UpdateTour(TourDto tourDto, long userId);
+        Result<TourDto> CreateTour(TourDto dto, int userId);
+        PagedResult<TourDto> GetAllByUserId(int userId);
+
+    
 }

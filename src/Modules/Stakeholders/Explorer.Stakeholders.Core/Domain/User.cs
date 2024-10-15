@@ -7,6 +7,7 @@ public class User : Entity
     public string Password { get; set; }
     public UserRole Role { get; set; }
     public bool IsActive { get; set; }
+    public bool IsBlocked {  get; set; }
 
     public User(string username, string password, UserRole role, bool isActive)
     {
@@ -14,6 +15,7 @@ public class User : Entity
         Password = password;
         Role = role;
         IsActive = isActive;
+        IsBlocked = false;
         Validate();
     }
 

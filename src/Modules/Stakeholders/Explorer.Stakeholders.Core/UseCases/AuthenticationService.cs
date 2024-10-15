@@ -24,6 +24,7 @@ public class AuthenticationService : IAuthenticationService
     {
         var user = _userRepository.GetActiveByName(credentials.Username);
         if (user == null || credentials.Password != user.Password) return Result.Fail(FailureCode.NotFound);
+        if (user.IsBlocked) return Result.Fail(FailureCode.Forbidden).WithError("User has been blocked");
 
         long personId;
         try
