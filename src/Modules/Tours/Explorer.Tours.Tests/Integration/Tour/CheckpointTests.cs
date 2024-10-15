@@ -80,7 +80,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
             //Assert - Response
             result.StatusCode.ShouldBe(409);
         }
-
+        
         private static CheckpointController CreateController(IServiceScope scope, string number)
         {
             return new CheckpointController(scope.ServiceProvider.GetRequiredService<ICheckpointService>())
