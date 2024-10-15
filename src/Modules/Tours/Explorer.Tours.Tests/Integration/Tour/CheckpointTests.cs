@@ -33,16 +33,16 @@ namespace Explorer.Tours.Tests.Integration.Tour
 
             var newEntity = new CheckpointDto
             {
-                Longitude = 20,
-                Latitude = 30,
+                Longitude = 10,
+                Latitude = 20,
                 Image = new TourImageDto
                 {
                     Data = "coa testna slika",
                     UploadedAt = DateTime.UtcNow,
-                    MimeType = "image/jpeg"
+                    MimeType = "image/png"
                 },
                 Name = "Trg Nikole Pasica",
-                Description = "Testni opis"
+                Description = "Testni opis2"
 
             };
             // Act

@@ -44,9 +44,9 @@ namespace Explorer.Tours.Core.UseCases.Author
                     throw new ArgumentException("Name cannot be null or empty.");
                 }
 
-                if (string.IsNullOrWhiteSpace(dto.Description))
+                if (dto.Description == null)
                 {
-                    throw new ArgumentException("Description cannot be null or empty.");
+                    throw new ArgumentException("Description cannot be null.");
                 }
 
                 Checkpoint checkpoint = new Checkpoint();
