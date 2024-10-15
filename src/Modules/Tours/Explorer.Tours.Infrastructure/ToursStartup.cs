@@ -5,8 +5,10 @@ using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases.Administration;
 using Explorer.Tours.Infrastructure.Database;
+using Explorer.BuildingBlocks.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Explorer.Tours.Infrastructure;
 
@@ -24,13 +26,18 @@ public static class ToursStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IEquipmentService, EquipmentService>();
+        services.AddScoped<ITourReviewService, TourReviewService>();
         services.AddScoped<ITourService, TourService>();
+        services.AddScoped<ITourIssueReportService, TourIssueReportService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<Tour>), typeof(CrudDatabaseRepository<Tour, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourReview>), typeof(CrudDatabaseRepository<TourReview, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourIssueReport>), typeof(CrudDatabaseRepository<TourIssueReport, ToursContext>));
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),

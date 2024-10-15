@@ -1,6 +1,7 @@
 using AutoMapper;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Stakeholders.Core.Mappers;
 
@@ -25,6 +26,13 @@ public class StakeholderProfile : Profile
 
         CreateMap<RatingApplicationDto, RatingApplication>().ReverseMap();
 
+
+
+        CreateMap<Person, AccountDto>()
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => (int)src.User.Role))
+            .ForMember(dest => dest.IsBlocked, opt => opt.MapFrom(src => src.User.IsBlocked));
 
     }
 }
