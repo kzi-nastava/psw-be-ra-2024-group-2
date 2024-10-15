@@ -1,6 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 
-namespace Explorer.Stakeholders.Core.Domain;
+namespace Explorer.BuildingBlocks.Core.Domain;
 
 public class Image : Entity
 {
