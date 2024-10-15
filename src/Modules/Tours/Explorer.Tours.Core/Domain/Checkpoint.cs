@@ -13,11 +13,10 @@ namespace Explorer.Tours.Core.Domain
         public double Latitude { get; private set; }
         public double Longitude { get; private set; } 
         public string Name { get; private set; }      
-        public string Description { get; private set; }    
-        public int? PhotoId { get; private set; }
-        
-
-        public Checkpoint(double latitude, double longitude, string name, string description, int? photoId)
+        public string Description { get; private set; }
+        public long? ImageId {  get; private set; }
+        public List<Tour> Tours { get; private set; } = new List<Tour>();
+        public Checkpoint(double latitude, double longitude, string name, string description, long? imageId)
         {
 
 
@@ -45,7 +44,7 @@ namespace Explorer.Tours.Core.Domain
             Longitude = longitude;
             Name = name;
             Description = description;
-            PhotoId = photoId;
+            ImageId = imageId;
         }
     }
 }
