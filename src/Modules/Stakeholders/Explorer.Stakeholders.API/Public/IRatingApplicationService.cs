@@ -12,8 +12,8 @@ namespace Explorer.Stakeholders.API.Public
     public interface IRatingApplicationService
     {
         Result<PagedResult<RatingApplicationDto>> GetPaged(int page, int pageSize);
-        Result<RatingApplicationDto> Get(long personId);
-        Result<RatingApplicationDto> Create(RatingApplicationDto ratingApplication);
+        Result<RatingApplicationDto> Get(long id);
+        Result<RatingApplicationDto> Create( long userId,RatingApplicationDto ratingApplication);
         Result<RatingApplicationDto> Update(long personId, RatingApplicationDto ratingApplication);
     }
 }

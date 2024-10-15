@@ -12,7 +12,7 @@ namespace Explorer.Stakeholders.API.Dtos
         public int Grade { get; set; }
         public string? Comment { get; set; }
         public DateTime RatingTime { get; set; }
-        public long PersonId { get; set; }
+        public long UserId { get; set; }
 
 
     }

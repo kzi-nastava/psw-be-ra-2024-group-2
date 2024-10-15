@@ -28,6 +28,7 @@ public static class StakeholdersStartup
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<ITransactionService, TransactionService>();
         services.AddScoped<IProfileService, ProfileService>();
+        services.AddScoped<IRatingApplicationService, RatingApplicationService>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
     }
 
@@ -36,6 +37,7 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, StakeholdersContext>));
         services.AddScoped(typeof(ITransactionRepository), typeof(TransactionRepository));
+        services.AddScoped(typeof(ICrudRepository<RatingApplication>), typeof(CrudDatabaseRepository<RatingApplication, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IImageRepository, ImageRepository>();
 
