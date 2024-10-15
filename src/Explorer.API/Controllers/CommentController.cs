@@ -3,6 +3,7 @@ using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Explorer.Stakeholders.Infrastructure.Authentication;
 
 namespace Explorer.API.Controllers
 {
@@ -34,21 +35,24 @@ namespace Explorer.API.Controllers
         [HttpPost]
         public ActionResult<CommentDTO> Create([FromBody] CommentDTO comment)
         {
-            var result = _commentService.Create(comment);
+            var userId = User.PersonId();
+            var result = _commentService.Create(userId,comment);
             return CreateResponse(result);
         }
 
         [HttpPut("{id:long}")]
-        public ActionResult<CommentDTO> Update([FromBody] CommentDTO comment)
+        public ActionResult<CommentDTO> Update(long id, [FromBody] CommentDTO comment)
         {
-            var result = _commentService.Update(comment);
+            var userId = User.PersonId();
+            var result = _commentService.Update(id, userId, comment);
             return CreateResponse(result);
         }
 
         [HttpDelete("{id:long}")]
         public ActionResult Delete(long id)
         {
-            var result = _commentService.Delete(id);
+            var userId = User.PersonId();
+            var result = _commentService.Delete(id, userId);
             return CreateResponse(result);
         }
     }

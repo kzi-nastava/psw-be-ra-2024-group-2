@@ -20,22 +20,35 @@ namespace Explorer.Blog.Core.UseCases
             this.mapper = mapper;
         }
 
-        public Result<CommentDTO> Create(CommentDTO commentDto)
+        public Result<CommentDTO> Create(long UserId, CommentDTO commentDto)
         {
             var comment = mapper.Map<Comment>(commentDto);
+            comment.UserId = UserId;
             var result = repository.Create(comment);
             return Result.Ok(mapper.Map<CommentDTO>(result));
         }
 
-        public Result<CommentDTO> Update(CommentDTO commentDto)
+        public Result<CommentDTO> Update(long id, long userId, CommentDTO commentDto)
         {
-            var comment = mapper.Map<Comment>(commentDto);
+            var comment = repository.Get(id);
+            if (comment.UserId != userId)
+            {
+                return Result.Fail<CommentDTO>("User is not authorized to update this comment.");
+            }
+            comment.UpdateLastModifiedAt();
+            comment.Text = commentDto.Text;
             var result = repository.Update(comment);
             return Result.Ok(mapper.Map<CommentDTO>(result));
         }
 
-        public Result Delete(long commentId)
+
+        public Result Delete(long commentId, long userId)
         {
+            var comment = repository.Get(commentId);
+            if (comment.UserId != userId)
+            {
+                return Result.Fail("User is not authorized to delete this comment.");
+            }
             repository.Delete(commentId);
             return Result.Ok();
         }
