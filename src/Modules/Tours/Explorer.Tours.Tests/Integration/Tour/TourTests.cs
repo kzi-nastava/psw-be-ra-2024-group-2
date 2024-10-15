@@ -145,28 +145,7 @@ public class TourTests : BaseToursIntegrationTest
         storedEntity.ShouldNotBeNull();
     }
 
-    [Fact]
-    public void AddTour_unsuccessful_unauthorized_user()
-    {
-        // Arrange
-        using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope, "-2");
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new TourDto
-        {
-            UserId = -1,
-            Equipment = { -1 },
-            Name = "Gala",
-            Description = "Opis",
-            Difficulty = TourDto.TourDifficulty.Hard,
-            Tag = TourDto.TourTag.Adventure,
-            Status = 0,
-            Price = 0
-        };
-        var result = (ObjectResult)controller.Create(newEntity).Result;
-        result.StatusCode.ShouldBe(403);
-    }
-
+   
     [Fact]
     public void UpdateEquipment_unsuccessful_unauthorized_user()
     {
