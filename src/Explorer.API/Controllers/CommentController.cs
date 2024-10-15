@@ -36,7 +36,13 @@ namespace Explorer.API.Controllers
         public ActionResult<CommentDTO> Create([FromBody] CommentDTO comment)
         {
             var userId = User.PersonId();
-            var result = _commentService.Create(userId,comment);
+            var result = _commentService.Create(userId, comment);
+
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors.First().Message); // Vraća 400 sa porukom greške
+            }
+
             return CreateResponse(result);
         }
 
@@ -53,7 +59,14 @@ namespace Explorer.API.Controllers
         {
             var userId = User.PersonId();
             var result = _commentService.Delete(id, userId);
-            return CreateResponse(result);
+
+            if (result.IsFailed)
+            {
+                return NotFound(result.Errors.First().Message);
+            }
+
+            return Ok(); // Vraća 200 OK ako je brisanje uspešno
         }
+
     }
 }

@@ -20,17 +20,32 @@ namespace Explorer.Blog.Core.UseCases
             this.mapper = mapper;
         }
 
-        public Result<CommentDTO> Create(long UserId, CommentDTO commentDto)
+        public Result<CommentDTO> Create(long userId, CommentDTO commentDto)
         {
+            // Proveri validnost podataka pre nego što pokušaš da kreiraš komentar
+            if (commentDto.BlogId <= 0)
+            {
+                return Result.Fail<CommentDTO>("Invalid BlogId");
+            }
+            if (string.IsNullOrWhiteSpace(commentDto.Text))
+            {
+                return Result.Fail<CommentDTO>("Invalid Text");
+            }
+
             var comment = mapper.Map<Comment>(commentDto);
-            comment.UserId = UserId;
+            comment.UserId = userId;
             var result = repository.Create(comment);
             return Result.Ok(mapper.Map<CommentDTO>(result));
         }
 
+
         public Result<CommentDTO> Update(long id, long userId, CommentDTO commentDto)
         {
             var comment = repository.Get(id);
+            if (comment == null)
+            {
+                return Result.Fail<CommentDTO>("Comment not found.");
+            }
             if (comment.UserId != userId)
             {
                 return Result.Fail<CommentDTO>("User is not authorized to update this comment.");
@@ -42,9 +57,14 @@ namespace Explorer.Blog.Core.UseCases
         }
 
 
+
         public Result Delete(long commentId, long userId)
         {
             var comment = repository.Get(commentId);
+            if (comment == null)
+            {
+                return Result.Fail("Comment not found."); 
+            }
             if (comment.UserId != userId)
             {
                 return Result.Fail("User is not authorized to delete this comment.");
@@ -52,6 +72,7 @@ namespace Explorer.Blog.Core.UseCases
             repository.Delete(commentId);
             return Result.Ok();
         }
+
 
         public Result<CommentDTO> GetById(long commentId)
         {
