@@ -1,4 +1,5 @@
 ﻿using Explorer.API.Controllers.Author;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
@@ -35,8 +36,14 @@ public class TourTests : BaseToursIntegrationTest
         {
             Id = -1,
             UserId = -1,
-            Equipment = {-1, -3}
-        
+            Equipment = {-1, -3},
+            Name = "Kusla",
+            Description = "Opis",
+            Difficulty = 0,
+            Tag = 0,
+            Status = 0,
+            Price = 0
+
         };
 
         //Act
@@ -56,14 +63,14 @@ public class TourTests : BaseToursIntegrationTest
     }
 
     [Fact]
-    public void UpdateEquipment_unsuccessful_existing_equiment()
+    public void UpdateEquipment_successful_remove_equiment()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope, "-2");
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
-        var equipment = dbContext.Equipment.FirstOrDefault(i => i.Id == -1);
+        var equipment = dbContext.Equipment.FirstOrDefault(i => i.Id == -2);
         var tour = dbContext.Tours.Include(t => t.Equipment).FirstOrDefault(t => t.Id == -3);
 
 
@@ -74,7 +81,7 @@ public class TourTests : BaseToursIntegrationTest
         {
             Id = -3,
             UserId = -2,
-            Equipment = { -1 }
+            Equipment = { }
 
         };
 
@@ -82,8 +89,82 @@ public class TourTests : BaseToursIntegrationTest
         var result = (ObjectResult)controller.UpdateEquipment(newEntity).Result;
 
         //Assert - Response
-        result.StatusCode.ShouldBe(400);
+        result.StatusCode.ShouldBe(200);
 
+        //Assert - Database
+        var storedEntity = dbContext.Tours
+            .Where(i => i.Id == newEntity.Id)
+            .ToList()
+            .FirstOrDefault(i => IsEquipmentEqual(i.Equipment, newEntity.Equipment));
+
+        storedEntity.ShouldNotBeNull();
+        storedEntity.Equipment.Count.ShouldBe(0);
+
+    }
+
+    [Fact]
+    public void Retrieves_all()
+    {
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope, "-1");
+        var result = ((ObjectResult)controller.GetAllByUserId().Result)?.Value as PagedResult<TourDto>;
+
+
+        result.ShouldNotBeNull();
+        result.Results.Count.ShouldBe(4);  
+        result.TotalCount.ShouldBe(4);
+    }
+
+    [Fact]
+    public void AddTour_successful_adds_tour()
+    {
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope, "-1");
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var newEntity = new TourDto
+        {
+            UserId = -1,
+            Equipment = { -1 },
+            Name = "Gala",
+            Description = "Opis",
+            Difficulty = TourDto.TourDifficulty.Hard,
+            Tag = TourDto.TourTag.Adventure,
+            Status = 0,
+            Price = 0
+        };
+        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourDto;
+
+        result.ShouldNotBeNull();
+        result.Name.ShouldBe(newEntity.Name);
+        result.Description.ShouldBe(newEntity.Description);
+        result.Difficulty.ShouldBe(newEntity.Difficulty);
+        result.Status.ShouldBe(TourDto.TourStatus.Draft);
+        result.Price.ShouldBe(0);
+
+        var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Name == newEntity.Name);
+        storedEntity.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void AddTour_unsuccessful_unauthorized_user()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope, "-2");
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var newEntity = new TourDto
+        {
+            UserId = -1,
+            Equipment = { -1 },
+            Name = "Gala",
+            Description = "Opis",
+            Difficulty = TourDto.TourDifficulty.Hard,
+            Tag = TourDto.TourTag.Adventure,
+            Status = 0,
+            Price = 0
+        };
+        var result = (ObjectResult)controller.Create(newEntity).Result;
+        result.StatusCode.ShouldBe(403);
     }
 
     [Fact]
@@ -97,7 +178,13 @@ public class TourTests : BaseToursIntegrationTest
         {
             Id = -1,
             UserId = -1,
-            Equipment = { -1, -3 }
+            Equipment = { -1, -3 },
+            Name = "Gala",
+            Description = "Opis",
+            Difficulty = 0,
+            Tag = 0,
+            Status = 0,
+            Price = 0
 
         };
 
@@ -120,7 +207,13 @@ public class TourTests : BaseToursIntegrationTest
         {
             Id = -1,
             UserId = -2,
-            Equipment = {-20 }
+            Equipment = {-20 },
+            Name = "Miha",
+            Description = "Opis",
+            Difficulty = 0,
+            Tag = 0,
+            Status = 0,
+            Price = 0
 
         };
 
@@ -153,7 +246,7 @@ public class TourTests : BaseToursIntegrationTest
 
     private static TourController CreateController(IServiceScope scope, string number)
     {
-        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())
+        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>(), scope.ServiceProvider.GetRequiredService<IEquipmentService>())
         {
             ControllerContext = new ControllerContext
             {
@@ -161,7 +254,8 @@ public class TourTests : BaseToursIntegrationTest
                 {
                     User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                     {
-                        new Claim("personId", number)
+                        new Claim("personId", number),
+                        new Claim("id", number)
                     }))
                 }
             }
