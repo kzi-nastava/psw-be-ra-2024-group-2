@@ -25,7 +25,6 @@ namespace Explorer.Tours.Core.Domain
 
         private void Validate()
         {
-            if (Date.Year < 1823) throw new ArgumentException("Computers weren't even made that year"); 
             if (!Enum.IsDefined(typeof(TourInviteStatus), Status)) throw new ArgumentException("Status is not valid");
 
         }

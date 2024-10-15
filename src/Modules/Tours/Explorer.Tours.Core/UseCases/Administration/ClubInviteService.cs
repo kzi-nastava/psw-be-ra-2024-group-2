@@ -29,15 +29,16 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             if (_clubInviteRepository.Exists(dto.ClubId, dto.TouristId))
             {
-                return Result.Fail("Invite to this club already exists.");
+                return Result.Fail(FailureCode.Conflict).WithError("Invite to this club already exists.");
             }
             ClubInvite invite = _crudClubInviteRepository.Create(MapToDomain(dto));
+            //dodati u klub kada kolega napravi repo za klub
             return MapToDto(invite);
         }
         public Result<ClubInviteDTO> Remove(ClubInviteDTO dto)
         {
             if (!_clubInviteRepository.Exists(dto.ClubId, dto.TouristId)) {
-                return Result.Fail("Tourist is not a member of this club.");
+                return Result.Fail(FailureCode.Conflict).WithError("Invite to this club doesn't exist.");
             }
             ClubInvite clubInvite = _clubInviteRepository.GetByClubTourist(dto.ClubId, dto.TouristId);
 
