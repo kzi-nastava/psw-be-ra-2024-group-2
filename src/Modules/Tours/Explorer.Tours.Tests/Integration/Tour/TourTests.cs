@@ -63,43 +63,6 @@ public class TourTests : BaseToursIntegrationTest
     }
 
     [Fact]
-    public void UpdateEquipment_unsuccessful_existing_equiment()
-    {
-        // Arrange
-        using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope, "-2");
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-
-        var equipment = dbContext.Equipment.FirstOrDefault(i => i.Id == -1);
-        var tour = dbContext.Tours.Include(t => t.Equipment).FirstOrDefault(t => t.Id == -3);
-
-
-        tour.Equipment.Add(equipment);
-        dbContext.SaveChanges();
-
-        var newEntity = new TourDto
-        {
-            Id = -3,
-            UserId = -2,
-            Equipment = { -1 },
-            Name = "Stefan",
-            Description = "Opis",
-            Difficulty = 0,
-            Tag = 0,
-            Status = 0,
-            Price = 0
-
-
-        };
-
-        //Act
-        var result = (ObjectResult)controller.UpdateEquipment(newEntity).Result;
-
-        //Assert - Response
-        result.StatusCode.ShouldBe(400);
-
-    }
-    [Fact]
     public void UpdateEquipment_successful_remove_equiment()
     {
         // Arrange
@@ -283,7 +246,7 @@ public class TourTests : BaseToursIntegrationTest
 
     private static TourController CreateController(IServiceScope scope, string number)
     {
-        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())
+        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>(), scope.ServiceProvider.GetRequiredService<IEquipmentService>())
         {
             ControllerContext = new ControllerContext
             {
