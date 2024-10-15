@@ -22,7 +22,6 @@ namespace Explorer.API.Controllers.Author
         [HttpPost]
         public ActionResult<RatingApplicationDto> Create([FromBody] RatingApplicationDto applicationRatingDto)
         {
-            applicationRatingDto.UserId = User.PersonId();
             var result = _ratingApplicationService.Create(applicationRatingDto.UserId, applicationRatingDto);
             return CreateResponse(result);
         }
