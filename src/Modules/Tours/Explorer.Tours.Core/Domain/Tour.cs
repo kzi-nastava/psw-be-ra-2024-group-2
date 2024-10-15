@@ -24,9 +24,6 @@ namespace Explorer.Tours.Core.Domain
         public List<Equipment> Equipment { get; private set; } = new List<Equipment>();
         public List<Checkpoint> Checkpoints { get; private set; } = new List<Checkpoint>();
 
-
-
-
         public Tour(long userId, string name, string description, TourDifficulty difficulty, TourTag tag, TourStatus status, double price)
        {
             UserId = userId;
