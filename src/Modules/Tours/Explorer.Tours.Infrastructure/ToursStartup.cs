@@ -7,6 +7,7 @@ using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases.Administration;
 using Explorer.Tours.Core.UseCases.Tourist;
+using Explorer.Tours.Core.UseCases.Author;
 using Explorer.Tours.Infrastructure.Database;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.Tours.Infrastructure.Database.Repositories;
@@ -34,6 +35,8 @@ public static class ToursStartup
         services.AddScoped<IObjectService, ObjectService>();
         services.AddScoped<ITourIssueReportService, TourIssueReportService>();
         services.AddScoped<IClubInviteService, ClubInviteService>();
+
+        services.AddScoped<ICheckpointService, CheckpointService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -43,10 +46,13 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<ClubInvite>), typeof(CrudDatabaseRepository<ClubInvite, ToursContext>));
 
         services.AddScoped<IClubInviteRepository, ClubInviteRepository>();
+        services.AddScoped(typeof(ICrudRepository<Checkpoint>), typeof(CrudDatabaseRepository<Checkpoint, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourReview>), typeof(CrudDatabaseRepository<TourReview, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourObject>), typeof(CrudDatabaseRepository<TourObject, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourIssueReport>), typeof(CrudDatabaseRepository<TourIssueReport, ToursContext>));
+
+
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),
