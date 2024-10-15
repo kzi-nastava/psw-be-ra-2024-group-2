@@ -8,5 +8,9 @@ namespace Explorer.Tours.Core.UseCases.Administration;
 
 public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipmentService
 {
-    public EquipmentService(ICrudRepository<Equipment> repository, IMapper mapper) : base(repository, mapper) {}
+    private readonly ICrudRepository<Equipment> _equipmentRepository;
+    public EquipmentService(ICrudRepository<Equipment> repository, IMapper mapper) : base(repository, mapper) 
+    {
+        _equipmentRepository = repository;
+    }
 }

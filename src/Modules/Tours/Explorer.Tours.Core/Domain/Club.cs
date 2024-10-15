@@ -13,8 +13,7 @@ namespace Explorer.Tours.Core.Domain
         public string? Description { get; set; }
         public int? ImageId { get; set; }
         public int OwnerId { get; set; }
-
-        public Club(string name, string description, int imageId, int ownerId)
+        public Club(string name, string description, int? imageId, int ownerId)
         {
             Name = name;
             Description = description;
@@ -22,12 +21,14 @@ namespace Explorer.Tours.Core.Domain
             OwnerId = ownerId;
             Validate();
         }
-
+        public Club()
+        {
+        }
         private void Validate()
         {
-            if(string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name");
+            if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name");
             if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description");
-            if(ImageId <= 0) throw new ArgumentException("Invalid Image");
+            if (ImageId <= 0) throw new ArgumentException("Invalid Image");
             if (OwnerId == 0) throw new ArgumentException("Club must have an Owner");
         }
     }

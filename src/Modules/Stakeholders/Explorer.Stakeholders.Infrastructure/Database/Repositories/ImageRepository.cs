@@ -24,4 +24,8 @@ public class ImageRepository : CrudDatabaseRepository<Image, StakeholdersContext
     {
         return DbContext.Images.FirstOrDefault(i => i.Data == data);
     }
+    public Image Get(int id)
+    {
+        return base.Get((long)id);
+    }
 }

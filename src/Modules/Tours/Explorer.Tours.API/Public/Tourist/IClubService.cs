@@ -10,8 +10,8 @@ namespace Explorer.Tours.API.Public.Tourist
 {
     public interface IClubService
     {
-        Result<ClubDto> Create(ClubDto club);
-        Result<ClubDto> Update(ClubDto club);
+        Result<ClubDto> Create(int userId, ClubDto club);
+        Result<ClubDto> Update(int id, ClubDto club);
 
     }
 }
