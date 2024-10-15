@@ -35,6 +35,8 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
         CreateMap<TourIssueReportDto, TourIssueReport>().ReverseMap();
+        CreateMap<ClubDto, Club>().ReverseMap();
+        CreateMap<ClubInviteDTO,ClubInvite>().ReverseMap();
     }
    
     
