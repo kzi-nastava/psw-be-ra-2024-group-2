@@ -1,5 +1,4 @@
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain;
 
 public interface IImageRepository
 {

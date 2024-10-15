@@ -1,6 +1,8 @@
-﻿using Explorer.Stakeholders.Infrastructure.Authentication;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Infrastructure.Authentication;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,15 +13,39 @@ namespace Explorer.API.Controllers.Author
     public class TourController : BaseApiController
     {
         private readonly ITourService _tourService;
-        public TourController(ITourService tourService)
+        private readonly IEquipmentService _equipmentService;
+        public TourController(ITourService tourService, IEquipmentService equipmentService)
         {
             _tourService = tourService;
+            _equipmentService = equipmentService;
         }
 
         [HttpPut("equipment")]
         public ActionResult<TourDto> UpdateEquipment([FromBody] TourDto tour)
         {
             var result = _tourService.UpdateTour(tour, User.PersonId());
+            return CreateResponse(result);
+        }
+
+        [HttpGet]
+        public ActionResult<PagedResult<TourDto>> GetAllByUserId()
+        {
+            var allTours = _tourService.GetAllByUserId(User.UserId());
+            return CreateResponse(allTours.ToResult());
+        }
+
+        [HttpPost]
+        public ActionResult<TourDto> Create([FromBody] TourDto dto)
+        {
+
+            var addedTour = _tourService.CreateTour(dto,User.UserId());
+            return CreateResponse(addedTour);
+        }
+
+        [HttpGet("equipment/getAll")]
+        public ActionResult<PagedResult<EquipmentDto>> GetAll()
+        {
+            var result = _equipmentService.GetPaged(1, int.MaxValue);
             return CreateResponse(result);
         }
     }

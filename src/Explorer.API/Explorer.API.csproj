@@ -27,6 +27,9 @@
 
   <ItemGroup>
     <Folder Include="Controllers\Author\" />
+    <Folder Include="Controllers\Tourist\" />
+    <Folder Include="Controllers\Author\" />
+    <Folder Include="Controllers\Author\" />
   </ItemGroup>
 
 </Project>

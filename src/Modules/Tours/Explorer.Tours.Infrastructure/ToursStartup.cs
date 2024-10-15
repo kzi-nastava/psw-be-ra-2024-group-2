@@ -7,8 +7,10 @@ using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases.Administration;
 using Explorer.Tours.Core.UseCases.Tourist;
 using Explorer.Tours.Infrastructure.Database;
+using Explorer.BuildingBlocks.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Explorer.Tours.Infrastructure;
 
@@ -26,7 +28,9 @@ public static class ToursStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IEquipmentService, EquipmentService>();
+        services.AddScoped<ITourReviewService, TourReviewService>();
         services.AddScoped<ITourService, TourService>();
+        services.AddScoped<ITourIssueReportService, TourIssueReportService>();
         services.AddScoped<IClubService, ClubService>();
     }
 
@@ -34,6 +38,9 @@ public static class ToursStartup
     {
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<Tour>), typeof(CrudDatabaseRepository<Tour, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourReview>), typeof(CrudDatabaseRepository<TourReview, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourIssueReport>), typeof(CrudDatabaseRepository<TourIssueReport, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, ToursContext>));
 
         services.AddDbContext<ToursContext>(opt =>
