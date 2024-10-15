@@ -2,6 +2,7 @@
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain;
+using System.Xml.Serialization;
 
 namespace Explorer.Tours.Core.Mappers;
 
@@ -35,6 +36,21 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
         CreateMap<TourIssueReportDto, TourIssueReport>().ReverseMap();
+
+        CreateMap<ObjectDto, TourObject>()
+                .ForMember(dest => dest.Image, opt => opt.Ignore())
+                .ConstructUsing(src => new TourObject(src.Name, src.Description, Enum.Parse<ObjectCategory>(src.Category)))
+                .ReverseMap()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()));
+
+
+        CreateMap<Image, ObjectImageDto>()
+            .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data))
+            .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
+            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
+
+        
+    
         CreateMap<ClubDto, Club>().ReverseMap();
         CreateMap<ClubInviteDTO,ClubInvite>().ReverseMap();
     }

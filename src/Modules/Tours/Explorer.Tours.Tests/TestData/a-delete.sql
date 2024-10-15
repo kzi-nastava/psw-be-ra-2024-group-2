@@ -1,6 +1,7 @@
 ﻿DELETE FROM tours."ClubInvites";
 DELETE FROM tours."EquipmentTour";
 DELETE FROM tours."TourReview";
+DELETE FROM tours."Objects";
 DELETE FROM tours."TourIssueReports";
 DELETE FROM tours."CheckpointTour";
 DELETE FROM tours."Tours";
