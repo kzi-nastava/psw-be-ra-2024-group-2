@@ -15,6 +15,11 @@ using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
+using AutoMapper
+using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Public.Tourist;
+using Explorer.Tours.Core.Domain;
 
 namespace Explorer.Tours.Core.UseCases.Tourist
 {
@@ -129,5 +134,6 @@ namespace Explorer.Tours.Core.UseCases.Tourist
 
             return new PagedResult<ClubDto>(filteredClubs, filteredClubs.Count());
         }
+        public ClubService(ICrudRepository<Club> crudRepository, IMapper mapper) : base(crudRepository, mapper) { }
     }
 }

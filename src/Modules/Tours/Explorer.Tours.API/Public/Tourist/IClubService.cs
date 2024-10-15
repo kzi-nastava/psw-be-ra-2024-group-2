@@ -14,5 +14,7 @@ namespace Explorer.Tours.API.Public.Tourist
         Result<ClubDto> Create(int userId, ClubDto club);
         Result<ClubDto> Update(int id, ClubDto club);
         PagedResult<ClubDto> GetAll();
+        Result<ClubDto> Create(ClubDto club);
+        Result<ClubDto> Update(ClubDto club);
     }
 }
