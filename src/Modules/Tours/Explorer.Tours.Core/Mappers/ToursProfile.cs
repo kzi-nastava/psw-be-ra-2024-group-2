@@ -18,8 +18,8 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude))
             .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image));
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
+            //.ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image));
 
         CreateMap<TourReview, TourReviewDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))

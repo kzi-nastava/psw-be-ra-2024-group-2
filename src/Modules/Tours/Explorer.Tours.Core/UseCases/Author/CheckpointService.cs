@@ -58,7 +58,7 @@ namespace Explorer.Tours.Core.UseCases.Author
                 checkpoint.Longitude = dto.Longitude;
 
                 // Create the image and save it
-                if (dto.Image != null && !_imageRepository.Exists(dto.Image.Data))
+                /*if (dto.Image != null && !_imageRepository.Exists(dto.Image.Data))
                 {
                     // If the profile has an image, create a new image object with the data from the profile
                     var newImage = new Image(
@@ -82,7 +82,7 @@ namespace Explorer.Tours.Core.UseCases.Author
                     // Update the person with the existing image
                     checkpoint.ImageId = image.Id;
                     checkpoint.Image = image;
-                }
+                }*/
 
                 /*if(_checkpointRepository.Create(checkpoint) == null)
                 {

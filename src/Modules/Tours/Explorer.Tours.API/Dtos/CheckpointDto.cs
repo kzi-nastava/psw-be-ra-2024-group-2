@@ -13,6 +13,7 @@ namespace Explorer.Tours.API.Dtos
         public double Longitude { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public TourImageDto Image { get; set; }
+
+        //public TourImageDto Image { get; set; }
     }
 }
