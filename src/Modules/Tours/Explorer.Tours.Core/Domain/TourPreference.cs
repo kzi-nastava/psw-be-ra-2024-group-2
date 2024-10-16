@@ -10,7 +10,7 @@ using System.Reflection.Metadata;
 
 namespace Explorer.Tours.Core.Domain
 {
-    public class TourPreferences : Entity
+    public class TourPreference : Entity
     {
         public long TouristId { get; private set; }
         public DifficultyLevel Difficulty { get; private set; }
@@ -20,7 +20,7 @@ namespace Explorer.Tours.Core.Domain
         public int BoatRating { get; private set; }
         public List<Tag>? Tags { get; private set; }
 
-        public TourPreferences(long touristId, DifficultyLevel difficulty, int walkRating, int bicycleRating, int carRating, int boatRating, List<Tag>? tags)
+        public TourPreference(long touristId, DifficultyLevel difficulty, int walkRating, int bicycleRating, int carRating, int boatRating, List<Tag>? tags)
         {
             if (!IsRatingValid(walkRating))
                 throw new ArgumentOutOfRangeException(nameof(walkRating), "rating must be between 0 and 3.");

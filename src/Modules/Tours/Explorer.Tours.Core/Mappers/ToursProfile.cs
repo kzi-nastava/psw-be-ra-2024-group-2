@@ -53,6 +53,7 @@ public class ToursProfile : Profile
     
         CreateMap<ClubDto, Club>().ReverseMap();
         CreateMap<ClubInviteDTO,ClubInvite>().ReverseMap();
+        CreateMap<TourPreferenceDto, TourPreference>().ReverseMap();
     }
    
     
