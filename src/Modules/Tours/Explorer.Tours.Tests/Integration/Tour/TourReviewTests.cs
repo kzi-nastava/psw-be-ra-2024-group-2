@@ -144,7 +144,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
 
         private static TourReviewController CreateController(IServiceScope scope, string number)
         {
-            return new TourReviewController(scope.ServiceProvider.GetRequiredService<ITourReviewService>())
+            return new TourReviewController(scope.ServiceProvider.GetRequiredService<ITourReviewService>(), scope.ServiceProvider.GetRequiredService<ITourService>())
             {
                 ControllerContext = new ControllerContext
                 {
