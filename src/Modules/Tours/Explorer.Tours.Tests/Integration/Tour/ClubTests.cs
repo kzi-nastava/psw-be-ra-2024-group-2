@@ -65,7 +65,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
             };
 
             // Act
-            var result = ((ObjectResult)controller.Update(1,updateEntity).Result)?.Value as ClubDto;
+            var result = ((ObjectResult)controller.Update(-1, updateEntity).Result)?.Value as ClubDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -73,7 +73,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
             result.Description.ShouldBe(updateEntity.Description);
             result.ImageId.ShouldBe(updateEntity.ImageId);
             result.OwnerId.ShouldBe(updateEntity.OwnerId);
-            
+
             // Assert - Database
             var storedEntity = dbContext.Clubs.FirstOrDefault(i => i.Name == "Beograd");
             storedEntity.ShouldNotBeNull();
@@ -91,7 +91,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
             var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
             var invalidEntity = new ClubDto()
             {
-                Name = "", 
+                Name = "",
                 Description = "",
                 ImageId = 1,
                 OwnerId = 1
@@ -120,7 +120,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
             };
 
             // Act
-            var result = (ObjectResult)controller.Update(1, invalidEntity).Result;
+            var result = (ObjectResult)controller.Update(-1, invalidEntity).Result;
 
             // Assert
             result.StatusCode.ShouldBe(400);
