@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using FluentResults;
 
@@ -10,4 +11,7 @@ public interface IEquipmentService
     Result<EquipmentDto> Create(EquipmentDto equipment);
     Result<EquipmentDto> Update(EquipmentDto equipment);
     Result Delete(int id);
+    Result AddEquipmentToTourist(int touristId, int equipmentId);
+    Result RemoveEquipmentFromTourist(int touristId, int equipmentId);
+
 }

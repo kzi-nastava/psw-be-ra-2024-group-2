@@ -1,7 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-
 namespace Explorer.Stakeholders.Core.Domain;
-
 public class User : Entity
 {
     public string Username { get; set; }

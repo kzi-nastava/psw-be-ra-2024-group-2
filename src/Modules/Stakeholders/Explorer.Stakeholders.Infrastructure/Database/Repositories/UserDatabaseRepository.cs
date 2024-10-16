@@ -42,4 +42,9 @@ public class UserDatabaseRepository : IUserRepository
         _dbContext.SaveChanges();
         return user;
     }
+
+    public User? GetById(long id) 
+    {
+        return _dbContext.Users.FirstOrDefault(user => user.Id == id);
+    }
 }
