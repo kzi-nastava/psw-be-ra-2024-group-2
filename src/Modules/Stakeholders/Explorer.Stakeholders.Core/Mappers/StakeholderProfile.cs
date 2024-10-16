@@ -23,6 +23,11 @@ public class StakeholderProfile : Profile
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
 
+
+        CreateMap<RatingApplicationDto, RatingApplication>().ReverseMap();
+
+
+
         CreateMap<Person, AccountDto>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
