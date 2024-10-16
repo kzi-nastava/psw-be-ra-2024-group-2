@@ -1,4 +1,7 @@
-﻿using Explorer.Stakeholders.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Microsoft.AspNetCore.Authorization;
@@ -11,9 +14,11 @@ namespace Explorer.API.Controllers.Tourist
     public class ClubInviteController: BaseApiController
     {
         private readonly IClubInviteService _clubInviteService;
-        public ClubInviteController(IClubInviteService tourService)
+        private readonly IAccountService _accountService;
+        public ClubInviteController(IClubInviteService tourService, IAccountService accountService)
         {
             _clubInviteService = tourService;
+            _accountService = accountService;
         }
 
         [HttpPut("invite")]
@@ -23,11 +28,22 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-
-        [HttpPut("remove")]
+        [HttpDelete("remove")]
         public ActionResult<ClubInviteDTO> RemoveTourist([FromBody] ClubInviteDTO dto)
         {
             var result = _clubInviteService.Remove(dto);
+            return CreateResponse(result);
+        }
+        [HttpGet("getClubInvites")]
+        public ActionResult<PagedResult<ClubInviteDTO>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _clubInviteService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }
+        [HttpGet("getTourists")]
+        public ActionResult<PagedResult<AccountDto>> GetAllTourists([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _accountService.GetPagedTourists(page, pageSize);
             return CreateResponse(result);
         }
     }

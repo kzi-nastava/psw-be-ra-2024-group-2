@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
@@ -45,6 +46,13 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
             _crudClubInviteRepository.Delete(clubInvite.Id);
             return Result.Ok(dto);
+        }
+
+
+        public Result<PagedResult<ClubInviteDTO>> GetPaged(int page, int pageSize)
+        {
+            var accounts = _clubInviteRepository.GetPaged(page, pageSize);
+            return MapToDto(accounts);
         }
     }
 }
