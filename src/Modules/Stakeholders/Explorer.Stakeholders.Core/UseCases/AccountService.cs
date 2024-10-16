@@ -37,7 +37,7 @@ public class AccountService : CrudService<AccountDto, Person>, IAccountService
             .ToList();
         var mappedResults = filteredResults.Select(person => new AccountDto
         {
-            Id = person.Id,
+            UserId = person.UserId,
             Username = person.User.Username,
             Email = person.Email,
             Role = (int)person.User.Role,
