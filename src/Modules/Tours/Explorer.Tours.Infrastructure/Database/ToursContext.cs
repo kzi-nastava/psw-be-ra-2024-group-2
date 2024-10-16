@@ -35,7 +35,5 @@ public class ToursContext : DbContext
             .WithOne()
             .HasForeignKey<TourReview>(s => s.ImageId)
             .OnDelete(DeleteBehavior.SetNull);
-
-
     }
 }
