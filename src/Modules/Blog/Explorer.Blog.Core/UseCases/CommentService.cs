@@ -86,5 +86,14 @@ namespace Explorer.Blog.Core.UseCases
             var filteredComments = comments.Where(c => c.BlogId == blogId);
             return Result.Ok(mapper.Map<IEnumerable<CommentDTO>>(filteredComments));
         }
+        public Result<PagedResult<CommentDTO>> GetPaged(int page, int pageSize)
+        {
+            var pagedComments = repository.GetPaged(page, pageSize);
+            var mappedComments = mapper.Map<List<CommentDTO>>(pagedComments.Results);
+            var result = new PagedResult<CommentDTO>(mappedComments, pagedComments.TotalCount);
+
+            return Result.Ok(result);
+        }
+
     }
 }

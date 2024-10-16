@@ -1,6 +1,7 @@
 ﻿using Explorer.Blog.API.Dtos;
 using FluentResults;
 using System.Collections.Generic;
+using Explorer.BuildingBlocks.Core.UseCases;
 
 namespace Explorer.Blog.API.Public
 {
@@ -11,5 +12,6 @@ namespace Explorer.Blog.API.Public
         Result Delete(long id, long userId);
         Result<CommentDTO> GetById(long commentId);
         Result<IEnumerable<CommentDTO>> GetByBlogId(long blogId);
+        Result<PagedResult<CommentDTO>> GetPaged(int page, int pageSize);
     }
 }

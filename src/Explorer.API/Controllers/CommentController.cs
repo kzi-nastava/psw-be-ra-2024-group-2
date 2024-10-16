@@ -32,6 +32,13 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
+        [HttpGet]
+        public ActionResult<PagedResult<CommentDTO>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _commentService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }
+
         [HttpPost]
         public ActionResult<CommentDTO> Create([FromBody] CommentDTO comment)
         {
