@@ -14,6 +14,7 @@ public interface ITourService
         Result<TourDto> UpdateTour(TourDto tourDto, long userId);
         Result<TourDto> CreateTour(TourDto dto, int userId);
         PagedResult<TourDto> GetAllByUserId(int userId);
+        Result<TourDto> GetById(long tourId);
         Result<PagedResult<TourDto>> GetPaged(int page, int pageSize);
 
 
