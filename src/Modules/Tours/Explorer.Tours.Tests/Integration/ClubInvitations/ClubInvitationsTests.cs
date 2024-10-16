@@ -1,5 +1,6 @@
 ﻿using Explorer.API.Controllers.Author;
 using Explorer.API.Controllers.Tourist;
+using Explorer.Stakeholders.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Infrastructure.Database;
@@ -137,7 +138,7 @@ public class ClubInvitationsTests: BaseToursIntegrationTest
 
     private static ClubInviteController CreateController(IServiceScope scope, string number)
     {
-        return new ClubInviteController(scope.ServiceProvider.GetRequiredService<IClubInviteService>())
+        return new ClubInviteController(scope.ServiceProvider.GetRequiredService<IClubInviteService>(),scope.ServiceProvider.GetRequiredService<IAccountService>())
         {
             ControllerContext = new ControllerContext
             {
