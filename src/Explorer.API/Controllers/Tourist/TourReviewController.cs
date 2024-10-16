@@ -13,12 +13,12 @@ namespace Explorer.API.Controllers.Tourist
     public class TourReviewController : BaseApiController
     {
         private readonly ITourReviewService _tourReviewService;
-        private readonly ITourService _tourService;
+        //private readonly ITourService _tourService;
 
-        public TourReviewController(ITourReviewService tourReviewService, ITourService tourService)
+        public TourReviewController(ITourReviewService tourReviewService)
         {
             _tourReviewService = tourReviewService;
-            _tourService = tourService;
+            //_tourService = tourService;
         }
 
         [HttpPost]
@@ -35,12 +35,12 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [HttpGet("get/tours")]
+        /*[HttpGet("get/tours")]
         public ActionResult<PagedResult<TourDto>> GetAllTours()
         {
             var result = _tourService.GetPaged(1, int.MaxValue);
             return CreateResponse(result);
-        }
+        }*/
 
 
     }
