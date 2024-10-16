@@ -12,5 +12,6 @@ namespace Explorer.Tours.API.Public.Tourist
     public interface ITourPreferenceService
     {
         Result<TourPreferenceDto> Create(TourPreferenceDto equipment);
+        Result<TourPreferenceDto> GetByTouristId(long touristId);   
     }
 }

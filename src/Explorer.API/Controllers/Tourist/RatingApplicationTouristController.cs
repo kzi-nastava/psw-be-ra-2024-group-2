@@ -26,8 +26,6 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-
-
         [HttpGet]
         public ActionResult<RatingApplicationDto> Get()
         {

@@ -18,10 +18,12 @@ namespace Explorer.Tours.Core.Domain
         public int BicycleRating { get; private set; }
         public int CarRating { get; private set; }
         public int BoatRating { get; private set; }
-        public List<Tag>? Tags { get; private set; }
+        public List<TourPreferenceTag>? Tags { get; private set; }
 
-        public TourPreference(long touristId, DifficultyLevel difficulty, int walkRating, int bicycleRating, int carRating, int boatRating, List<Tag>? tags)
+        public TourPreference() { }
+        public TourPreference(long touristId, DifficultyLevel difficulty, int walkRating, int bicycleRating, int carRating, int boatRating, List<TourPreferenceTag>? tags)
         {
+            // TODO: Move to validate
             if (!IsRatingValid(walkRating))
                 throw new ArgumentOutOfRangeException(nameof(walkRating), "rating must be between 0 and 3.");
             if (!IsRatingValid(bicycleRating))
@@ -38,6 +40,14 @@ namespace Explorer.Tours.Core.Domain
             CarRating = carRating;
             BoatRating = boatRating;
             Tags = tags;
+
+            Validate();
+        }
+
+        private void Validate()
+        {
+            // TODO: Implement validation
+            throw new NotImplementedException();
         }
 
         private bool IsRatingValid(int rating)
@@ -51,13 +61,5 @@ namespace Explorer.Tours.Core.Domain
         Easy,
         Moderate,
         Hard
-    }
-    public enum Tag
-    {
-        Adventure,
-        Relaxation,
-        Historical,
-        Cultural,
-        Nature
     }
 }

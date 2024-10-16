@@ -50,10 +50,14 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
 
         
-    
         CreateMap<ClubDto, Club>().ReverseMap();
         CreateMap<ClubInviteDTO,ClubInvite>().ReverseMap();
-        CreateMap<TourPreferenceDto, TourPreference>().ReverseMap();
+
+        CreateMap<TourPreference, TourPreferenceDto>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.Name)));
+
+        CreateMap<TourPreferenceDto, TourPreference>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TourPreferenceTag(t))));
     }
    
     

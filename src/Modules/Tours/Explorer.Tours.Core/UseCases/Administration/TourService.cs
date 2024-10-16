@@ -57,7 +57,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
             if (dto.UserId != userId)
                 return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add equipment to this tour");
 
-            Tour tour = new Tour(dto.UserId, dto.Name, dto.Description, (TourDifficulty)dto.Difficulty,(TourTag)dto.Tag,(TourStatus)dto.Status,dto.Price);
+            Tour tour = new Tour(dto.UserId, dto.Name, dto.Description, (TourDifficulty)dto.Difficulty, (TourTag)dto.Tag,(TourStatus)dto.Status,dto.Price);
             Validate(dto);
             var result = _tourRepository.Create(tour);
             return MapToDto(result);
