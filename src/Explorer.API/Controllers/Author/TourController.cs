@@ -13,10 +13,11 @@ namespace Explorer.API.Controllers.Author
     public class TourController : BaseApiController
     {
         private readonly ITourService _tourService;
-        
-        public TourController(ITourService tourService)
+        private readonly IEquipmentService _equipmentService;
+        public TourController(ITourService tourService, IEquipmentService equipmentService)
         {
             _tourService = tourService;
+            _equipmentService = equipmentService;
         }
 
         [HttpPut("equipment")]
@@ -33,7 +34,6 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(allTours.ToResult());
         }
 
-
         [HttpPost]
         public ActionResult<TourDto> Create([FromBody] TourDto dto)
         {
@@ -43,5 +43,12 @@ namespace Explorer.API.Controllers.Author
         }
 
 
+
+        [HttpGet("equipment/getAll")]
+        public ActionResult<PagedResult<EquipmentDto>> GetAll()
+        {
+            var result = _equipmentService.GetPaged(1, int.MaxValue);
+            return CreateResponse(result);
+        }
     }
 }
