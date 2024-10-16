@@ -28,10 +28,10 @@ namespace Explorer.API.Controllers.Administrator
             return CreateResponse(result);
         }
 
-        [HttpPut("block/{id:long}")]
-        public ActionResult<AccountDto> Block(long id)
+        [HttpPut("block")]
+        public ActionResult<AccountDto> Block([FromBody] AccountDto account)
         {
-            var updatedProfile = _accountService.Block(id);
+            var updatedProfile = _accountService.Block(account.UserId);
             return CreateResponse(updatedProfile);
         }
     }

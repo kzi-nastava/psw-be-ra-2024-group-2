@@ -29,6 +29,7 @@ public class StakeholderProfile : Profile
 
 
         CreateMap<Person, AccountDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => (int)src.User.Role))

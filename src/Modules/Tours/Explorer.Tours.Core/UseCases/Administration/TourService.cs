@@ -80,5 +80,19 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
             return new PagedResult<TourDto>(filteredTours, filteredTours.Count());
         }
+
+        public Result<TourDto> GetById(long tourId)
+        {
+            try
+            {
+                var tour = _tourRepository.Get(tourId);
+                return MapToDto(tour);
+            }
+            catch(KeyNotFoundException ex) {
+                return Result.Fail(FailureCode.NotFound).WithError(ex.Message);
+            }
+        }
+
+
     }
 }
