@@ -1,4 +1,5 @@
-﻿using Explorer.Stakeholders.Infrastructure.Authentication;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Infrastructure.Authentication;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.UseCases.Administration;
@@ -15,6 +16,13 @@ namespace Explorer.API.Controllers.Author
         public ObjectController(IObjectService objectService)
         {
             _objectService = objectService;
+        }
+
+        [HttpGet]
+        public ActionResult<PagedResult<ObjectDto>> GetAll()
+        {
+            var allObjects = _objectService.GetAll();
+            return allObjects;
         }
 
         [HttpPost]

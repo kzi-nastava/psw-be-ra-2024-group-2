@@ -4,6 +4,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,17 @@ namespace Explorer.Tours.Core.UseCases.Administration
             _imageRepository = imageRepository;
         }
 
+        public PagedResult<ObjectDto> GetAll()
+        {
+            var allObjects = _objectRepository.GetPaged(1, int.MaxValue);
+
+
+            var objects = allObjects.Results
+                               .Select(obj => MapToDto(obj))
+                               .ToList();
+
+            return new PagedResult<ObjectDto>(objects, objects.Count());
+        }
         public Result<ObjectDto> Create(ObjectDto dto)
         {
             try
