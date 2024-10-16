@@ -41,6 +41,7 @@ namespace Explorer.API.Controllers.Author
             var addedTour = _tourService.CreateTour(dto,User.UserId());
             return CreateResponse(addedTour);
         }
-       
+
+
     }
 }
