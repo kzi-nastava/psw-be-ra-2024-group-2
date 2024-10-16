@@ -29,6 +29,24 @@ public class AccountService : CrudService<AccountDto, Person>, IAccountService
         _userRepository = userRepository;
         _transactionRepository = transactionRepository;
     }
+    public Result<PagedResult<AccountDto>> GetPagedTourists(int page, int pageSize)
+    {
+        var pagedResult = _personRepository.GetPaged(page, pageSize);
+        var filteredResults = pagedResult.Results
+            .Where(t => t.User.Role == UserRole.Tourist)
+            .ToList();
+        var mappedResults = filteredResults.Select(person => new AccountDto
+        {
+            Id = person.Id,
+            Username = person.User.Username,
+            Email = person.Email,
+            Role = (int)person.User.Role,
+            IsBlocked = person.User.IsBlocked
+        }).ToList();
+        var filteredPagedResult = new PagedResult<AccountDto>(mappedResults, pagedResult.TotalCount);
+
+        return Result.Ok(filteredPagedResult);
+    }
 
     public Result<PagedResult<AccountDto>> GetPaged(int page, int pageSize)
     {
