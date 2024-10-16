@@ -42,6 +42,8 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(addedTour);
         }
 
+
+
         [HttpGet("equipment/getAll")]
         public ActionResult<PagedResult<EquipmentDto>> GetAll()
         {
