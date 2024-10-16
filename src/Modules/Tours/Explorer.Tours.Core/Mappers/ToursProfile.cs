@@ -36,12 +36,6 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
         CreateMap<TourIssueReportDto, TourIssueReport>().ReverseMap();
-        CreateMap<EquipmentDto, Equipment>().ReverseMap();
-        CreateMap<ClubDto, Club>()
-            .ForMember(dest => dest.ImageId, opt => opt.MapFrom(src => src.ImageId))
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
-        CreateMap<ClubDto, Club>().ReverseMap();
 
         CreateMap<ObjectDto, TourObject>()
                 .ForMember(dest => dest.Image, opt => opt.Ignore())
@@ -49,11 +43,15 @@ public class ToursProfile : Profile
                 .ReverseMap()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()));
 
+
         CreateMap<Image, ObjectImageDto>()
             .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data))
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
-            
+
+        
+    
+        CreateMap<ClubDto, Club>().ReverseMap();
         CreateMap<ClubInviteDTO,ClubInvite>().ReverseMap();
     }
    
