@@ -19,7 +19,10 @@ public class TourPreferenceTag : Entity
 
     private void Validate()
     {
-        // TODO: Implement validation
-        throw new NotImplementedException();
+        if (Name != "Adventure" && Name != "Relaxation" && Name != "Historical" &&
+            Name != "Cultural" && Name != "Nature")
+        {
+            throw new ArgumentException($"Invalid name: {Name}. Allowed values are Adventure, Relaxation, Historical, Cultural, and Nature.");
+        }
     }
 }

@@ -23,16 +23,7 @@ namespace Explorer.Tours.Core.Domain
         public TourPreference() { }
         public TourPreference(long touristId, DifficultyLevel difficulty, int walkRating, int bicycleRating, int carRating, int boatRating, List<TourPreferenceTag>? tags)
         {
-            // TODO: Move to validate
-            if (!IsRatingValid(walkRating))
-                throw new ArgumentOutOfRangeException(nameof(walkRating), "rating must be between 0 and 3.");
-            if (!IsRatingValid(bicycleRating))
-                throw new ArgumentOutOfRangeException(nameof(bicycleRating), "rating must be between 0 and 3.");
-            if (!IsRatingValid(carRating))
-                throw new ArgumentOutOfRangeException(nameof(carRating), "rating must be between 0 and 3.");
-            if (!IsRatingValid(boatRating))
-                throw new ArgumentOutOfRangeException(nameof(boatRating), "rating must be between 0 and 3.");
-
+            Validate(walkRating, bicycleRating, carRating, boatRating, difficulty);
             TouristId = touristId;
             Difficulty = difficulty;
             WalkRating = walkRating;
@@ -40,19 +31,31 @@ namespace Explorer.Tours.Core.Domain
             CarRating = carRating;
             BoatRating = boatRating;
             Tags = tags;
-
-            Validate();
         }
 
-        private void Validate()
+        private void Validate(int walk, int bicycle, int car, int boat, DifficultyLevel difficultyLevel)
         {
-            // TODO: Implement validation
-            throw new NotImplementedException();
+            if (!IsRatingValid(walk))
+                throw new ArgumentOutOfRangeException(nameof(walk), "rating must be between 0 and 3.");
+            if (!IsRatingValid(bicycle))
+                throw new ArgumentOutOfRangeException(nameof(bicycle), "rating must be between 0 and 3.");
+            if (!IsRatingValid(car))
+                throw new ArgumentOutOfRangeException(nameof(car), "rating must be between 0 and 3.");
+            if (!IsRatingValid(boat))
+                throw new ArgumentOutOfRangeException(nameof(boat), "rating must be between 0 and 3.");
+            if (!IsDifficultyValid(difficultyLevel))
+                throw new ArgumentOutOfRangeException(nameof(difficultyLevel), "Invalid difficulty level.");
         }
 
         private bool IsRatingValid(int rating)
         {
             return rating >= 0 && rating <= 3;
+        }
+        private bool IsDifficultyValid(DifficultyLevel difficulty)
+        {
+            return difficulty == DifficultyLevel.Easy ||
+                   difficulty == DifficultyLevel.Moderate ||
+                   difficulty == DifficultyLevel.Hard;
         }
     }
 
