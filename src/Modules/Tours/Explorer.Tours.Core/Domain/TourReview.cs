@@ -25,12 +25,12 @@ namespace Explorer.Tours.Core.Domain
 
         public Image? Image { get; set; }
 
-        public DateOnly ReviewDate { get; set; }
+        public DateTime ReviewDate { get; set; }
 
-        public DateOnly VisitDate { get; set; }
+        public DateTime VisitDate { get; set; }
 
 
-        public TourReview(int grade, string comment, long userId, long tourId, DateOnly reviewDate, DateOnly visitDate, long imageId)
+        public TourReview(int grade, string comment, long userId, long tourId, DateTime reviewDate, DateTime visitDate, long imageId)
         {
             Grade = grade;
             Comment = comment;
@@ -42,7 +42,7 @@ namespace Explorer.Tours.Core.Domain
             Validate();
         }
 
-        public TourReview(int grade, string comment, long userId, long tourId, DateOnly reviewDate, DateOnly visitDate)
+        public TourReview(int grade, string comment, long userId, long tourId, DateTime reviewDate, DateTime visitDate)
         {
             Grade = grade;
             Comment = comment;

@@ -42,8 +42,8 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 },
-                ReviewDate = DateOnly.MinValue,
-                VisitDate = DateOnly.MinValue,
+                ReviewDate = DateTime.MinValue,
+                VisitDate = DateTime.MinValue,
 
             };
 
@@ -83,8 +83,8 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 },
-                ReviewDate = DateOnly.MinValue,
-                VisitDate = DateOnly.MinValue,
+                ReviewDate = DateTime.MinValue,
+                VisitDate = DateTime.MinValue,
 
             };
 
@@ -114,8 +114,8 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 },
-                ReviewDate = DateOnly.MinValue,
-                VisitDate = DateOnly.MinValue,
+                ReviewDate = DateTime.MinValue,
+                VisitDate = DateTime.MinValue,
 
             };
            

@@ -66,8 +66,8 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 review.Comment = dto.Comment;
                 review.UserId = dto.UserId;
                 review.TourId = dto.TourId;
-                review.ReviewDate = dto.ReviewDate;
-                review.VisitDate = dto.VisitDate;
+                review.ReviewDate = DateTime.SpecifyKind(dto.ReviewDate, DateTimeKind.Utc); // Ensure UTC
+                review.VisitDate = DateTime.SpecifyKind(dto.VisitDate, DateTimeKind.Utc);   // Ensure UTC
 
                 // Create the image and save it
                 if (dto.Image != null && !_imageRepository.Exists(dto.Image.Data))
