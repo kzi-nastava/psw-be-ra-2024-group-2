@@ -66,6 +66,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
                     tourObject.ImageId = image.Id;
                     tourObject.Image = image;
                 }
+                // DODATO SAMO RADI TESTIRANJA BACKENDA PROMIJENICE SE INTEGRACIJOM MAPE
 
                 _objectRepository.Create(tourObject);
                 return MapToDto(tourObject);

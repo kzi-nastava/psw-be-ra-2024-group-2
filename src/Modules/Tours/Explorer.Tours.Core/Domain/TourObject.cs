@@ -18,27 +18,27 @@ namespace Explorer.Tours.Core.Domain
         public long? ImageId { get;  set; }
         public Image? Image { get;  set; }
 
-    public TourObject(string name, string description, ObjectCategory category, long imageId)
+        public double Longitude { get; private set; } //postaviti setere na private
+        public double Latitude { get; private set; }
+
+    public TourObject(string name, string description, ObjectCategory category, long imageId, double lng, double lat)
         {   
             Name = name;
             Description = description;
             Category = category;
             ImageId = imageId;
+            Longitude = lng;
+            Latitude = lat;
             Validate();
         }
 
-    public TourObject(string name, string description, ObjectCategory category)
+    public TourObject(string name, string description, ObjectCategory category, double longitude, double latitude)
         {
             Name = name;
             Description = description;
             Category = category;
-            Validate();
-        }
-        public TourObject(string name, string description, string category)
-        {
-            Name = name;
-            Description = description;
-            Category = GetObjectCategoryDenormalized(category);
+            Longitude = longitude;
+            Latitude = latitude;
             Validate();
         }
 
@@ -62,6 +62,8 @@ namespace Explorer.Tours.Core.Domain
         {
             if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name.");
             if (!Enum.IsDefined(typeof(ObjectCategory), Category)) throw new ArgumentException("Invalid object category.");
+            if (double.IsNaN(Longitude)) throw new ArgumentException("Invalid location.");
+            if (double.IsNaN(Latitude)) throw new ArgumentException("Invalid location");
         }
 
         

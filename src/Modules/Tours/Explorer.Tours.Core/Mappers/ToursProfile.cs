@@ -39,7 +39,7 @@ public class ToursProfile : Profile
 
         CreateMap<ObjectDto, TourObject>()
                 .ForMember(dest => dest.Image, opt => opt.Ignore())
-                .ConstructUsing(src => new TourObject(src.Name, src.Description, Enum.Parse<ObjectCategory>(src.Category)))
+                .ConstructUsing(src => new TourObject(src.Name, src.Description, Enum.Parse<ObjectCategory>(src.Category), src.Longitude, src.Latitude))
                 .ReverseMap()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()));
 
