@@ -12,6 +12,7 @@ namespace Explorer.Stakeholders.API.Public;
 public interface IAccountService
 {
     Result<PagedResult<AccountDto>> GetPaged(int page, int pageSize);
+    Result<PagedResult<AccountDto>> GetPagedTourists(int page, int pageSize);
     Result<AccountDto> Get(long personId);
     Result<AccountDto> Block(long personId);
 }

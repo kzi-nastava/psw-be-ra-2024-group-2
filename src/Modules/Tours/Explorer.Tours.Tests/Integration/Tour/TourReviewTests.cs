@@ -38,12 +38,12 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 Comment = "string",
                 Image = new TourImageDto
                 {
-                    Data = "new data for this idk",
+                    Data = "new dataas gala",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 },
-                ReviewDate = DateOnly.MinValue,
-                VisitDate = DateOnly.MinValue,
+                ReviewDate = DateTime.MinValue,
+                VisitDate = DateTime.MinValue,
 
             };
 
@@ -83,8 +83,8 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 },
-                ReviewDate = DateOnly.MinValue,
-                VisitDate = DateOnly.MinValue,
+                ReviewDate = DateTime.MinValue,
+                VisitDate = DateTime.MinValue,
 
             };
 
@@ -114,8 +114,8 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 },
-                ReviewDate = DateOnly.MinValue,
-                VisitDate = DateOnly.MinValue,
+                ReviewDate = DateTime.MinValue,
+                VisitDate = DateTime.MinValue,
 
             };
            
@@ -144,7 +144,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
 
         private static TourReviewController CreateController(IServiceScope scope, string number)
         {
-            return new TourReviewController(scope.ServiceProvider.GetRequiredService<ITourReviewService>())
+            return new TourReviewController(scope.ServiceProvider.GetRequiredService<ITourReviewService>(), scope.ServiceProvider.GetRequiredService<ITourService>())
             {
                 ControllerContext = new ControllerContext
                 {

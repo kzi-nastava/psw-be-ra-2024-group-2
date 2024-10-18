@@ -26,11 +26,11 @@ namespace Explorer.Tours.Core.UseCases.Administration
             _equipmentRepository = equipmentRepository;
         }
 
-       public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
-{
-           try
-           {
-                if(tourDto.UserId != userId)
+        public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
+        {
+            try
+            {
+                if (tourDto.UserId != userId)
                     return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add equipment to this tour");
 
                 Tour tour = _tourRepository.Get(tourDto.Id);
@@ -54,10 +54,9 @@ namespace Explorer.Tours.Core.UseCases.Administration
         public Result<TourDto> CreateTour(TourDto dto, int userId)
         {
 
-            if (dto.UserId != userId)
-                return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add equipment to this tour");
+            dto.UserId = userId;
 
-            Tour tour = new Tour(dto.UserId, dto.Name, dto.Description, (TourDifficulty)dto.Difficulty,(TourTag)dto.Tag,(TourStatus)dto.Status,dto.Price);
+            Tour tour = new Tour(dto.UserId, dto.Name, dto.Description, (TourDifficulty)dto.Difficulty, (TourTag)dto.Tag, (TourStatus)dto.Status, dto.Price);
             Validate(dto);
             var result = _tourRepository.Create(tour);
             return MapToDto(result);
@@ -65,10 +64,10 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         private void Validate(TourDto dto)
         {
-
             if (dto.Price != 0) throw new ArgumentException("Price must be 0");
             if (dto.Status != TourDto.TourStatus.Draft) throw new ArgumentException("Invalid Status");
         }
+
         public PagedResult<TourDto> GetAllByUserId(int userId)
         {
             var allTours = _tourRepository.GetPaged(1, int.MaxValue);
@@ -81,5 +80,37 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
             return new PagedResult<TourDto>(filteredTours, filteredTours.Count());
         }
+
+        public Result<TourDto> GetById(long tourId)
+        {
+            try
+            {
+                var tour = _tourRepository.Get(tourId);
+                return MapToDto(tour);
+            }
+            catch(KeyNotFoundException ex) {
+                return Result.Fail(FailureCode.NotFound).WithError(ex.Message);
+            }
+        }
+
+
+
+        public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
+        {
+            var pagedResult = base.GetPaged(page, pageSize);
+
+            if (pagedResult.IsFailed)
+            {
+                return Result.Fail(pagedResult.Errors);
+            }
+
+            var filteredReviews = pagedResult.Value.Results;
+
+
+            // Step 2: Return the paged result directly without filtering
+            return Result.Ok(pagedResult.Value);
+
+        }
+
     }
 }

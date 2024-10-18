@@ -25,7 +25,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
 
         private static TourIssueReportController CreateController(IServiceScope scope, string userId)
         {
-            return new TourIssueReportController(scope.ServiceProvider.GetRequiredService<ITourIssueReportService>())
+            return new TourIssueReportController(scope.ServiceProvider.GetRequiredService<ITourIssueReportService>(), scope.ServiceProvider.GetRequiredService<ITourService>())
             {
                 ControllerContext = new ControllerContext
                 {
@@ -41,7 +41,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
         }
         private static TourIssueReportReviewController CreateControllerReview(IServiceScope scope, string number)
         {
-            return new TourIssueReportReviewController(scope.ServiceProvider.GetRequiredService<ITourIssueReportService>())
+            return new TourIssueReportReviewController(scope.ServiceProvider.GetRequiredService<ITourIssueReportService>(), scope.ServiceProvider.GetRequiredService<ITourService>())
             {
                 ControllerContext = new ControllerContext
                 {

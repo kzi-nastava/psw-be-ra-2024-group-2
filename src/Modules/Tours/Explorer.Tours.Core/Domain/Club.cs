@@ -14,7 +14,6 @@ namespace Explorer.Tours.Core.Domain
         public string? Description { get; set; }
         public int? ImageId { get; set; }
         public int OwnerId { get; set; }
-        public List<long> tourists { get; set; } = new List<long>();
         public Club() { }
         public Club(string name, string description, int imageId, int ownerId)
         {

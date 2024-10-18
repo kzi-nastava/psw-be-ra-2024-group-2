@@ -50,6 +50,7 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var updatedEntity = new AccountDto
             {
+                UserId = -11,
                 Username = "autor1@gmail.com",
                 Email = "autor1@gmail.com",
                 Role = 1,
@@ -57,7 +58,7 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             };
 
             // Act
-            var result = ((ObjectResult)controller.Block(-11).Result)?.Value as AccountDto;
+            var result = ((ObjectResult)controller.Block(updatedEntity).Result)?.Value as AccountDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -67,13 +68,11 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             result.IsBlocked.ShouldBe(updatedEntity.IsBlocked);
 
             // Assert - Database
-            var storedEntity = dbContext.Users.FirstOrDefault(i => i.Username == updatedEntity.Username 
-                && i.IsBlocked == updatedEntity.IsBlocked
-                && (int)i.Role == updatedEntity.Role);
+            var storedEntity = dbContext.Users.FirstOrDefault(i => i.Id == updatedEntity.UserId 
+                && i.IsBlocked == updatedEntity.IsBlocked);
             storedEntity.ShouldNotBeNull();
-            var oldEntity = dbContext.Users.FirstOrDefault(i => i.Username == updatedEntity.Username
-                && i.IsBlocked != updatedEntity.IsBlocked
-                && (int)i.Role == updatedEntity.Role);
+            var oldEntity = dbContext.Users.FirstOrDefault(i => i.Id == updatedEntity.UserId
+                && i.IsBlocked != updatedEntity.IsBlocked);
             oldEntity.ShouldBeNull();
         }
 
@@ -82,10 +81,18 @@ namespace Explorer.Stakeholders.Tests.Integration.User
         {
             // Arrange
             using var scope = Factory.Services.CreateScope();
-            var controller = CreateController(scope, "-1");
+            var controller = CreateController(scope, "-1"); 
+            var nonExistentEntity = new AccountDto
+            {
+                UserId = -5,
+                Username = "autor1@gmail.com",
+                Email = "autor1@gmail.com",
+                Role = 1,
+                IsBlocked = true
+            };
 
             // Act
-            var result = ((ObjectResult)controller.Block(-5).Result)?.Value as AccountDto;
+            var result = ((ObjectResult)controller.Block(nonExistentEntity).Result)?.Value as AccountDto;
 
             // Assert
             result.ShouldBeNull();

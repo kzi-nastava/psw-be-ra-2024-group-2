@@ -1,4 +1,5 @@
-﻿using Explorer.Tours.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace Explorer.Tours.API.Public.Administration
     {
         Result<ClubInviteDTO> Invite(ClubInviteDTO dto);
         Result<ClubInviteDTO> Remove(ClubInviteDTO dto);
+        Result<PagedResult<ClubInviteDTO>> GetPaged(int page, int pageSize);
     }
 }
