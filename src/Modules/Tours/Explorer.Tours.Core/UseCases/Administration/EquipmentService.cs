@@ -13,4 +13,6 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
     {
         _equipmentRepository = repository;
     }
+
+
 }

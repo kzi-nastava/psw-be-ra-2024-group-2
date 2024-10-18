@@ -25,7 +25,7 @@ public class StakeholderProfile : Profile
 
 
         CreateMap<RatingApplicationDto, RatingApplication>().ReverseMap();
-
+       
 
 
         CreateMap<Person, AccountDto>()
