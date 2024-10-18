@@ -9,3 +9,5 @@ DELETE FROM tours."Clubs";
 DELETE FROM tours."Equipment";
 DELETE FROM tours."Checkpoints";
 DELETE FROM tours."Images";
+DELETE FROM tours."PreferenceTags";
+DELETE FROM tours."TourPreferences";
