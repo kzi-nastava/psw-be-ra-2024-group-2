@@ -11,17 +11,17 @@ namespace Explorer.Tours.Core.UseCases.Administration;
 public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipmentService
 {
     private readonly ICrudRepository<Equipment> _equipmentRepository;
-    private readonly ICrudRepository<UserEquipment> _userEquipmentRepository;
-    public EquipmentService(ICrudRepository<Equipment> repository,ICrudRepository<UserEquipment> userEquipmentRepository, IMapper mapper) : base(repository, mapper) 
+    private readonly ICrudRepository<TouristEquipment> _touristEquipmentRepository;
+    public EquipmentService(ICrudRepository<Equipment> repository,ICrudRepository<TouristEquipment> touristEquipmentRepository, IMapper mapper) : base(repository, mapper) 
     {
         _equipmentRepository = repository;
-        _userEquipmentRepository = userEquipmentRepository;
+        _touristEquipmentRepository = touristEquipmentRepository;
     }
 
-    public Result AddEquipmentToUser(long userId, long equipmentId)
+    public Result AddEquipmentTourist(long userId, long equipmentId)
     {
         
-        var userEquipmentPagedResult = _userEquipmentRepository.GetPaged(1, int.MaxValue);
+        var userEquipmentPagedResult = _touristEquipmentRepository.GetPaged(1, int.MaxValue);
 
         var exists = userEquipmentPagedResult.Results
             .Any(ue => ue.UserId == userId && ue.EquipmentId == equipmentId);
@@ -31,19 +31,15 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
             return Result.Fail("Equipment already assigned to the user.");
         }
 
-        var userEquipment = new UserEquipment
-        {
-            UserId = userId,
-            EquipmentId = equipmentId
-        };
+        var touristEquipment = new TouristEquipment(userId, equipmentId);
 
-        _userEquipmentRepository.Create(userEquipment);
+        _touristEquipmentRepository.Create(touristEquipment);
         return Result.Ok();
     }
 
-    public Result RemoveEquipmentFromUser(long userId, long equipmentId)
+    public Result RemoveEquipmentFromTourist(long userId, long equipmentId)
     {
-        var userEquipmentPagedResult = _userEquipmentRepository.GetPaged(1, int.MaxValue);
+        var userEquipmentPagedResult = _touristEquipmentRepository.GetPaged(1, int.MaxValue);
 
         var userEquipment = userEquipmentPagedResult.Results
             .FirstOrDefault(ue => ue.UserId == userId && ue.EquipmentId == equipmentId);
@@ -53,7 +49,7 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
             return Result.Fail("Equipment not found for the user.");
         }
 
-        _userEquipmentRepository.Delete(userEquipment.Id);
+        _touristEquipmentRepository.Delete(userEquipment.Id);
         return Result.Ok();
     }
 

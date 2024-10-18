@@ -7,10 +7,15 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.Domain
 {
-    public class UserEquipment: Entity
+    public class TouristEquipment: Entity
     {
         public long UserId;
         public long EquipmentId;
-        public UserEquipment() { }
+      public TouristEquipment() { }
+      public TouristEquipment(long userId, long equipmentId)
+        {
+            UserId = userId;
+            EquipmentId = equipmentId;
+        }
     }
 }
