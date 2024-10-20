@@ -35,12 +35,12 @@ namespace Explorer.Tours.Tests.Integration.Tour
             {
                 Longitude = 10,
                 Latitude = 20,
-                Image = new TourImageDto
+                /*Image = new TourImageDto
                 {
                     Data = "coa testna slika",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/png"
-                },
+                },*/
                 Name = "Trg Nikole Pasica",
                 Description = "Testni opis2"
 
@@ -64,12 +64,12 @@ namespace Explorer.Tours.Tests.Integration.Tour
             {
                 Longitude = 10,
                 Latitude = 20,
-                Image = new TourImageDto
+                /*Image = new TourImageDto
                 {
                     Data = "coa testna slika2",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
-                },
+                },*/
                 Name = "",
                 Description = "Testni opis"
             };

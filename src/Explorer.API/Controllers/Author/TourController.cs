@@ -20,6 +20,13 @@ namespace Explorer.API.Controllers.Author
             _equipmentService = equipmentService;
         }
 
+        [HttpPut("checkpoints")]
+        public ActionResult<TourDto> UpdateCheckpoints([FromBody] TourDto tour)
+        {
+            var result = _tourService.UpdateTourCheckpoints(tour, User.PersonId());
+            return CreateResponse(result);
+        }
+
         [HttpPut("equipment")]
         public ActionResult<TourDto> UpdateEquipment([FromBody] TourDto tour)
         {

@@ -16,7 +16,7 @@ public class TourDto
         public TourTag Tag { get; set; }
         public TourStatus Status { get; set; }
         public double Price { get; set; }
-
+        public List<int> Checkpoints { get; set; } = new List<int>();
         public enum TourStatus
         {
             Draft,
