@@ -83,7 +83,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
             dto.UserId = userId;
 
-            Tour tour = new Tour(dto.UserId, dto.Name, dto.Description, (TourDifficulty)dto.Difficulty, (TourTag)dto.Tag, (TourStatus)dto.Status, dto.Price);
+            Tour tour = new Tour(dto.UserId, dto.Name, dto.Description, (TourDifficulty)dto.Difficulty, (TourTag)dto.Tag,(TourStatus)dto.Status,dto.Price);
             Validate(dto);
             var result = _tourRepository.Create(tour);
             return MapToDto(result);
