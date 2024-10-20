@@ -19,11 +19,13 @@ namespace Explorer.Tours.Core.UseCases.Administration
     {
         private readonly ICrudRepository<Tour> _tourRepository;
         private readonly ICrudRepository<Equipment> _equipmentRepository;
+        private readonly ICrudRepository<Checkpoint> _checkpointRepository;
 
-        public TourService(ICrudRepository<Tour> tourRepository, ICrudRepository<Equipment> equipmentRepository, IMapper mapper) : base(tourRepository, mapper)
+        public TourService(ICrudRepository<Tour> tourRepository, ICrudRepository<Equipment> equipmentRepository, ICrudRepository<Checkpoint> checkpointRepository,IMapper mapper) : base(tourRepository, mapper)
         {
             _tourRepository = tourRepository;
             _equipmentRepository = equipmentRepository;
+            _checkpointRepository = checkpointRepository;
         }
 
         public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
@@ -51,6 +53,31 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 return Result.Fail(FailureCode.NotFound).WithError("Tour or equipment doesn't exist !");
             }
         }
+        public Result<TourDto> UpdateTourCheckpoints(TourDto tourDto, long userId)
+        {
+            try
+            {
+                if (tourDto.UserId != userId)
+                    return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add checkpoints");
+
+                Tour tour = _tourRepository.Get(tourDto.Id);
+
+
+                foreach (var elementId in tourDto.Checkpoints)
+                {
+                    var newCheckpoint = _checkpointRepository.Get(elementId);
+                    tour.Checkpoints.Add(newCheckpoint);
+                }
+
+                _tourRepository.Update(tour);
+                return MapToDto(tour);
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError("Tour or checkpoint doesn't exist !");
+            }
+        }
+
         public Result<TourDto> CreateTour(TourDto dto, int userId)
         {
 
