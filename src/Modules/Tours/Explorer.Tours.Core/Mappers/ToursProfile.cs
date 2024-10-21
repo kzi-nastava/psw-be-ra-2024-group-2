@@ -21,6 +21,7 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image));
+            //.ForMember(dest => dest.Tours, opt => opt.MapFrom(src => src.Tours));
 
         CreateMap<TourReview, TourReviewDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))

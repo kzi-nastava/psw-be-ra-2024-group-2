@@ -34,6 +34,7 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(result);
         }
 
+
         [HttpGet]
         public ActionResult<PagedResult<TourDto>> GetAllByUserId()
         {
@@ -49,7 +50,12 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(addedTour);
         }
 
-
+        [HttpGet("{tourId}")]
+        public ActionResult<TourDto> GetById(long tourId)
+        {
+            var tour = _tourService.GetById(tourId);
+            return CreateResponse(tour);
+        }
 
         [HttpGet("equipment/getAll")]
         public ActionResult<PagedResult<EquipmentDto>> GetAll()

@@ -19,10 +19,13 @@ namespace Explorer.Tours.Core.UseCases.Author
     {
         private readonly IImageRepository _imageRepository;
         private readonly ICrudRepository<Checkpoint> _checkpointRepository;
+        private readonly ICrudRepository<Tour> _tourRepository;
 
-        public CheckpointService(ICrudRepository<Checkpoint> repository, IMapper mapper, IImageRepository imageRepository, ICrudRepository<Checkpoint> checkpointRepository) : base(repository, mapper) {
+        public CheckpointService(ICrudRepository<Checkpoint> repository, IMapper mapper, IImageRepository imageRepository, ICrudRepository<Checkpoint> checkpointRepository, ICrudRepository<Tour> tourRepository) : base(repository, mapper)
+        {
             _imageRepository = imageRepository;
             _checkpointRepository = checkpointRepository;
+            _tourRepository = tourRepository;
         }
 
         public override Result<CheckpointDto> Create(CheckpointDto dto)
@@ -56,6 +59,12 @@ namespace Explorer.Tours.Core.UseCases.Author
                 checkpoint.Name = dto.Name;
                 checkpoint.Description = dto.Description;
                 checkpoint.Longitude = dto.Longitude;
+
+                /*foreach(var elementId in dto.Tours)
+                {
+                    var newTour = _tourRepository.Get(elementId);
+                    checkpoint.Tours.Add(newTour);
+                }*/
 
                 // Create the image and save it
                 if (dto.Image != null && !_imageRepository.Exists(dto.Image.Data))
