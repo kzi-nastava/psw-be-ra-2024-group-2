@@ -11,6 +11,11 @@ using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Stakeholders.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Explorer.Stakeholders.API.Public.Administration;
+using Explorer.Stakeholders.API.Public.Tourist;
+using Explorer.Tours.Core.UseCases.Administration;
+using Explorer.Tours.Core.UseCases.Tourist;
+using Explorer.Tours.Infrastructure.Database.Repositories;
 
 namespace Explorer.Stakeholders.Infrastructure;
 
@@ -32,6 +37,8 @@ public static class StakeholdersStartup
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IRatingApplicationService, RatingApplicationService>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
+        services.AddScoped<IClubInviteService, ClubInviteService>();
+        services.AddScoped<IClubService, ClubService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -39,6 +46,10 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, StakeholdersContext>));
         services.AddScoped(typeof(ITransactionRepository), typeof(TransactionRepository));
+        services.AddScoped(typeof(ICrudRepository<ClubInvite>), typeof(CrudDatabaseRepository<ClubInvite, StakeholdersContext>));
+
+        services.AddScoped<IClubInviteRepository, ClubInviteRepository>();
+        services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<RatingApplication>), typeof(CrudDatabaseRepository<RatingApplication, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IImageRepository, ImageRepository<StakeholdersContext>>();

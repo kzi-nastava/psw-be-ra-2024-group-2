@@ -1,9 +1,9 @@
 ﻿using Explorer.API.Controllers.Author;
 using Explorer.API.Controllers.Tourist;
 using Explorer.Stakeholders.API.Public;
-using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public.Administration;
-using Explorer.Tours.Infrastructure.Database;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public.Administration;
+using Explorer.Stakeholders.Infrastructure.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,19 +15,19 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Tours.Tests.Integration.ClubInvitations;
+namespace Explorer.Stakeholders.Tests.Integration.Clubs;
 
 [Collection("Sequential")]
-public class ClubInvitationsTests: BaseToursIntegrationTest
+public class ClubInvitationsTests : BaseStakeholdersIntegrationTest
 {
-    public ClubInvitationsTests(ToursTestFactory factory) : base(factory) { }
+    public ClubInvitationsTests(StakeholdersTestFactory factory) : base(factory) { }
 
     [Fact]
     public void InviteToClub_successful_invite()
     {
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope, "-1");
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var newEntity = new ClubInviteDTO
         {
             OwnerId = -1,
@@ -59,7 +59,7 @@ public class ClubInvitationsTests: BaseToursIntegrationTest
     {
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope, "-1");
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var newEntity = new ClubInviteDTO
         {
             OwnerId = -1,
@@ -86,7 +86,7 @@ public class ClubInvitationsTests: BaseToursIntegrationTest
     {
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope, "-1");
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var newEntity = new ClubInviteDTO
         {
             OwnerId = -2,
@@ -113,7 +113,7 @@ public class ClubInvitationsTests: BaseToursIntegrationTest
     {
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope, "-1");
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var newEntity = new ClubInviteDTO
         {
             OwnerId = -200,
@@ -138,7 +138,7 @@ public class ClubInvitationsTests: BaseToursIntegrationTest
 
     private static ClubInviteController CreateController(IServiceScope scope, string number)
     {
-        return new ClubInviteController(scope.ServiceProvider.GetRequiredService<IClubInviteService>(),scope.ServiceProvider.GetRequiredService<IAccountService>())
+        return new ClubInviteController(scope.ServiceProvider.GetRequiredService<IClubInviteService>(), scope.ServiceProvider.GetRequiredService<IAccountService>())
         {
             ControllerContext = new ControllerContext
             {

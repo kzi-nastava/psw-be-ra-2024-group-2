@@ -1,11 +1,12 @@
 ﻿using Explorer.Stakeholders.Infrastructure.Authentication;
-using Explorer.Tours.API.Dtos;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
-using Explorer.Tours.Core.Domain;
+using Explorer.Stakeholders.Core.Domain;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Explorer.Stakeholders.API.Public.Tourist;
 
 namespace Explorer.API.Controllers.Tourist
 {

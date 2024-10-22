@@ -1,6 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Infrastructure.Database;
-using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.Infrastructure.Database;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
@@ -10,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Infrastructure.Database.Repositories
 {
-    public class ClubInviteRepository : CrudDatabaseRepository<ClubInvite, ToursContext>, IClubInviteRepository
+    public class ClubInviteRepository : CrudDatabaseRepository<ClubInvite, StakeholdersContext>, IClubInviteRepository
     {
-        public ClubInviteRepository(ToursContext dbContext) : base(dbContext)
+        public ClubInviteRepository(StakeholdersContext dbContext) : base(dbContext)
         {
         }
         public bool Exists(long clubId, long touristId)

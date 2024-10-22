@@ -18,6 +18,15 @@ public class StakeholderProfile : Profile
             .ForMember(dest => dest.Moto, opt => opt.MapFrom(src => src.Moto))
             .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image));
 
+
+        CreateMap<ClubDto, Club>()
+            .ForMember(dest => dest.ImageId, opt => opt.MapFrom(src => src.ImageId))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src => src.OwnerId));
+        CreateMap<ClubDto, Club>().ReverseMap();
+        CreateMap<ClubInviteDTO, ClubInvite>().ReverseMap();
+
         CreateMap<Image, ImageDto>()
             .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data))
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))

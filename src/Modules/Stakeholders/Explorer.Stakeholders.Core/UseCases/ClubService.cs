@@ -7,9 +7,9 @@ using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.Core.UseCases;
-using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public.Tourist;
-using Explorer.Tours.Core.Domain;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public.Tourist;
+using Explorer.Stakeholders.Core.Domain;
 using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases.Tourist

@@ -34,8 +34,6 @@ public static class ToursStartup
         services.AddScoped<ITourService, TourService>();
         services.AddScoped<IObjectService, ObjectService>();
         services.AddScoped<ITourIssueReportService, TourIssueReportService>();
-        services.AddScoped<IClubInviteService, ClubInviteService>();
-        services.AddScoped<IClubService, ClubService>();
 
 
         services.AddScoped<ICheckpointService, CheckpointService>();
@@ -46,9 +44,6 @@ public static class ToursStartup
     {
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<Tour>), typeof(CrudDatabaseRepository<Tour, ToursContext>));
-        services.AddScoped(typeof(ICrudRepository<ClubInvite>), typeof(CrudDatabaseRepository<ClubInvite, ToursContext>));
-
-        services.AddScoped<IClubInviteRepository, ClubInviteRepository>();
         services.AddScoped(typeof(ICrudRepository<Checkpoint>), typeof(CrudDatabaseRepository<Checkpoint, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourReview>), typeof(CrudDatabaseRepository<TourReview, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, ToursContext>));
@@ -56,7 +51,6 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<TourIssueReport>), typeof(CrudDatabaseRepository<TourIssueReport, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourPreference>), typeof(CrudDatabaseRepository<TourPreference, ToursContext>));
 
-        services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, ToursContext>));
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),

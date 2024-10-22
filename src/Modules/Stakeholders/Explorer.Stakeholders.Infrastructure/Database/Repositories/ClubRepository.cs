@@ -5,16 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
-using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.Infrastructure.Database;
 
 namespace Explorer.Tours.Infrastructure.Database.Repositories
 {
     public class ClubRepository : IClubRepository
     {
-        private readonly ToursContext _dbContext;
+        private readonly StakeholdersContext _dbContext;
 
-        public ClubRepository(ToursContext dbContext)
+        public ClubRepository(StakeholdersContext dbContext)
         {
             _dbContext = dbContext;
         }

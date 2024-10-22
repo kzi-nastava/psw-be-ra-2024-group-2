@@ -13,8 +13,6 @@ public class ToursContext : DbContext
     public DbSet<Image> Images { get; set; }
     public DbSet<TourObject> Objects { get; set; }
     public DbSet<TourIssueReport> TourIssueReports { get; set; }
-    public DbSet<ClubInvite> ClubInvites { get; set; }
-    public DbSet<Club> Clubs { get; set; }
     public DbSet<Checkpoint> Checkpoints { get; set; }
     public DbSet<TourPreference> TourPreferences { get; set; }
     public DbSet<TourPreferenceTag> PreferenceTags { get; set; }
@@ -24,13 +22,6 @@ public class ToursContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("tours");
-        modelBuilder.Entity<Club>()
-        .Property(c => c.ImageId)
-        .IsRequired(false);
-
-        modelBuilder.Entity<Club>()
-        .Property(c => c.OwnerId)
-        .IsRequired();
 
         modelBuilder.Entity<TourReview>()
             .HasOne(p => p.Image)

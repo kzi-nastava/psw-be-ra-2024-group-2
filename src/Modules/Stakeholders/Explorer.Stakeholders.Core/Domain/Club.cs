@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.Stakeholders.Core.Domain;
 
-namespace Explorer.Tours.Core.Domain
+namespace Explorer.Stakeholders.Core.Domain
 {
     public class Club : Entity
     {

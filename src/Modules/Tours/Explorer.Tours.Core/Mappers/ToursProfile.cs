@@ -51,14 +51,6 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
 
-        CreateMap<ClubDto, Club>()
-            .ForMember(dest => dest.ImageId, opt => opt.MapFrom(src => src.ImageId))
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-            .ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src => src.OwnerId));
-        CreateMap<ClubDto, Club>().ReverseMap();
-        CreateMap<ClubInviteDTO,ClubInvite>().ReverseMap();
-
         CreateMap<TourPreference, TourPreferenceDto>()
             .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.Name)));
 
