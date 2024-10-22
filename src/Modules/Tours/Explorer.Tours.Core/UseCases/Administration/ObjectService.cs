@@ -9,6 +9,7 @@ using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,6 +35,25 @@ namespace Explorer.Tours.Core.UseCases.Administration
                                .ToList();
 
             return new PagedResult<ObjectDto>(objects, objects.Count());
+        }
+
+        public Result<ObjectDto> UpdateObject(int id, double[] coordinates)
+        {
+            try
+            {
+                TourObject obj = _objectRepository.Get(id);
+                obj.Longitude = coordinates[0];
+                obj.Latitude = coordinates[1];
+                _objectRepository.Update(obj);
+
+                return MapToDto(obj);
+            }
+            catch (ArgumentException e)
+            {
+
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+
         }
         public Result<ObjectDto> Create(ObjectDto dto)
         {
