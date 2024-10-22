@@ -31,5 +31,13 @@ namespace Explorer.API.Controllers.Author
             var result = _objectService.Create(tourObject);
             return CreateResponse(result);
         }
+
+
+        [HttpPut("{id}")]
+        public ActionResult<ObjectDto> UpdateObject(int id, [FromBody] double[] coordinates)
+        {
+            var result = _objectService.UpdateObject(id, coordinates);
+            return CreateResponse(result);
+        }
     }
 }

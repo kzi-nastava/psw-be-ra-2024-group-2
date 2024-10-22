@@ -18,8 +18,8 @@ namespace Explorer.Tours.Core.Domain
         public long? ImageId { get;  set; }
         public Image? Image { get;  set; }
 
-        public double Longitude { get; private set; } //postaviti setere na private
-        public double Latitude { get; private set; }
+        public double Longitude { get;  set; } 
+        public double Latitude { get;  set; }
 
     public TourObject(string name, string description, ObjectCategory category, long imageId, double lng, double lat)
         {   

@@ -13,5 +13,6 @@ namespace Explorer.Tours.API.Public.Administration
     {
         Result<ObjectDto> Create(ObjectDto tourObject);
         PagedResult<ObjectDto> GetAll();
+        Result <ObjectDto> UpdateObject(int id, double[] coordinates);
     }
 }
