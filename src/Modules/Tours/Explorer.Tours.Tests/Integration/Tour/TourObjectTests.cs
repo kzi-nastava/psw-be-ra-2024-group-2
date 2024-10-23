@@ -34,13 +34,19 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 Name = "Restoran Dva sesira",
                 Description = "Restoran na Skadarliji, poznat po ukusnim specjalitetima domace kuhinje.",
                 Category = "Restaurant",
+                Longitude = 0.0,
+                Latitude = 0.0,
                 Image = new ObjectImageDto
                 {
                     Data = "new data for this jjhkjhjghfhgfhgdffgsfdsidk",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
                 }
+                
+
+
             };
+
 
             //Act
             var result = ((ObjectResult)controller.CreateObject(newEntity).Result)?.Value as ObjectDto;
@@ -71,7 +77,9 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     Data = "new data for this idkkkkk",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
-                }
+                },
+                Longitude = 0,
+                Latitude = 0
             };
 
             // Act
@@ -98,7 +106,9 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     Data = "new data for ttttthis idk",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
-                }
+                },
+                Longitude= 0,
+                Latitude= 0
             };
 
             // Act
@@ -124,7 +134,9 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     Data = "new daaaata for this idk",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
-                }
+                },
+                Longitude = 0,
+                Latitude = 0
             };
 
             // Act
@@ -151,7 +163,9 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     Data = "new datttta for this idk",
                     UploadedAt = DateTime.UtcNow,
                     MimeType = "image/jpeg"
-                }
+                },
+                Longitude= 0.0,
+                Latitude= 0.0
             };
 
             // Act

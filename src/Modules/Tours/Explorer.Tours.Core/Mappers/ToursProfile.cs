@@ -12,7 +12,8 @@ public class ToursProfile : Profile
     {
         CreateMap<EquipmentDto, Equipment>().ReverseMap();
         CreateMap<Tour, TourDto>()
-            .ForMember(dest => dest.Equipment, opt => opt.MapFrom(src => src.Equipment.Select(e => e.Id)));
+            .ForMember(dest => dest.Equipment, opt => opt.MapFrom(src => src.Equipment.Select(e => e.Id)))
+            .ForMember(dest => dest.Checkpoints, opt => opt.MapFrom(src => src.Checkpoints.Select(e => e.Id)));
         CreateMap<Checkpoint, CheckpointDto>()
             .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
             .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude))
@@ -20,6 +21,7 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image));
+            //.ForMember(dest => dest.Tours, opt => opt.MapFrom(src => src.Tours));
 
         CreateMap<TourReview, TourReviewDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
@@ -39,7 +41,7 @@ public class ToursProfile : Profile
 
         CreateMap<ObjectDto, TourObject>()
                 .ForMember(dest => dest.Image, opt => opt.Ignore())
-                .ConstructUsing(src => new TourObject(src.Name, src.Description, Enum.Parse<ObjectCategory>(src.Category)))
+                .ConstructUsing(src => new TourObject(src.Name, src.Description, Enum.Parse<ObjectCategory>(src.Category), src.Longitude, src.Latitude))
                 .ReverseMap()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()));
 
@@ -56,6 +58,12 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src => src.OwnerId));
         CreateMap<ClubDto, Club>().ReverseMap();
         CreateMap<ClubInviteDTO,ClubInvite>().ReverseMap();
+
+        CreateMap<TourPreference, TourPreferenceDto>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => t.Name)));
+
+        CreateMap<TourPreferenceDto, TourPreference>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TourPreferenceTag(t))));
     }
    
     

@@ -12,8 +12,6 @@ namespace Explorer.Tours.Core.Domain
 {
     public class Tour  : Entity
     {
-
-
         public long UserId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
