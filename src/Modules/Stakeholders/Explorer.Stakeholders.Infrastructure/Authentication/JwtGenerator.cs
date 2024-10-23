@@ -34,7 +34,31 @@ public class JwtGenerator : ITokenGenerator
             
         return authenticationResponse;
     }
-        
+
+    public Result<AuthenticatedTokenDto> DecomposeAccessToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+        if (jsonToken == null)
+        {
+            return Result.Fail("Invalid token");
+        }
+
+        var id = jsonToken.Claims.First(claim => claim.Type == "id").Value;
+        var username = jsonToken.Claims.First(claim => claim.Type == "username").Value;
+        var personId = jsonToken.Claims.First(claim => claim.Type == "personId").Value;
+        var role = jsonToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
+
+        return new AuthenticatedTokenDto
+        {
+            UserId = long.Parse(id),
+            Username = username,
+            PersonId = long.Parse(personId),
+            Role = role
+        };
+    }
+
     private string CreateToken(IEnumerable<Claim> claims, double expirationTimeInMinutes)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
