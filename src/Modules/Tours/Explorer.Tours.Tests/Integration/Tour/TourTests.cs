@@ -1,4 +1,5 @@
 ﻿using Explorer.API.Controllers.Author;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
@@ -9,14 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Explorer.Tours.Tests.Integration.Tour;
 
@@ -127,8 +121,8 @@ public class TourTests : BaseToursIntegrationTest
             Equipment = { -1 },
             Name = "Gala",
             Description = "Opis",
-            Difficulty = TourDto.TourDifficulty.Hard,
-            Tag = TourDto.TourTag.Adventure,
+            Difficulty = TourDifficulty.Hard,
+            Tag = TourTag.Adventure,
             Status = 0,
             Price = 0
         };
@@ -138,7 +132,7 @@ public class TourTests : BaseToursIntegrationTest
         result.Name.ShouldBe(newEntity.Name);
         result.Description.ShouldBe(newEntity.Description);
         result.Difficulty.ShouldBe(newEntity.Difficulty);
-        result.Status.ShouldBe(TourDto.TourStatus.Draft);
+        result.Status.ShouldBe(TourStatus.Draft);
         result.Price.ShouldBe(0);
 
         var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Name == newEntity.Name);

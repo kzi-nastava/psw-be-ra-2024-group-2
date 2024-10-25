@@ -1,12 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 
 namespace Explorer.Tours.Core.Domain
 {
@@ -15,14 +8,14 @@ namespace Explorer.Tours.Core.Domain
         public string Name { get; private set; }
         public string? Description { get; private set; }
         public ObjectCategory Category { get; private set; }
-        public long? ImageId { get;  set; }
-        public Image? Image { get;  set; }
+        public long? ImageId { get; set; }
+        public Image? Image { get; set; }
 
-        public double Longitude { get;  set; } 
-        public double Latitude { get;  set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
 
-    public TourObject(string name, string description, ObjectCategory category, long imageId, double lng, double lat)
-        {   
+        public TourObject(string name, string description, ObjectCategory category, long imageId, double lng, double lat)
+        {
             Name = name;
             Description = description;
             Category = category;
@@ -32,7 +25,7 @@ namespace Explorer.Tours.Core.Domain
             Validate();
         }
 
-    public TourObject(string name, string description, ObjectCategory category, double longitude, double latitude)
+        public TourObject(string name, string description, ObjectCategory category, double longitude, double latitude)
         {
             Name = name;
             Description = description;
@@ -65,16 +58,5 @@ namespace Explorer.Tours.Core.Domain
             if (double.IsNaN(Longitude)) throw new ArgumentException("Invalid location.");
             if (double.IsNaN(Latitude)) throw new ArgumentException("Invalid location");
         }
-
-        
-    }
-
-
-
-    public enum ObjectCategory
-    {
-        WC, 
-        Restaurant,
-        Parking
     }
 }

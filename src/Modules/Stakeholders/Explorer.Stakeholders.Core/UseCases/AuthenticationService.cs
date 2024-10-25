@@ -1,4 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.BuildingBlocks.Core.Domain.Enums;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;

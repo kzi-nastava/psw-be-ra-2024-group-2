@@ -3,6 +3,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain;
 using System.Xml.Serialization;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 
 namespace Explorer.Tours.Core.Mappers;
 
@@ -32,7 +33,6 @@ public class ToursProfile : Profile
                 .ForMember(dest => dest.VisitDate, opt => opt.MapFrom(src => src.VisitDate))
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image));
 
-
         CreateMap<Image, TourImageDto>()
             .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data))
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
@@ -44,7 +44,6 @@ public class ToursProfile : Profile
                 .ConstructUsing(src => new TourObject(src.Name, src.Description, Enum.Parse<ObjectCategory>(src.Category), src.Longitude, src.Latitude))
                 .ReverseMap()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()));
-
 
         CreateMap<Image, ObjectImageDto>()
             .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data))

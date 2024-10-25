@@ -1,4 +1,4 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.Domain.Enums;
 
 namespace Explorer.BuildingBlocks.Core.Domain;
 
@@ -48,9 +48,3 @@ public class Image : Entity
     }
 }
 
-public enum MimeType
-{
-    Jpeg,
-    Png,
-    Gif
-}
