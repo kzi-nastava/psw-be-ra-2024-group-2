@@ -1,12 +1,13 @@
-﻿using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Microsoft.EntityFrameworkCore;
 
-namespace Explorer.Stakeholders.Infrastructure.Database.Repositories;
+namespace Explorer.BuildingBlocks.Infrastructure.Database;
 
-public class TransactionRepository : ITransactionRepository
+public class TransactionRepository<Context> : ITransactionRepository where Context : DbContext
 {
-    private readonly StakeholdersContext _dbContext;
+    private readonly Context _dbContext;
 
-    public TransactionRepository(StakeholdersContext dbContext)
+    public TransactionRepository(Context dbContext)
     {
         _dbContext = dbContext;
     }

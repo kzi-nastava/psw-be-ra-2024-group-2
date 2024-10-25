@@ -14,7 +14,7 @@ public class Tour  : Entity
     public double Price { get; private set; }
     public List<Equipment> Equipment { get; private set; } = new List<Equipment>();
     public List<Checkpoint> Checkpoints { get; private set; } = new List<Checkpoint>();
-    public List<TourDurationByTransport> TourDurationByTransports { get; private set; } = new List<TourDurationByTransport>();
+    public List<TourDurationByTransport>? TourDurationByTransports { get; set; } = new List<TourDurationByTransport>();
     public DateTime? PublishedAt { get; private set; }
     public DateTime? ArchivedAt { get; private set; }
 

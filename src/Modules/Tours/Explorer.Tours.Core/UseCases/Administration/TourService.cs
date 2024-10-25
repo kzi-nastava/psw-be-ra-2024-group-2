@@ -4,6 +4,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 namespace Explorer.Tours.Core.UseCases.Administration
 {
@@ -12,12 +13,16 @@ namespace Explorer.Tours.Core.UseCases.Administration
         private readonly ICrudRepository<Tour> _tourRepository;
         private readonly ICrudRepository<Equipment> _equipmentRepository;
         private readonly ICrudRepository<Checkpoint> _checkpointRepository;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly ITourDurationByTransportRepository _tourDurationByTransportRepository;
 
-        public TourService(ICrudRepository<Tour> tourRepository, ICrudRepository<Equipment> equipmentRepository, ICrudRepository<Checkpoint> checkpointRepository, IMapper mapper) : base(tourRepository, mapper)
+        public TourService(ICrudRepository<Tour> tourRepository, ICrudRepository<Equipment> equipmentRepository, ICrudRepository<Checkpoint> checkpointRepository, IMapper mapper, ITransactionRepository transactionRepository, ITourDurationByTransportRepository tourDurationByTransportRepository) : base(tourRepository, mapper)
         {
             _tourRepository = tourRepository;
             _equipmentRepository = equipmentRepository;
             _checkpointRepository = checkpointRepository;
+            _transactionRepository = transactionRepository;
+            _tourDurationByTransportRepository = tourDurationByTransportRepository;
         }
 
         public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
@@ -72,28 +77,45 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         public Result<TourDto> CreateTour(TourDto dto, int userId)
         {
-            dto.UserId = userId;
+            try
+            {
+                dto.UserId = userId;
 
-            Tour tour = new(dto.UserId, 
-                dto.Name, 
-                dto.Description,
-                dto.Difficulty,
-                dto.Tag, 
-                dto.Status, 
-                dto.Price);
+                _transactionRepository.BeginTransaction();
 
-            tour.TourDurationByTransports.AddRange(
-                dto.TourDurationByTransportDtos?.Select(
-                    t => new TourDurationByTransport(t.Transport, t.Duration)).ToList() 
-                        ?? new List<TourDurationByTransport>());
+                Tour tour = new(dto.UserId,
+                    dto.Name,
+                    dto.Description,
+                    dto.Difficulty,
+                    dto.Tag,
+                    dto.Status,
+                    dto.Price);
 
-            Validate(dto);
+                Validate(dto);
 
-            var result = _tourRepository.Create(tour);
+                var result = _tourRepository.Create(tour);
 
-            return MapToDto(result);
+                result.TourDurationByTransports = dto.TourDurationByTransportDtos.Select(tourDurationByTransportDto =>
+                {
+                    var tourDurationByTransport = new TourDurationByTransport(result.Id, tourDurationByTransportDto.Transport, tourDurationByTransportDto.Duration);
+                    _tourDurationByTransportRepository.Create(tourDurationByTransport);
+                    return tourDurationByTransport;
+                }).ToList();
+
+                _transactionRepository.CommitTransaction();
+
+                return MapToDto(result);
+
+            } catch(Exception)
+            {
+                _transactionRepository.RollbackTransaction();
+
+                return Result.Fail(FailureCode.Conflict).WithError("An unexpected error occurred");
+            }
         }
 
+        // Price should not be 0
+        // Status should be draft at start
         private static void Validate(TourDto dto)
         {
             if (dto.Price != 0) throw new ArgumentException("Price must be 0");

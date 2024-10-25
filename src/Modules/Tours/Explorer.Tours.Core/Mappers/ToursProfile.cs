@@ -14,7 +14,13 @@ public class ToursProfile : Profile
         CreateMap<EquipmentDto, Equipment>().ReverseMap();
         CreateMap<Tour, TourDto>()
             .ForMember(dest => dest.Equipment, opt => opt.MapFrom(src => src.Equipment.Select(e => e.Id)))
-            .ForMember(dest => dest.Checkpoints, opt => opt.MapFrom(src => src.Checkpoints.Select(e => e.Id)));
+            .ForMember(dest => dest.Checkpoints, opt => opt.MapFrom(src => src.Checkpoints.Select(e => e.Id)))
+            .ForMember(dest => dest.TourDurationByTransportDtos, opt => opt.MapFrom(src => src.TourDurationByTransports));
+
+        CreateMap<TourDurationByTransport, TourDurationByTransportDto>()
+            .ForMember(dest => dest.Transport, opt => opt.MapFrom(src => src.TransportType.ToString()));
+
+
         CreateMap<Checkpoint, CheckpointDto>()
             .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
             .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude))
