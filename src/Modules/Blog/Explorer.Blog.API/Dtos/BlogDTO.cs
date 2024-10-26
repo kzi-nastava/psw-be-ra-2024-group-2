@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace Explorer.Blog.API.Dtos
 {
-    internal class BlogDTO
+    public class BlogDto
     {
+        public string Title {  get; set; }
+        public string Description { get; set; }
+        public Status Status { get; set; }
+        public int AuthorId { get; set; }
+
+    }
+    public enum Status
+    {
+        Draft,
+        Published,
+        Closed
     }
 }
