@@ -219,7 +219,7 @@ public class TourTests : BaseToursIntegrationTest
 
     private static TourController CreateController(IServiceScope scope, string number)
     {
-        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>(), scope.ServiceProvider.GetRequiredService<IEquipmentService>())
+        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>(), scope.ServiceProvider.GetRequiredService<IEquipmentService>(), scope.ServiceProvider.GetRequiredService<ICheckpointService>())
         {
             ControllerContext = new ControllerContext
             {
