@@ -29,8 +29,8 @@ public enum TourDifficulty
 public enum TransportType
 {
     Walking,
-    Bicycle,
-    Automobile
+    Bicycling,
+    Driving
 }
 public enum ObjectCategory
 {
