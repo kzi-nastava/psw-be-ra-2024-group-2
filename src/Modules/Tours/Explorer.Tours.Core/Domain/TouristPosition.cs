@@ -11,5 +11,20 @@ namespace Explorer.Tours.Core.Domain
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
+        TouristPosition(double latitude, double longitude)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+        }
+
+        /*TouristPosition CreateNewPosition(TouristPosition tp)
+        {
+            return new TouristPosition(tp.Latitude, tp.Longitude);
+        }*/
+        public void UpdatePosition(double latitude, double longitude)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+        }
     }
 }
