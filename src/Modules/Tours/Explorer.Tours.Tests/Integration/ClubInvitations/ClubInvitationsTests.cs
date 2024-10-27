@@ -1,5 +1,6 @@
 ﻿using Explorer.API.Controllers.Author;
 using Explorer.API.Controllers.Tourist;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;

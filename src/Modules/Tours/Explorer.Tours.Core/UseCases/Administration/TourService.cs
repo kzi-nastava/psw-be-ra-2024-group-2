@@ -1,18 +1,11 @@
 ﻿using AutoMapper;
-using AutoMapper.Configuration.Annotations;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 namespace Explorer.Tours.Core.UseCases.Administration
 {
     public class TourService : CrudService<TourDto, Tour>, ITourService
@@ -20,12 +13,16 @@ namespace Explorer.Tours.Core.UseCases.Administration
         private readonly ICrudRepository<Tour> _tourRepository;
         private readonly ICrudRepository<Equipment> _equipmentRepository;
         private readonly ICrudRepository<Checkpoint> _checkpointRepository;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly ITourDurationByTransportRepository _tourDurationByTransportRepository;
 
-        public TourService(ICrudRepository<Tour> tourRepository, ICrudRepository<Equipment> equipmentRepository, ICrudRepository<Checkpoint> checkpointRepository,IMapper mapper) : base(tourRepository, mapper)
+        public TourService(ICrudRepository<Tour> tourRepository, ICrudRepository<Equipment> equipmentRepository, ICrudRepository<Checkpoint> checkpointRepository, IMapper mapper, ITransactionRepository transactionRepository, ITourDurationByTransportRepository tourDurationByTransportRepository) : base(tourRepository, mapper)
         {
             _tourRepository = tourRepository;
             _equipmentRepository = equipmentRepository;
             _checkpointRepository = checkpointRepository;
+            _transactionRepository = transactionRepository;
+            _tourDurationByTransportRepository = tourDurationByTransportRepository;
         }
 
         public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
@@ -80,19 +77,49 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         public Result<TourDto> CreateTour(TourDto dto, int userId)
         {
+            try
+            {
+                dto.UserId = userId;
 
-            dto.UserId = userId;
+                _transactionRepository.BeginTransaction();
 
-            Tour tour = new Tour(dto.UserId, dto.Name, dto.Description, (TourDifficulty)dto.Difficulty, (TourTag)dto.Tag,(TourStatus)dto.Status,dto.Price);
-            Validate(dto);
-            var result = _tourRepository.Create(tour);
-            return MapToDto(result);
+                Tour tour = new(dto.UserId,
+                    dto.Name,
+                    dto.Description,
+                    dto.Difficulty,
+                    dto.Tag,
+                    dto.Status,
+                    dto.Price);
+
+                Validate(dto);
+
+                var result = _tourRepository.Create(tour);
+
+                result.TourDurationByTransports = dto.TourDurationByTransportDtos.Select(tourDurationByTransportDto =>
+                {
+                    var tourDurationByTransport = new TourDurationByTransport(result.Id, tourDurationByTransportDto.Transport, tourDurationByTransportDto.Duration);
+                    _tourDurationByTransportRepository.Create(tourDurationByTransport);
+                    return tourDurationByTransport;
+                }).ToList();
+
+                _transactionRepository.CommitTransaction();
+
+                return MapToDto(result);
+
+            } catch(Exception)
+            {
+                _transactionRepository.RollbackTransaction();
+
+                return Result.Fail(FailureCode.Conflict).WithError("An unexpected error occurred");
+            }
         }
 
-        private void Validate(TourDto dto)
+        // Price should not be 0
+        // Status should be draft at start
+        private static void Validate(TourDto dto)
         {
             if (dto.Price != 0) throw new ArgumentException("Price must be 0");
-            if (dto.Status != TourDto.TourStatus.Draft) throw new ArgumentException("Invalid Status");
+            if (dto.Status != TourStatus.Draft) throw new ArgumentException("Invalid Status");
         }
 
         public PagedResult<TourDto> GetAllByUserId(int userId)
@@ -115,7 +142,8 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 var tour = _tourRepository.Get(tourId);
                 return MapToDto(tour);
             }
-            catch(KeyNotFoundException ex) {
+            catch (KeyNotFoundException ex)
+            {
                 return Result.Fail(FailureCode.NotFound).WithError(ex.Message);
             }
         }

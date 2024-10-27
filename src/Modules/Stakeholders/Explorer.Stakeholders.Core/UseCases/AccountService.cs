@@ -1,15 +1,11 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.UseCases;
 
@@ -22,7 +18,7 @@ public class AccountService : CrudService<AccountDto, Person>, IAccountService
     public AccountService(ICrudRepository<Person> personRepository,
         IUserRepository userRepository,
         ITransactionRepository transactionRepository,
-        IMapper mapper) 
+        IMapper mapper)
         : base(personRepository, mapper)
     {
         _personRepository = personRepository;
@@ -61,7 +57,7 @@ public class AccountService : CrudService<AccountDto, Person>, IAccountService
             var person = _personRepository.Get(personId);
             return MapToDto(person);
         }
-        catch(KeyNotFoundException e)
+        catch (KeyNotFoundException e)
         {
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
         }
@@ -103,5 +99,4 @@ public class AccountService : CrudService<AccountDto, Person>, IAccountService
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
     }
-
 }
