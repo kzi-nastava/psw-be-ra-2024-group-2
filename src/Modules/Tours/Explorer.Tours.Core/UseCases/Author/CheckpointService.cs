@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
@@ -107,6 +108,17 @@ namespace Explorer.Tours.Core.UseCases.Author
                 return Result.Fail(FailureCode.Conflict).WithError("Checkpoint data non valid");
 
             }
+        }
+
+        public PagedResult<CheckpointDto> GetAllById(List<long> ids)
+        {
+            var allCheckpoints = _checkpointRepository.GetPaged(1, int.MaxValue);
+            var filteredcheckpoints = allCheckpoints.Results
+                               .Where(checkpoint => ids.Contains(checkpoint.Id))
+                               .Select(checkpoint => MapToDto(checkpoint))
+                               .ToList();
+
+            return new PagedResult<CheckpointDto>(filteredcheckpoints, filteredcheckpoints.Count());
         }
     }
 }
