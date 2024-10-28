@@ -15,6 +15,7 @@ namespace Explorer.Tours.Core.Domain
         public string Comment { get; private set; }
         public DateTime PublishedAt { get; private set; }
         public TourIssueReport TourIssueReport { get; private set; }
+        public TourIssueComment(){}
         public TourIssueComment(long userId, long tourIssueId, string comment, DateTime publishedAt)
         {
             UserId = userId;

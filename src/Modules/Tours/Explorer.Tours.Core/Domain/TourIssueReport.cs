@@ -14,17 +14,14 @@ namespace Explorer.Tours.Core.Domain
     public class TourIssueReport : Entity
     {
         public string Category { get; private set; }
-
         public string Description { get; private set; }
-
         public string Priority { get; private set; }
-
         public DateTime DateTime { get; private set; }
-
         public long UserId { get; private set; }
         public long TourId { get; private set; }
         public Tour Tour { get; private set; }
-        public List<TourIssueComment> TourIssueComments { get; private set; } = new List<TourIssueComment>();
+        public List<TourIssueComment>? TourIssueComments { get; private set; } = new List<TourIssueComment>();
+        public TourIssueReport(){}
         public TourIssueReport(string category, string description, string priority, DateTime dateTime, long userId, long tourId)
         {
             Category = category;
@@ -58,6 +55,5 @@ namespace Explorer.Tours.Core.Domain
         {
             Priority = priority;
         }
-
     }
 }
