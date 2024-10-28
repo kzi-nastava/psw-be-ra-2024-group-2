@@ -30,7 +30,8 @@ public class StakeholdersContext : DbContext
             .Property(ue => ue.EquipmentId)
             .IsRequired();
         ConfigureStakeholder(modelBuilder);
-       
+
+
     }
 
     private static void ConfigureStakeholder(ModelBuilder modelBuilder)
@@ -47,5 +48,11 @@ public class StakeholdersContext : DbContext
             .WithOne()
             .HasForeignKey<Person>(s => s.ImageId)
             .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.Entity<Person>()
+                .OwnsOne(p => p.TouristPosition, tp =>
+                {
+                    tp.Property(t => t.Latitude).HasColumnName("Latitude");
+                    tp.Property(t => t.Longitude).HasColumnName("Longitude");
+                });
     }
 }

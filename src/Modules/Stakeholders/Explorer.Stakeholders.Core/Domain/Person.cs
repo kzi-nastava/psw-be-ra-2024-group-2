@@ -15,7 +15,7 @@ public class Person : Entity
 
     public User User { get; set; }
     public Image? Image { get; set; }
-
+    public TouristPosition? TouristPosition { get; set; }
     public Person(long userId, string name, string surname, string email)
     {
         UserId = userId;
