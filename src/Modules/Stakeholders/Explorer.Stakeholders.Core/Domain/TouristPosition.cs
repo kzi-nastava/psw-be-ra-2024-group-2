@@ -4,18 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Tours.Core.Domain
+namespace Explorer.Stakeholders.Core.Domain
 {
     public class TouristPosition
     {
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        TouristPosition(double latitude, double longitude)
+        public TouristPosition(double latitude, double longitude)
         {
             Latitude = latitude;
             Longitude = longitude;
         }
+
+        public TouristPosition() { }
 
         /*TouristPosition CreateNewPosition(TouristPosition tp)
         {

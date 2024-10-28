@@ -15,6 +15,5 @@ public class TourDto
     public double Price { get; set; }
     public List<int> Checkpoints { get; set; } = new List<int>();
     public List<TourDurationByTransportDto>? TourDurationByTransportDtos { get; set; } = new List<TourDurationByTransportDto>();
-    public TouristPositionDto? TouristPosition { get; set; }
 }
 

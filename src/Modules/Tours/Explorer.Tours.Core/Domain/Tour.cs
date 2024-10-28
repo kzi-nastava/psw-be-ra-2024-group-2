@@ -17,7 +17,6 @@ public class Tour  : Entity
     public List<TourDurationByTransport>? TourDurationByTransports { get; set; } = new List<TourDurationByTransport>();
     public DateTime? PublishedAt { get; private set; }
     public DateTime? ArchivedAt { get; private set; }
-    public TouristPosition TouristPosition { get; private set; }
     public Tour(long userId, string name, string description, TourDifficulty difficulty, TourTag tag, TourStatus status, double price)
     {
         UserId = userId;

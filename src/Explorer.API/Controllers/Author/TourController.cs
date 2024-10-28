@@ -80,13 +80,5 @@ namespace Explorer.API.Controllers.Author
             var result = _equipmentService.GetPaged(1, int.MaxValue);
             return CreateResponse(result);
         }
-
-        [HttpPut("{tourId}/position")]
-        public ActionResult<TourDto> UpdateTouristPosition(int tourId, [FromBody] TouristPositionDto positionDto)
-        {
-            var result = _tourService.UpdateTouristPosition(tourId, positionDto.Latitude, positionDto.Longitude);
-            return CreateResponse(result);
-        }
-
     }
 }

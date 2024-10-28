@@ -19,7 +19,6 @@ public class ToursContext : DbContext
     public DbSet<TourPreference> TourPreferences { get; set; }
     public DbSet<TourPreferenceTag> PreferenceTags { get; set; }
     public DbSet<TourDurationByTransport> TourDurationByTransports { get; set; }
-
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,5 +43,7 @@ public class ToursContext : DbContext
             .WithOne(t => t.Tour)
             .HasForeignKey(t => t.TourId)
             .OnDelete(DeleteBehavior.Cascade);
+
+       
     }
 }

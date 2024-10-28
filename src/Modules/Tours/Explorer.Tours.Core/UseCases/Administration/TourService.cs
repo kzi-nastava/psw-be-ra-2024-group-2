@@ -167,24 +167,5 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         }
 
-        public Result<TourDto> UpdateTouristPosition(int tourId, double latitude, double longitude)
-        {
-            try
-            {
-                var tour = _tourRepository.Get(tourId);
-                if (tour == null)
-                    return Result.Fail(FailureCode.NotFound).WithError("Tour not found");
-                //tour.TouristPosition ??= new TouristPosition(latitude, longitude);
-                tour.TouristPosition.UpdatePosition(latitude, longitude);
-                _tourRepository.Update(tour);
-
-                return MapToDto(tour);
-            }
-            catch(Exception e)
-            {
-                return Result.Fail(FailureCode.Conflict).WithError(e.Message); //Conflict
-            }
-        }
-
     }
 }

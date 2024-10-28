@@ -25,7 +25,11 @@ public class StakeholderProfile : Profile
 
 
         CreateMap<RatingApplicationDto, RatingApplication>().ReverseMap();
-       
+
+        CreateMap<Person, PersonDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.TouristPosition));
 
 
         CreateMap<Person, AccountDto>()
