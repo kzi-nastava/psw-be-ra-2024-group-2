@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain
 {
-    public class TourIssueComment : ValueObject
+    public class TourIssueComment : Entity
     {
         public long UserId { get; private set; }
         public long TourIssueId { get; private set; }
         public string Comment { get; private set; }
         public DateTime PublishedAt { get; private set; }
-
-        [JsonConstructor]
+        public TourIssueReport TourIssueReport { get; private set; }
         public TourIssueComment(long userId, long tourIssueId, string comment, DateTime publishedAt)
         {
             UserId = userId;
@@ -23,15 +22,6 @@ namespace Explorer.Tours.Core.Domain
             Comment = comment;
             PublishedAt = publishedAt;
         }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return UserId;
-            yield return TourIssueId;
-            yield return Comment;
-            yield return PublishedAt;
-        }
-
         public void UpdateComment(string comment)
         {
             Comment = comment;
