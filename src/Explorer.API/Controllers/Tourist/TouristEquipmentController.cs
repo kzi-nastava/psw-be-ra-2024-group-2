@@ -1,4 +1,6 @@
-﻿using Explorer.Tours.API.Public.Administration;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Public.Administration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,5 +30,22 @@ namespace Explorer.API.Controllers.Tourist
             var result = _equipmentService.RemoveEquipmentFromTourist(touristId, equipmentId);
             return CreateResponse(result);
         }
+
+        [HttpGet("{touristId:long}")]
+        public ActionResult GetTouristEquipment(long touristId)
+        {
+            var result = _equipmentService.GetEquipmentForTourist(touristId);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public ActionResult<PagedResult<EquipmentDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _equipmentService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }
+
+
+
     }
 }
