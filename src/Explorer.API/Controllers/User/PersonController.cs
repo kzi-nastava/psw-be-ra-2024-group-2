@@ -18,6 +18,12 @@ namespace Explorer.API.Controllers.User
         {
             _personService = personService;
         }
+        [HttpGet("{id}")]
+        public ActionResult<PersonDto> GetTouristPosition(int id)
+        {
+            var person = _personService.GetPositionByUserId(id);
+            return CreateResponse(person);
+        }
 
         [HttpPut("{userId}/position")]
         public ActionResult<PersonDto> UpdatePersonLocation(int userId, [FromBody] TouristPositionDto positionDto)

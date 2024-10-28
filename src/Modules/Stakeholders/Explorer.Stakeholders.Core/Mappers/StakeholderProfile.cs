@@ -25,10 +25,17 @@ public class StakeholderProfile : Profile
 
 
         CreateMap<RatingApplicationDto, RatingApplication>().ReverseMap();
+        // Mapping for TouristPosition
+        CreateMap<TouristPosition, TouristPositionDto>()
+            .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
+            .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude));
 
         CreateMap<Person, PersonDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Surname))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.TouristPosition));
 
 

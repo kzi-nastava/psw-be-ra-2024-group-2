@@ -11,5 +11,7 @@ namespace Explorer.Stakeholders.API.Public
     public interface IPersonService
     {
         public Result<PersonDto> UpdateTouristPosition(int userId, double latitude, double longitude);
+        public Result<PersonDto> GetPositionByUserId(int userId);
+
     }
 }

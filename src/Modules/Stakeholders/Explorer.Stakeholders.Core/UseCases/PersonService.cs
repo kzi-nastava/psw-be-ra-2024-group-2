@@ -22,6 +22,19 @@ namespace Explorer.Stakeholders.Core.UseCases
             _personRepository = personRepository;
         }
 
+        public Result<PersonDto> GetPositionByUserId(int userId)
+        {
+            try
+            {
+                var person = _personRepository.Get(userId);
+                return MapToDto(person);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(ex.Message);
+            }
+
+        }
         public Result<PersonDto> UpdateTouristPosition(int userId, double latitude, double longitude)
         {
             try
