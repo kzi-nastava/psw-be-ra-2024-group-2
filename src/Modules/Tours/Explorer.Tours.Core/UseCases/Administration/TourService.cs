@@ -32,6 +32,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 if (tourDto.UserId != userId)
                     return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add equipment to this tour");
 
+                _transactionRepository.BeginTransaction();
                 Tour tour = _tourRepository.Get(tourDto.Id);
 
                 tour.Equipment.Clear();
@@ -42,11 +43,31 @@ namespace Explorer.Tours.Core.UseCases.Administration
                     tour.Equipment.Add(newEquipment);
                 }
 
+                if(tourDto.Status.ToString() == "Published") 
+                {
+                    tour.UpdatePublishDate(DateTime.UtcNow);
+                    tour.UpdateArhivedDate(null);
+                }
+                else if(tourDto.Status.ToString() == "Archived") 
+                {
+                    tour.UpdatePublishDate(null);
+                    tour.UpdateArhivedDate(DateTime.UtcNow);
+                }
+                    
+
+
+                tour.UpdateStatus(tourDto.Status);
+                tour.UpdatePrice(tourDto.Price);
+
                 _tourRepository.Update(tour);
+                _transactionRepository.CommitTransaction();
                 return MapToDto(tour);
             }
             catch (Exception e)
             {
+                if (_transactionRepository.HasActiveTransacation())
+                    _transactionRepository.RollbackTransaction();
+
                 return Result.Fail(FailureCode.NotFound).WithError("Tour or equipment doesn't exist !");
             }
         }
@@ -166,6 +187,8 @@ namespace Explorer.Tours.Core.UseCases.Administration
             return Result.Ok(pagedResult.Value);
 
         }
+
+
 
     }
 }

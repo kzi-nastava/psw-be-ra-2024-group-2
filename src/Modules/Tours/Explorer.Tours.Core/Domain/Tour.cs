@@ -39,4 +39,25 @@ public class Tour  : Entity
         if(Status != TourStatus.Draft && Status != TourStatus.Archived && Status != TourStatus.Published) throw new ArgumentException("Invalid Status");
         if(Tag != TourTag.Adventure && Tag != TourTag.Relaxation && Tag != TourTag.Historical && Tag != TourTag.Cultural && Tag != TourTag.Nature) throw new ArgumentException("Invalid Tag");
     }
+
+    public void UpdateStatus(TourStatus newStatus)
+    {
+        Status = newStatus;
+    }
+
+    public void UpdatePrice(double newPrice)
+    {
+        Price = newPrice;
+    }
+
+    public void UpdatePublishDate(DateTime? time) 
+    {
+        PublishedAt = time;
+    }
+
+    public void UpdateArhivedDate(DateTime? time)
+    {
+        ArchivedAt = time;
+    }
+
 }
