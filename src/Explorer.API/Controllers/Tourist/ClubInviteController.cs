@@ -29,7 +29,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpDelete("remove")]
-        public ActionResult RemoveTourist([FromQuery] long touristId,long clubId)
+        public ActionResult<ClubInviteDTO> RemoveTourist([FromQuery] long touristId,long clubId)
         {
             var result = _clubInviteService.Remove(clubId,touristId);
             return CreateResponse(result);
