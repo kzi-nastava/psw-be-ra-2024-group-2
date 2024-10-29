@@ -14,5 +14,7 @@ namespace Explorer.Tours.API.Public.Administration
         Result<PagedResult<TourIssueReportDto>> GetPaged(int page, int pageSize);
         //Result<TourIssueReportDto> Create(TourIssueReportDto report);
         Result<TourIssueReportDto> Create(long userId, long tourId, TourIssueReportDto tourIssueReport);
+        public Result<TourIssueReportDto> SetFixUntilDate(long fromUserId, TourIssueReportDto tourIssueReportDto);
+        public Result<TourIssueReportDto> CloseReport(TourIssueReportDto tourIssueReportDto);
     }
 }

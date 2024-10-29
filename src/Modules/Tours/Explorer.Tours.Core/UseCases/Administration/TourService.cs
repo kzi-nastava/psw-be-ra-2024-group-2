@@ -170,7 +170,6 @@ namespace Explorer.Tours.Core.UseCases.Administration
         }
 
 
-
         public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
         {
             var pagedResult = base.GetPaged(page, pageSize);
@@ -188,7 +187,9 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         }
 
-
-
+        public Result DeleteById(int tourId)
+        {
+            return base.Delete(tourId);
+        }
     }
 }
