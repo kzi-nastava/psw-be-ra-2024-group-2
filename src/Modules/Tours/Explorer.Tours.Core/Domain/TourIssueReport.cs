@@ -24,18 +24,21 @@ namespace Explorer.Tours.Core.Domain
         public long TourId { get; private set; }
         public TourIssueReport(string category, string description, string priority, DateTime dateTime, long userId, long tourId)
         {
-
-            if (string.IsNullOrWhiteSpace(category)) throw new ArgumentException("Invalid Category.");
-            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Invalid Description.");
-            if (string.IsNullOrWhiteSpace(priority)) throw new ArgumentException("Invalid Priority.");
-
-
             Category = category;
             Description = description;
             Priority = priority;
             DateTime = dateTime;
             UserId = userId;
             TourId = tourId;
+            Validate();
+        }
+        
+        private void Validate()
+        {
+            if (string.IsNullOrWhiteSpace(Category)) throw new ArgumentException("Invalid Category.");
+            if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description.");
+            if (string.IsNullOrWhiteSpace(Priority)) throw new ArgumentException("Invalid Priority.");
+
         }
     }
 }

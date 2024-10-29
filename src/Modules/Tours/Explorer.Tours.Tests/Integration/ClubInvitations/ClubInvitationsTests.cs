@@ -97,7 +97,7 @@ public class ClubInvitationsTests: BaseToursIntegrationTest
             Date = new DateTime(),
             Status = TourInviteStatus.Pending,
         };
-        var result = (ObjectResult)controller.RemoveTourist(newEntity).Result;
+        var result = (ObjectResult)controller.RemoveTourist(newEntity.TouristId, newEntity.ClubId).Result;
 
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(200);
@@ -124,7 +124,7 @@ public class ClubInvitationsTests: BaseToursIntegrationTest
             Date = new DateTime(),
             Status = TourInviteStatus.Pending,
         };
-        var result = (ObjectResult)controller.RemoveTourist(newEntity).Result;
+        var result = (ObjectResult)controller.RemoveTourist(newEntity.TouristId, newEntity.ClubId).Result;
 
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(409);
