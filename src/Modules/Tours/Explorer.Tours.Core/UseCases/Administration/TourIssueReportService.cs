@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
@@ -33,6 +34,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             try
             {
+                _transactionRepository.BeginTransaction();
                 var tour = _tourRepository.Get(tourId);
                 var pagedResult = base.GetPaged(1, int.MaxValue);
 
@@ -54,10 +56,14 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
                 var results = _tourIssueReportRepository.Create(tourIssue);
 
+                _transactionRepository.CommitTransaction();
+
                 return MapToDto(results);
             }
             catch(Exception e) 
             {
+
+                _transactionRepository.RollbackTransaction();
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
@@ -108,5 +114,61 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 return Result.Fail(FailureCode.Conflict).WithError(e.Message);
             }
         }
+        public Result<TourIssueReportDto> MarkAsDone(TourIssueReportDto tourIssueReportDto)
+        {
+            try
+            {
+                _transactionRepository.BeginTransaction();
+
+                var tourIssue = MapToDomain(tourIssueReportDto);
+
+                var tourIssueGet = _tourIssueReportRepository.Get(tourIssue.TourId) ?? throw new Exception();
+
+                tourIssueReportDto.Status = TourIssueReportStatus.Closed;
+
+                var tourIssueReport = MapToDomain(tourIssueReportDto);
+
+                var results = _tourIssueReportRepository.Update(tourIssueReport);
+
+                _transactionRepository.CommitTransaction();
+
+                return MapToDto(results);
+                
+            }
+            catch (Exception e)
+            {
+                _transactionRepository.RollbackTransaction();
+                return Result.Fail(FailureCode.Conflict).WithError(e.Message);
+            }
+        }
+
+        public Result<TourIssueReportDto> AlertNotDone(TourIssueReportDto tourIssueReportDto)
+        {
+            try
+            {
+                _transactionRepository.BeginTransaction();
+
+                var tourIssue = MapToDomain(tourIssueReportDto);
+
+                var tourIssueGet = _tourIssueReportRepository.Get(tourIssue.TourId) ?? throw new Exception();
+
+                tourIssueReportDto.FixUntil = DateTime.Now;
+
+                var tourIssueReport = MapToDomain(tourIssueReportDto);
+
+                var results = _tourIssueReportRepository.Update(tourIssueReport);
+
+                _transactionRepository.CommitTransaction();
+
+                return MapToDto(results);
+
+            }
+            catch (Exception e)
+            {
+                _transactionRepository.RollbackTransaction();
+                return Result.Fail(FailureCode.Conflict).WithError(e.Message);
+            }
+        }
+
     }
 }

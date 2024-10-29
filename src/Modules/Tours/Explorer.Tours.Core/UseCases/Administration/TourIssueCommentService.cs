@@ -47,5 +47,18 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 return Result.Fail(FailureCode.Conflict).WithError(e.Message);
             }
         }
+
+        public PagedResult<TourIssueCommentDto> GetPaged(long reportId, int page, int pageSize)
+        {
+            List<TourIssueCommentDto> tourIssueCommentDtos = new List<TourIssueCommentDto>();
+            var allIssueComments = _tourIssueCommentRepository.GetPaged(1, int.MaxValue);
+            
+            var comments = allIssueComments.Results.Where(t => t.TourIssueReportId == reportId).ToList();
+            foreach(var c in comments)
+                tourIssueCommentDtos.Add(MapToDto(c));
+
+            return new PagedResult<TourIssueCommentDto>(tourIssueCommentDtos, tourIssueCommentDtos.Count());
+        }
+
     }
 }

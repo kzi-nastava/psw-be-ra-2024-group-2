@@ -25,7 +25,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
 
         private static TourIssueReportController CreateController(IServiceScope scope, string userId)
         {
-            return new TourIssueReportController(scope.ServiceProvider.GetRequiredService<ITourIssueReportService>(), scope.ServiceProvider.GetRequiredService<ITourService>())
+            return new TourIssueReportController(scope.ServiceProvider.GetRequiredService<ITourIssueReportService>(), scope.ServiceProvider.GetRequiredService<ITourService>(), scope.ServiceProvider.GetRequiredService<ITourIssueCommentService>())
             {
                 ControllerContext = new ControllerContext
                 {
@@ -86,7 +86,9 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 Description = "There was a broken railing on the path.",
                 Priority = "High",
                 TourId = -1,  // ID postojeće ture
-                DateTime = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                FixUntil = DateTime.UtcNow,
+                Status = 0,
                 UserId = -21
             };
 
@@ -119,7 +121,9 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 Description = "There was a broken railing on the path.",
                 Priority = "High",
                 TourId = -9999,
-                DateTime = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                FixUntil = DateTime.UtcNow,
+                Status = 0,
                 UserId = -21
             };
 
