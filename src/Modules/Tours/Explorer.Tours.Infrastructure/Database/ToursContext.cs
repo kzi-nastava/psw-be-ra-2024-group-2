@@ -13,6 +13,7 @@ public class ToursContext : DbContext
     public DbSet<Image> Images { get; set; }
     public DbSet<TourObject> Objects { get; set; }
     public DbSet<TourIssueReport> TourIssueReports { get; set; }
+    public DbSet<TourIssueComment> TourIssueComments { get; set; }
     public DbSet<ClubInvite> ClubInvites { get; set; }
     public DbSet<Club> Clubs { get; set; }
     public DbSet<Checkpoint> Checkpoints { get; set; }
@@ -44,6 +45,19 @@ public class ToursContext : DbContext
             .HasForeignKey(t => t.TourId)
             .OnDelete(DeleteBehavior.Cascade);
 
-       
+        modelBuilder.Entity<Tour>()
+            .HasMany(t => t.TourIssueReports)
+            .WithOne(t => t.Tour)
+            .HasForeignKey(t => t.TourId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<TourIssueReport>()
+            .HasMany(t => t.TourIssueComments)
+            .WithOne(t => t.TourIssueReport)
+            .HasForeignKey(t => t.TourIssueId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // modelBuilder.Entity<TourIssueReport>()
+        //.Property(item => item.TourIssueComments).HasColumnType("jsonb");
     }
 }
