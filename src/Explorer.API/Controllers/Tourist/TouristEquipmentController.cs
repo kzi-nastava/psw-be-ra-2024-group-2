@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Infrastructure.Authentication;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Microsoft.AspNetCore.Authorization;
@@ -17,35 +18,32 @@ namespace Explorer.API.Controllers.Tourist
             _equipmentService = equipmentService;
         }
 
-        [HttpPost("{touristId:int}/add/{equipmentId:long}")]
-        public ActionResult AddEquipmentToTourist(long touristId, long equipmentId)
+        [HttpPost("add/{equipmentId:long}")]
+        public ActionResult AddEquipmentToTourist(long equipmentId)
         {
-            var result = _equipmentService.AddEquipmentTourist(touristId, equipmentId);
+            var result = _equipmentService.AddEquipmentTourist(User.PersonId(), equipmentId);
             return CreateResponse(result);
         }
 
-        [HttpDelete("{touristId:long}/remove/{equipmentId:long}")]
-        public ActionResult RemoveEquipmentFromTourist(long touristId, long equipmentId)
+        [HttpDelete("remove/{equipmentId:long}")]
+        public ActionResult RemoveEquipmentFromTourist(long equipmentId)
         {
-            var result = _equipmentService.RemoveEquipmentFromTourist(touristId, equipmentId);
+            var result = _equipmentService.RemoveEquipmentFromTourist(User.PersonId(), equipmentId);
             return CreateResponse(result);
-        }
-
-        [HttpGet("{touristId:long}")]
-        public ActionResult GetTouristEquipment(long touristId)
-        {
-            var result = _equipmentService.GetEquipmentForTourist(touristId);
-            return Ok(result);
         }
 
         [HttpGet]
+        public ActionResult GetTouristEquipment()
+        {
+            var result = _equipmentService.GetEquipmentForTourist(User.PersonId());
+            return Ok(result);
+        }
+
+        [HttpGet("all")]
         public ActionResult<PagedResult<EquipmentDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _equipmentService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
-
-
-
     }
 }
