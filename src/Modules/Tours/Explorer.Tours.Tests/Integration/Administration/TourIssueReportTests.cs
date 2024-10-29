@@ -81,6 +81,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
 
             var newReport = new TourIssueReportDto
             {
+                Id = -1,
                 Category = "Safety",
                 Description = "There was a broken railing on the path.",
                 Priority = "High",
@@ -113,6 +114,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
 
             var newReport = new TourIssueReportDto
             {
+                Id = -2,
                 Category = "Safety",
                 Description = "There was a broken railing on the path.",
                 Priority = "High",

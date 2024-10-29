@@ -49,3 +49,8 @@ public enum TourIssueReportStatus
     Open,
     Closed
 }
+public enum TourIssueNotificationStatus
+{
+    Read,
+    Unread
+}

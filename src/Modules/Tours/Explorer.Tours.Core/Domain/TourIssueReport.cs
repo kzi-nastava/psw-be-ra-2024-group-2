@@ -23,6 +23,7 @@ namespace Explorer.Tours.Core.Domain
         public Tour Tour { get; private set; }
         public TourIssueReportStatus Status { get; private set; }
         public List<TourIssueComment>? TourIssueComments { get; private set; } = new List<TourIssueComment>();
+        public List<TourIssueNotification>? TourIssueNotifications { get; private set; } = new List<TourIssueNotification>();
         public TourIssueReport(){}
         public TourIssueReport(string category, string description, string priority, DateTime createdAt, DateTime fixUntil, long userId, long tourId)
         {
@@ -30,7 +31,7 @@ namespace Explorer.Tours.Core.Domain
             Description = description;
             Priority = priority;
             CreatedAt = createdAt;
-            FixUntil = createdAt.AddYears(500);
+            FixUntil = fixUntil;
             UserId = userId;
             TourId = tourId;
             Validate();
@@ -62,6 +63,10 @@ namespace Explorer.Tours.Core.Domain
         public void UpdateFixUntil(DateTime dateLimit)
         {
             FixUntil = dateLimit;
+        }
+        public void UpdateStatus(TourIssueReportStatus status)
+        {
+            Status = status;
         }
     }
 }
