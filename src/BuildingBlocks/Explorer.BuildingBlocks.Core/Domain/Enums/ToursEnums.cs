@@ -44,3 +44,8 @@ public enum DifficultyLevel
     Moderate,
     Hard
 }
+public enum TourIssueReportStatus
+{
+    Open,
+    Closed
+}
