@@ -58,8 +58,6 @@ namespace Explorer.Tours.Core.UseCases.Administration
             return Result.Ok();
         }
 
-
-
         public Result<PagedResult<ClubInviteDTO>> GetPaged(int page, int pageSize)
         {
             var accounts = _clubInviteRepository.GetPaged(page, pageSize);

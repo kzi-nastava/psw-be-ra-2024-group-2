@@ -11,7 +11,7 @@ namespace Explorer.Tours.API.Public.Administration
 {
     public interface ITourIssueCommentService
     {
-        Result<PagedResult<TourIssueCommentDto>> GetPaged(int page, int pageSize);
+        PagedResult<TourIssueCommentDto> GetPaged(long reportId, int page, int pageSize);
         Result<TourIssueCommentDto> Get(int commentId);
         Result<TourIssueCommentDto> Create(TourIssueCommentDto tourIssueCommentDto);
     }
