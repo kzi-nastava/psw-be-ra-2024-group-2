@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Explorer.BuildingBlocks.Core.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,13 @@ namespace Explorer.Blog.API.Dtos
 {
     public class BlogDto
     {
+        public int Id { get; set; }
         public string Title {  get; set; }
         public string Description { get; set; }
         public Status Status { get; set; }
         public int AuthorId { get; set; }
+
+        public List<Image?> Images { get; set; } = new List<Image>();
 
     }
     public enum Status

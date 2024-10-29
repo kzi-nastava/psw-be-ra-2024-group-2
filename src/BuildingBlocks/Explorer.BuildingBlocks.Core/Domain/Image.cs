@@ -7,7 +7,10 @@ public class Image : Entity
     public string Data { get; init; }
     public DateTime UploadedAt { get; init; }
     public MimeType MimeType { get; init; }
+    public Image()
+    {
 
+    }
     public Image(string data, DateTime uploadedAt, MimeType mimeType)
     {
         Data = data;
@@ -31,7 +34,6 @@ public class Image : Entity
         MimeType.Gif => "image/gif",
         _ => throw new ArgumentException("MimeType is not valid")
     };
-
     private MimeType GetMimeTypeDenormalized(string mimeType) => mimeType switch
     {
         "image/jpeg" => MimeType.Jpeg,
@@ -47,7 +49,6 @@ public class Image : Entity
         if (!Enum.IsDefined(typeof(MimeType), MimeType)) throw new ArgumentException("MimeType is not valid");
     }
 }
-
 public enum MimeType
 {
     Jpeg,

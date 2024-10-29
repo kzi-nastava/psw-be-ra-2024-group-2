@@ -27,11 +27,7 @@ namespace Explorer.Blog.Core.Domain
             Status = status;
             Date = DateTime.UtcNow;
             AuthorId = authorId;
-        }
-
-        public Blog() 
-        {
-            Date = DateTime.UtcNow;
+            Validate();
         }
 
         private void Validate()

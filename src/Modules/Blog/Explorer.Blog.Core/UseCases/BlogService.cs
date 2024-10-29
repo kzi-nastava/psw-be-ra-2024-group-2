@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
@@ -19,8 +20,9 @@ namespace Explorer.Blog.Core.UseCases
         private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
 
-        public BlogService(ICrudRepository<Explorer.Blog.Core.Domain.Blog> crudRepository, ITransactionRepository transactionRepository, IMapper mapper) : base(crudRepository, mapper)
+        public BlogService(ICrudRepository<Explorer.Blog.Core.Domain.Blog> crudRepository, ITransactionRepository transactionRepository, IImageRepository imageRepository, IMapper mapper) : base(crudRepository, mapper)
         {
+            _imageRepository = imageRepository;
             _blogRepository = crudRepository;
             _mapper = mapper;
             _transactionRepository = transactionRepository;
@@ -31,8 +33,18 @@ namespace Explorer.Blog.Core.UseCases
             try
             {
                 var blog = _mapper.Map<Core.Domain.Blog>(blogDto);
-                var result = _blogRepository.Create(blog);
-                return Result.Ok(_mapper.Map<BlogDto>(result));
+
+                var createdBlog = _blogRepository.Create(blog);
+
+                if (blogDto.Images != null && blogDto.Images.Any())
+                {
+                    foreach (var image in blogDto.Images)
+                    {
+                        _imageRepository.Create(image);
+                    }
+                }
+
+                return Result.Ok(_mapper.Map<BlogDto>(createdBlog));
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 ﻿using Explorer.Blog.API.Dtos;
+using Explorer.BuildingBlocks.Core.UseCases;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,7 @@ namespace Explorer.Blog.API.Public
     public interface IBlogService
     {
         Result<BlogDto> Create(BlogDto blog);
+        Result<PagedResult<BlogDto>> GetPaged(int page, int pageSize);
+        Result<BlogDto> Get(int id);
     }
 }

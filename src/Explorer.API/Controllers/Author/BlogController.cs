@@ -1,7 +1,9 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.Infrastructure.Authentication;
 using Explorer.Tours.API.Dtos;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Author
@@ -15,6 +17,33 @@ namespace Explorer.API.Controllers.Author
         {
             _blogService = blogService;
         }
+
+        [HttpGet]
+        public ActionResult<PagedResult<BlogDto>> GetAll()
+        {
+            var result = _blogService.GetPaged(0, 0);
+
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(result.Value);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<BlogDto> GetById(int id)
+        {
+            var result = _blogService.Get(id);
+
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(result.Value);
+        }
+
 
         [HttpPost]
         public ActionResult<BlogDto> Create([FromBody] BlogDto dto)
