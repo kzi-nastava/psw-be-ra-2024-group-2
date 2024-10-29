@@ -28,14 +28,14 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
 
             // Act
-            var result = (OkResult)controller.RemoveEquipmentFromTourist(-21, -1);
+            var result = (OkResult)controller.RemoveEquipmentFromTourist(-1);
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.StatusCode.ShouldBe(200);
 
             // Assert - Database
-            var storedCourse = dbContext.TouristEquipments.FirstOrDefault(i => i.UserId == -21 && i.EquipmentId == -1);
+            var storedCourse = dbContext.TouristEquipments.FirstOrDefault(i => i.EquipmentId == -1);
             storedCourse.ShouldBeNull();
         }
 
@@ -48,14 +48,14 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
 
             // Act
-            var result = (OkResult)controller.AddEquipmentToTourist(-22, -2);
+            var result = (OkResult)controller.AddEquipmentToTourist(-2);
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.StatusCode.ShouldBe(200);
 
             // Assert - Database
-            var storedCourse = dbContext.TouristEquipments.FirstOrDefault(i => i.UserId == -22 && i.EquipmentId == -2);
+            var storedCourse = dbContext.TouristEquipments.FirstOrDefault(i => i.EquipmentId == -2);
             storedCourse.ShouldNotBeNull();
         }
 
@@ -67,7 +67,7 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             var controller = CreateController(scope);
 
             // Act
-            var result = (ObjectResult)controller.RemoveEquipmentFromTourist(-1000, -1000);
+            var result = (ObjectResult)controller.RemoveEquipmentFromTourist(-1000);
 
             // Assert
             result.ShouldNotBeNull();
