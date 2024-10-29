@@ -16,10 +16,14 @@ namespace Explorer.Tours.Core.UseCases.Administration
     {
         private readonly ICrudRepository<TourIssueReport> _tourIssueReportRepository;
         private readonly ICrudRepository<Tour> _tourRepository;
-        public TourIssueReportService(ICrudRepository<TourIssueReport> repository, ICrudRepository<Tour> tourRepository, IMapper mapper) : base(repository, mapper)
+        private readonly ICrudRepository<TourIssueComment> _tourIssueCommentRepository;
+        private readonly ITransactionRepository _transactionRepository;
+        public TourIssueReportService(ICrudRepository<TourIssueReport> repository, ICrudRepository<Tour> tourRepository, ICrudRepository<TourIssueComment> tourIssueCommentRepository, ITransactionRepository transactionRepository, IMapper mapper) : base(repository, mapper)
         {
             _tourIssueReportRepository = repository;
             _tourRepository = tourRepository;
+            _tourIssueCommentRepository = tourIssueCommentRepository;
+            _transactionRepository = transactionRepository;
         }
 
         public Result<TourIssueReportDto> Create(long userId, long tourId, TourIssueReportDto tourIssueReport)
@@ -54,5 +58,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
+
+        
     }
 }

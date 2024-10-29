@@ -55,7 +55,7 @@ public class ToursContext : DbContext
         modelBuilder.Entity<TourIssueReport>()
             .HasMany(t => t.TourIssueComments)
             .WithOne(t => t.TourIssueReport)
-            .HasForeignKey(t => t.TourIssueId)
+            .HasForeignKey(t => t.TourIssueReportId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<TourIssueReport>()
