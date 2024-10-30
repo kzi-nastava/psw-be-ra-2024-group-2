@@ -44,3 +44,14 @@ public enum DifficultyLevel
     Moderate,
     Hard
 }
+
+public enum TourExecutionStatus
+{
+    InProgress,
+    Completed
+}
+public enum CheckpointStatus
+{
+    Completed,
+    NotCompleted
+}
