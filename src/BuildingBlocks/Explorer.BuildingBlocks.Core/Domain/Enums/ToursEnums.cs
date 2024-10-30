@@ -55,3 +55,13 @@ public enum CheckpointStatus
     Completed,
     NotCompleted
 }
+public enum TourIssueReportStatus
+{
+    Open,
+    Closed
+}
+public enum TourIssueNotificationStatus
+{
+    Read,
+    Unread
+}

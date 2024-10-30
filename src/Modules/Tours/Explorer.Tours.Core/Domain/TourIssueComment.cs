@@ -11,15 +11,15 @@ namespace Explorer.Tours.Core.Domain
     public class TourIssueComment : Entity
     {
         public long UserId { get; private set; }
-        public long TourIssueId { get; private set; }
+        public long TourIssueReportId { get; private set; }
         public string Comment { get; private set; }
         public DateTime PublishedAt { get; private set; }
         public TourIssueReport TourIssueReport { get; private set; }
         public TourIssueComment(){}
-        public TourIssueComment(long userId, long tourIssueId, string comment, DateTime publishedAt)
+        public TourIssueComment(long userId, long tourIssueReportId, string comment, DateTime publishedAt)
         {
             UserId = userId;
-            TourIssueId = tourIssueId;
+            TourIssueReportId = tourIssueReportId;
             Comment = comment;
             PublishedAt = publishedAt;
         }
