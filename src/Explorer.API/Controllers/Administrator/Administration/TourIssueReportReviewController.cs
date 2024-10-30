@@ -41,7 +41,7 @@ namespace Explorer.API.Controllers.Administrator.Administration
         [HttpPut("setFixUntilDate/{fromUserId}")] //fromUserId is admin in this case
         public ActionResult<TourIssueReportDto> SetFixUntilDate([FromBody] TourIssueReportDto tourIssueReportDto, long fromUserId)
         {
-            var updatedTourIssueReport = _tourIssueReportService.SetFixUntilDate(fromUserId, tourIssueReportDto);
+            var updatedTourIssueReport = _tourIssueReportService.SetFixUntilDate(tourIssueReportDto, fromUserId);
             return CreateResponse(updatedTourIssueReport);
         }
 

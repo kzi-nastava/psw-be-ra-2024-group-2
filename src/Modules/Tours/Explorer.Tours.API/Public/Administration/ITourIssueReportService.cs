@@ -17,7 +17,7 @@ namespace Explorer.Tours.API.Public.Administration
         Result<TourIssueReportDto> MarkAsDone(TourIssueReportDto tourIssueReport);
         Result<TourIssueReportDto> AlertNotDone(TourIssueReportDto tourIssueReport);
         Result<TourIssueReportDto> Get(int Id);
-        public Result<TourIssueReportDto> SetFixUntilDate(long fromUserId, TourIssueReportDto tourIssueReportDto);
+        public Result<TourIssueReportDto> SetFixUntilDate(TourIssueReportDto tourIssueReportDto, long fromUserId);
         public Result<TourIssueReportDto> CloseReport(TourIssueReportDto tourIssueReportDto);
     }
 }
