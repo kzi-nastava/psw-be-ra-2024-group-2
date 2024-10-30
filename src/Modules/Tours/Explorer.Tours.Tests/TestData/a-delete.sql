@@ -2,6 +2,7 @@
 DELETE FROM tours."EquipmentTour";
 DELETE FROM tours."TourReview";
 DELETE FROM tours."Objects";
+DELETE FROM tours."TourIssueComments";
 DELETE FROM tours."TourIssueReports";
 DELETE FROM tours."CheckpointTour";
 DELETE FROM tours."Tours";
