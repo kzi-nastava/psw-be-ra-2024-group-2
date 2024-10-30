@@ -51,24 +51,5 @@ namespace Explorer.API.Controllers.Tourist
             var result = _tourIssueReportService.AlertNotDone(report);
             return CreateResponse(result);
         }
-
-        [HttpPost("comment")]
-        public ActionResult<TourIssueCommentDto> CreateComment([FromBody] TourIssueCommentDto comment)
-        {
-            var result = _tourCommentService.Create(comment);
-            return CreateResponse(result);
-        }
-
-        [HttpGet("comments")]
-        public ActionResult<PagedResult<TourIssueCommentDto>> GetAllComments([FromQuery] long tourIssueReportId, [FromQuery] int page, [FromQuery] int pageSize)
-        {
-            var pagedResult = _tourCommentService.GetPaged(tourIssueReportId, page, pageSize);
-
-            if (pagedResult == null)
-                return CreateResponse(Result.Fail("No comments found"));
-
-            var result = Result.Ok(pagedResult);
-            return CreateResponse(result);
-        }
     }
 }

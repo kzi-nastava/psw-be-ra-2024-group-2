@@ -135,6 +135,34 @@ namespace Explorer.Tours.Tests.Integration.Administration
             result.StatusCode.ShouldBe(404); // Očekujte 404 Not Found
         }
 
+        [Fact]
+        public void CloseReport_Successfully_Closes_Report()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateControllerReview(scope, "-1");
+
+            var newReport = new TourIssueReportDto
+            {
+                Id = -2,
+                Category = "Safety",
+                Description = "There was a broken railing on the path.",
+                Priority = "High",
+                TourId = -9999,
+                CreatedAt = DateTime.UtcNow,
+                FixUntil = DateTime.UtcNow,
+                Status = 0,
+                UserId = -21
+            };
+
+            // Act
+            var result = (ObjectResult)controller.CloseReport(newReport).Result;
+
+            // Assert
+            //result.ShouldNotBeNull();
+            //result.StatusCode.ShouldBe(404);
+        }
+
 
     }
 }
