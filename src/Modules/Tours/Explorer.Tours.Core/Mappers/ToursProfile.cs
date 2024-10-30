@@ -4,6 +4,7 @@ using Explorer.Tours.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain;
 using System.Xml.Serialization;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 
 namespace Explorer.Tours.Core.Mappers;
 
@@ -11,6 +12,13 @@ public class ToursProfile : Profile
 {
     public ToursProfile()
     {
+
+        CreateMap<TourIssueCommentDto, TourIssueComment>()
+            .ForMember(dest => dest.TourIssueReportId, opt => opt.MapFrom(src => src.TourIssueReportId.ToString()))
+            .ForMember(dest => dest.Comment, opt => opt.MapFrom(dest => dest.Comment.ToString()))
+            .ForMember(dest => dest.PublishedAt, opt => opt.MapFrom(dest => dest.PublishedAt.ToString()))
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(dest => dest.UserId.ToString()));
+
         CreateMap<EquipmentDto, Equipment>().ReverseMap();
         CreateMap<Tour, TourDto>()
             .ForMember(dest => dest.Equipment, opt => opt.MapFrom(src => src.Equipment.Select(e => e.Id)))
@@ -69,7 +77,29 @@ public class ToursProfile : Profile
 
         CreateMap<TourPreferenceDto, TourPreference>()
             .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(t => new TourPreferenceTag(t))));
+
+        CreateMap<TourExecution, TourExecutionDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.TourId, opt => opt.MapFrom(src => src.TourId))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+            .ForMember(dest => dest.SessionEndingTime, opt => opt.MapFrom(src => src.SessionEndingTime))
+            .ForMember(dest => dest.LastActivity, opt => opt.MapFrom(src => src.LastActivity))
+            .ForMember(dest => dest.Tour, opt => opt.MapFrom(src => src.Tour)) 
+            .ForMember(dest => dest.tourExecutionCheckpoints,
+                       opt => opt.MapFrom(src => src.tourExecutionCheckpoints));
+
+
+        CreateMap<TourExecutionCheckpoint, TourExecutionCheckpointDto>()
+            .ForMember(dest => dest.CheckpointId, opt => opt.MapFrom(src => src.CheckpointId))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+            .ForMember(dest => dest.ArrivalAt, opt => opt.MapFrom(src => src.ArrivalAt))
+            .ForMember(dest => dest.TourExecutionId, opt => opt.MapFrom(src => src.TourExecutionId))
+            .ForMember(dest => dest.Checkpoint, opt => opt.MapFrom(src => src.Checkpoint));
+
+
+
+
     }
-   
-    
+
+
 }
