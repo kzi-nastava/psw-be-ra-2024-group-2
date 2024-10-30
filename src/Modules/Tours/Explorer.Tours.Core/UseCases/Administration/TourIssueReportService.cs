@@ -122,13 +122,11 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
                 var tourIssue = MapToDomain(tourIssueReportDto);
 
-                var tourIssueGet = _tourIssueReportRepository.Get(tourIssue.TourId) ?? throw new Exception();
+                var tourIssueGet = _tourIssueReportRepository.Get(tourIssue.Id) ?? throw new Exception();
 
-                tourIssueReportDto.Status = TourIssueReportStatus.Closed;
+                tourIssueGet.UpdateStatus(TourIssueReportStatus.Closed);
 
-                var tourIssueReport = MapToDomain(tourIssueReportDto);
-
-                var results = _tourIssueReportRepository.Update(tourIssueReport);
+                var results = _tourIssueReportRepository.Update(tourIssueGet);
 
                 _transactionRepository.CommitTransaction();
 
@@ -150,13 +148,11 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
                 var tourIssue = MapToDomain(tourIssueReportDto);
 
-                var tourIssueGet = _tourIssueReportRepository.Get(tourIssue.TourId) ?? throw new Exception();
+                var tourIssueGet = _tourIssueReportRepository.Get(tourIssue.Id) ?? throw new Exception();
 
-                tourIssueReportDto.FixUntil = DateTime.Now;
+                tourIssueGet.UpdateFixUntil(DateTime.UtcNow.AddDays(2));
 
-                var tourIssueReport = MapToDomain(tourIssueReportDto);
-
-                var results = _tourIssueReportRepository.Update(tourIssueReport);
+                var results = _tourIssueReportRepository.Update(tourIssueGet);
 
                 _transactionRepository.CommitTransaction();
 

@@ -1,8 +1,12 @@
-﻿using Explorer.Tours.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Infrastructure.Authentication;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.Core.UseCases.Tourist;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Explorer.Tours.API.Public.Administration;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -17,10 +21,10 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet]
-        public ActionResult<TourPreferenceDto> GetByTouristId(long id)
+        public ActionResult<PagedResult<TourPreferenceDto>> GetByTouristId()
         {
-            var result = _tourPreferenceService.GetByTouristId(id);
-            return CreateResponse(result);
+            var allTourPreferences = _tourPreferenceService.GetByTouristId(User.PersonId());
+            return CreateResponse(allTourPreferences.ToResult());
         }
 
         [HttpPost]
