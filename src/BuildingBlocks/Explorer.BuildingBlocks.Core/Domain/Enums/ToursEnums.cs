@@ -55,7 +55,6 @@ public enum CheckpointStatus
     Completed,
     NotCompleted
 }
-}
 public enum TourIssueReportStatus
 {
     Open,

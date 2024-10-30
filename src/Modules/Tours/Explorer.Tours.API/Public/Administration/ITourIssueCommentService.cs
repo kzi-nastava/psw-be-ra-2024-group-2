@@ -13,6 +13,6 @@ namespace Explorer.Tours.API.Public.Administration
     {
         PagedResult<TourIssueCommentDto> GetPaged(long reportId, int page, int pageSize);
         Result<TourIssueCommentDto> Get(int commentId);
-        Result<TourIssueCommentDto> Create(TourIssueCommentDto tourIssueCommentDto);
+        Result<TourIssueCommentDto> CreateComment(TourIssueCommentDto tourIssueCommentDto);
     }
 }
