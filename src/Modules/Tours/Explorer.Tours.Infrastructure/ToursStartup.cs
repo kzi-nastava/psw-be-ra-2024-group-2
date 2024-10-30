@@ -41,10 +41,7 @@ public static class ToursStartup
         services.AddScoped<ITourPreferenceService, TourPreferenceService>();
         services.AddScoped<ITourIssueCommentService, TourIssueCommentService>();
         services.AddScoped<ITourIssueCommentService, TourIssueCommentService>();
-=========
         services.AddScoped<ITourExecutionCheckpointService,TourExecutionCheckpointService> ();
-
->>>>>>>>> Temporary merge branch 2
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
