@@ -15,6 +15,7 @@ public class Tour  : Entity
     public List<Equipment> Equipment { get; private set; } = new List<Equipment>();
     public List<Checkpoint> Checkpoints { get; private set; } = new List<Checkpoint>();
     public List<TourDurationByTransport>? TourDurationByTransports { get; set; } = new List<TourDurationByTransport>();
+    public List<TourIssueReport>? TourIssueReports { get; private set; } = new List<TourIssueReport>();
     public DateTime? PublishedAt { get; private set; }
     public DateTime? ArchivedAt { get; private set; }
     public Tour(long userId, string name, string description, TourDifficulty difficulty, TourTag tag, TourStatus status, double price)

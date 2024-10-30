@@ -16,6 +16,5 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             _dbContext = dbContext;
         }
 
-
     }
 }

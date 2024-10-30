@@ -14,6 +14,7 @@ public class ToursContext : DbContext
     public DbSet<Image> Images { get; set; }
     public DbSet<TourObject> Objects { get; set; }
     public DbSet<TourIssueReport> TourIssueReports { get; set; }
+    public DbSet<TourIssueComment> TourIssueComments { get; set; }
     public DbSet<ClubInvite> ClubInvites { get; set; }
     public DbSet<Club> Clubs { get; set; }
     public DbSet<Checkpoint> Checkpoints { get; set; }
@@ -50,33 +51,23 @@ public class ToursContext : DbContext
             .HasForeignKey(t => t.TourId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        //modelBuilder.Entity<TourExecution>()
-        //    .HasOne(te => te.Tour)
-        //    .WithMany()
-        //    .HasForeignKey(te => te.TourId)
-        //    .OnDelete(DeleteBehavior.Cascade);
-
-        //modelBuilder.Entity<TourExecution>()
-        //    .HasMany(te => te.tourExecutionCheckpoints)
-        //    .WithOne(tc => tc.TourExecution)
-        //    .HasForeignKey(tc => tc.TourExecutionId)  // Ensure correct FK mapping
-        //    .OnDelete(DeleteBehavior.Cascade);
-
-        //modelBuilder.Entity<TourExecutionCheckpoint>()
-        //    .HasOne(tc => tc.Checkpoint)
-        //    .WithMany()
-        //    .HasForeignKey(tc => tc.CheckpointId)  // Use correct FK for Checkpoint
-        //    .OnDelete(DeleteBehavior.Restrict);
-
-
         modelBuilder.Entity<TourExecution>()
             .HasMany(te => te.tourExecutionCheckpoints)
             .WithOne()
             .OnDelete(DeleteBehavior.Cascade);
-        //modelBuilder.Entity<TourExecutionCheckpoint>()
-        //    .HasOne(kp => kp.Checkpoint)
-        //    .WithOne()
-        //    .OnDelete(DeleteBehavior.Cascade);
+       
+        modelBuilder.Entity<Tour>()
+            .HasMany(t => t.TourIssueReports)
+            .WithOne(t => t.Tour)
+            .HasForeignKey(t => t.TourId)
+            .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<TourIssueReport>()
+            .HasMany(t => t.TourIssueComments)
+            .WithOne(t => t.TourIssueReport)
+            .HasForeignKey(t => t.TourIssueId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+     
     }
 }
