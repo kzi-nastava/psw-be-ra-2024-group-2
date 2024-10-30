@@ -28,7 +28,7 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Create(newComment).Result)?.Value as CommentDTO;
+        var result = ((ObjectResult)controller.Create(newComment.BlogId,newComment).Result)?.Value as CommentDTO;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -55,7 +55,7 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         };
 
         // Act
-        var result = (ObjectResult)controller.Create(invalidComment).Result;
+        var result = (ObjectResult)controller.Create(invalidComment.BlogId,invalidComment).Result;
 
         // Assert
         result.ShouldNotBeNull();
@@ -76,7 +76,7 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         };
 
         // Kreiraj inicijalni komentar
-        var createdComment = ((ObjectResult)controller.Create(initialComment).Result)?.Value as CommentDTO;
+        var createdComment = ((ObjectResult)controller.Create(initialComment.BlogId,initialComment).Result)?.Value as CommentDTO;
 
         // Ažuriraj komentar
         var updatedComment = new CommentDTO
@@ -132,7 +132,7 @@ public class CommentCommandTests : BaseBlogIntegrationTest
             BlogId = 1,
             Text = "Komentar za brisanje."
         };
-        var createdComment = ((ObjectResult)controller.Create(commentToDelete).Result)?.Value as CommentDTO;
+        var createdComment = ((ObjectResult)controller.Create(commentToDelete.BlogId, commentToDelete).Result)?.Value as CommentDTO;
 
         // Act
         var result = (OkResult)controller.Delete(createdComment.Id);
