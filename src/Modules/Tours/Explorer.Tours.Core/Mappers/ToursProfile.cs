@@ -28,7 +28,7 @@ public class ToursProfile : Profile
         CreateMap<TourDurationByTransport, TourDurationByTransportDto>()
             .ForMember(dest => dest.Transport, opt => opt.MapFrom(src => src.TransportType.ToString()));
 
-
+        CreateMap<TourIssueNotificationDto, TourIssueNotification>().ReverseMap();
         CreateMap<Checkpoint, CheckpointDto>()
             .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
             .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude))
