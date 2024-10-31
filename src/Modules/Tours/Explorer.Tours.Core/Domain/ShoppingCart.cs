@@ -4,8 +4,19 @@ using Explorer.Tours.Core.Domain;
 public class ShoppingCart : Entity
 {
     public double TotalPrice { get; private set; } = 0.0;
-    public List<OrderItem> Items { get; private set; } = new List<OrderItem>();
+    public List<OrderItem> Items { get; private set; }
     public long TouristId { get; private set; }
+
+    public ShoppingCart(long touristId, long tourId)
+    {
+        TouristId = touristId;
+        OrderItem item = new OrderItem(tourId);
+        Items.Add(item);
+    }
+
+    public ShoppingCart() {
+        Items = new List<OrderItem>();
+    }
 
     public void AddItem(OrderItem item)
     {

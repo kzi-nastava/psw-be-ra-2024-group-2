@@ -67,6 +67,7 @@ public static class ToursStartup
         services.AddScoped(typeof(ITourDurationByTransportRepository), typeof(TourDurationByTransportRepository));
         services.AddScoped(typeof(ICrudRepository<TourExecution>), typeof(CrudDatabaseRepository<TourExecution, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourExecutionCheckpoint>), typeof(CrudDatabaseRepository<TourExecutionCheckpoint, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<OrderItem>), typeof(CrudDatabaseRepository<OrderItem, ToursContext>));
         services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 
         services.AddDbContext<ToursContext>(opt =>

@@ -14,5 +14,10 @@ namespace Explorer.Tours.Core.Domain
         public long TourId { get; set; }
         public long UserId { get; set; }
         public Boolean Token { get; set; }
+        public OrderItem() { }
+        public OrderItem(long tourId)
+        {
+            TourId = tourId;
+        }
     }
 }
