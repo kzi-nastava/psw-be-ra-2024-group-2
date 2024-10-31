@@ -31,5 +31,14 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 
         public TourExecution() { }
 
+        public double GetProgress()
+        {
+            return tourExecutionCheckpoints.Where(c => c.Status == CheckpointStatus.Completed).Count() / tourExecutionCheckpoints.Count();
+        }
+
+        public bool IsLastActivityOlderThanSevenDays()
+        {
+            return (DateTime.UtcNow - LastActivity).TotalDays > 7;
+        }
     }
 }
