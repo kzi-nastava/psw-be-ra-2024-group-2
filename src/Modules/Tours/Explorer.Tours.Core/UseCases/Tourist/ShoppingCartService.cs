@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using FluentResults;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 public class ShoppingCartService : IShoppingCartService
 {
@@ -55,12 +56,11 @@ public class ShoppingCartService : IShoppingCartService
     {
         var cart = _shoppingCartRepository.GetByUserId(userId);
         var orderItem = _mapper.Map<OrderItem>(orderItemDto);
-        var orderItemDeletion = cart.Items.FirstOrDefault(item =>
-        item.TourId == orderItemDto.TourId &&
-        item.UserId == userId);
-        cart.RemoveItem(orderItem);
-        _shoppingCartRepository.Update(cart);
-        //_orderItemRepository.Delete(orderItemDeletion.Id);
+        //cart.RemoveItem(orderItem);
+        //_shoppingCartRepository.Update(cart);#
+        var allItems = _orderItemRepository.GetPaged(1, int.MaxValue);
+        var order = allItems.Results.FirstOrDefault(o => o.TourId == orderItemDto.TourId && o.ShoppingCartId == cart.Id);
+        _orderItemRepository.Delete(order.Id);
         return Result.Ok(); 
     }
 

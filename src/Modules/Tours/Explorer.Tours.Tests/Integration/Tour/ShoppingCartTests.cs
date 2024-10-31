@@ -37,7 +37,10 @@ namespace Explorer.Tours.Tests.Integration.Tour
             // Assert - Database
             var storedCourse = dbContext.OrderItems.FirstOrDefault(i => i.TourId == -1);
             storedCourse.ShouldBeNull();
+
         }
+
+
 
         [Fact]
         public void Adds()
@@ -70,7 +73,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
             var result = (ObjectResult)controller.RemoveItemFromCart(-1000);
 
             // Assert
-            result.ShouldNotBeNull();
+            result.ShouldBeNull();
             result.StatusCode.ShouldBe(500);
         }
 
@@ -79,7 +82,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
         {
             return new ShoppingCartController(scope.ServiceProvider.GetRequiredService<IShoppingCartService>())
             {
-                ControllerContext = BuildContext("-1")
+                ControllerContext = BuildContext("-21")
             };
         }
     }

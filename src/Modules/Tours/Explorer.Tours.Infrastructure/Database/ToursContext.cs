@@ -77,6 +77,11 @@ public class ToursContext : DbContext
             .WithOne(t => t.TourIssueReport)
             .HasForeignKey(t => t.TourIssueReportId)
             .OnDelete(DeleteBehavior.Cascade);
-       
+
+        modelBuilder.Entity<ShoppingCart>()
+        .HasMany(s => s.Items)
+        .WithOne(i => i.ShoppingCart)
+        .HasForeignKey(i => i.ShoppingCartId);
+
     }
 }

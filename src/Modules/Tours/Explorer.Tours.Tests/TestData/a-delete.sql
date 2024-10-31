@@ -13,4 +13,4 @@ DELETE FROM tours."Images";
 DELETE FROM tours."PreferenceTags";
 DELETE FROM tours."TourPreferences";
 DELETE FROM tours."OrderItems";
-DELETE FROM tours."ShoppingCart";
+DELETE FROM tours."ShoppingCarts";

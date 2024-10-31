@@ -15,7 +15,10 @@ public class ShoppingCart : Entity
     }
 
     public ShoppingCart() {
-        Items = new List<OrderItem>();
+        if (Items == null)
+        {
+            Items = new List<OrderItem>();
+        }
     }
 
     public void AddItem(OrderItem item)
