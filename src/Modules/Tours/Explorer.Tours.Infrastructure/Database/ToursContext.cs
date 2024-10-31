@@ -21,7 +21,6 @@ public class ToursContext : DbContext
     public DbSet<Checkpoint> Checkpoints { get; set; }
     public DbSet<TourPreference> TourPreferences { get; set; }
     public DbSet<TourPreferenceTag> PreferenceTags { get; set; }
-    public DbSet<TourDurationByTransport> TourDurationByTransports { get; set; }
 
     public DbSet<TourExecution> TourExecutions { get; set; }
 
@@ -46,17 +45,15 @@ public class ToursContext : DbContext
             .HasForeignKey<TourReview>(s => s.ImageId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Tour>()
-            .HasMany(t => t.TourDurationByTransports)
-            .WithOne(t => t.Tour)
-            .HasForeignKey(t => t.TourId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         modelBuilder.Entity<TourExecution>()
             .HasMany(te => te.tourExecutionCheckpoints)
             .WithOne()
             .OnDelete(DeleteBehavior.Cascade);
-       
+
+        modelBuilder.Entity<Tour>()
+            .Property(t => t.TourDurationByTransports)
+            .HasColumnType("jsonb");
+
         modelBuilder.Entity<Tour>()
             .HasMany(t => t.TourIssueReports)
             .WithOne(t => t.Tour)
