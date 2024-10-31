@@ -26,6 +26,8 @@ public class ToursContext : DbContext
     public DbSet<TourExecution> TourExecutions { get; set; }
 
     public DbSet<TourExecutionCheckpoint> TourExecutionCheckpoints { get; set; }
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
@@ -75,5 +77,6 @@ public class ToursContext : DbContext
             .WithOne(t => t.TourIssueReport)
             .HasForeignKey(t => t.TourIssueReportId)
             .OnDelete(DeleteBehavior.Cascade);
+       
     }
 }

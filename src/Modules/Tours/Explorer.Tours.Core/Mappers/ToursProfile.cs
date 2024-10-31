@@ -5,6 +5,7 @@ using Explorer.BuildingBlocks.Core.Domain;
 using System.Xml.Serialization;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.API.Public.Tourist.DTOs;
 
 namespace Explorer.Tours.Core.Mappers;
 
@@ -99,6 +100,8 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.TourExecutionId, opt => opt.MapFrom(src => src.TourExecutionId))
             .ForMember(dest => dest.Checkpoint, opt => opt.MapFrom(src => src.Checkpoint));
 
+        CreateMap<OrderItemDto, OrderItem>().ReverseMap();
+      
 
 
 

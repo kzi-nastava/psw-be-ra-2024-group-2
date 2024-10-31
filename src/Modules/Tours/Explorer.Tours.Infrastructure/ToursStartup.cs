@@ -41,7 +41,8 @@ public static class ToursStartup
         services.AddScoped<ITourPreferenceService, TourPreferenceService>();
         services.AddScoped<ITourIssueCommentService, TourIssueCommentService>();
         services.AddScoped<ITourIssueCommentService, TourIssueCommentService>();
-        services.AddScoped<ITourExecutionCheckpointService,TourExecutionCheckpointService> ();
+        services.AddScoped<ITourExecutionCheckpointService, TourExecutionCheckpointService>();
+        services.AddScoped<IShoppingCartService, ShoppingCartService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -66,6 +67,7 @@ public static class ToursStartup
         services.AddScoped(typeof(ITourDurationByTransportRepository), typeof(TourDurationByTransportRepository));
         services.AddScoped(typeof(ICrudRepository<TourExecution>), typeof(CrudDatabaseRepository<TourExecution, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourExecutionCheckpoint>), typeof(CrudDatabaseRepository<TourExecutionCheckpoint, ToursContext>));
+        services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),
