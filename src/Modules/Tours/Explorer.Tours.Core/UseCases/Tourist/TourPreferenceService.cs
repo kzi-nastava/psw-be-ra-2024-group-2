@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -21,10 +23,17 @@ namespace Explorer.Tours.Core.UseCases.Tourist
             _repository = repository;
         }
 
-        public Result<TourPreferenceDto> GetByTouristId(long touristId)
+        public PagedResult<TourPreferenceDto> GetByTouristId(long userId)
         {
-            var tourPreference = _repository.Get(touristId);
-            return MapToDto(tourPreference);
+            var allTourPreferences = _repository.GetPaged(1, int.MaxValue);
+
+
+            var filteredTourPreferences = allTourPreferences.Results
+                               .Where(tp => tp.TouristId == userId)
+                               .Select(tp => MapToDto(tp))
+                               .ToList();
+
+            return new PagedResult<TourPreferenceDto>(filteredTourPreferences, filteredTourPreferences.Count());
         }
     }
 }

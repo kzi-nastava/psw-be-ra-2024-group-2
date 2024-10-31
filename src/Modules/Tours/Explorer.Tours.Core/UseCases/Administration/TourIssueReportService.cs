@@ -68,7 +68,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
             }
         }
 
-        public Result<TourIssueReportDto> SetFixUntilDate(long fromUserId, TourIssueReportDto tourIssueReportDto) //fromUserId is admin in this case
+        public Result<TourIssueReportDto> SetFixUntilDate(TourIssueReportDto tourIssueReportDto, long fromUserId) //fromUserId is admin in this case
         {
             try
             {

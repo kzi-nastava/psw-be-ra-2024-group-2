@@ -37,8 +37,8 @@ namespace Explorer.Stakeholders.Tests.Integration.User
 
             // Assert
             result.ShouldNotBeNull();
-            result.Results.Count.ShouldBe(9);
-            result.TotalCount.ShouldBe(9);
+            result.Results.Count.ShouldBe(11);
+            result.TotalCount.ShouldBe(11);
         }
 
         [Fact]
