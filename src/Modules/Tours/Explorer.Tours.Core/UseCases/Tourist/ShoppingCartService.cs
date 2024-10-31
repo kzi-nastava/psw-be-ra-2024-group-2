@@ -22,28 +22,8 @@ public class ShoppingCartService : IShoppingCartService
         _mapper = mapper;
     }
 
-    /*public Result AddItemToCart(long userId, OrderItemDto orderItemDto)
-    {
-        var cart = _shoppingCartRepository.GetByUserId(userId);
-        if (cart == null)
-        {
-            cart = new ShoppingCart(userId, orderItemDto.TourId);
-            _shoppingCartRepository.Create(cart);
-        }
-        var orderItem = _mapper.Map<OrderItem>(orderItemDto);
-        cart.AddItem(orderItem);
-        _shoppingCartRepository.Update(cart);
-        return Result.Ok();
-    }*/
     public Result AddItemToCart(long userId, OrderItemDto orderItemDto)
     {
-        var cart = _shoppingCartRepository.GetByUserId(userId);
-        if (cart == null)
-        {
-            cart = new ShoppingCart(userId, orderItemDto.TourId);
-            _shoppingCartRepository.Create(cart);
-        }
-
         var allTours = _tourRepository.GetPaged(1, int.MaxValue);
         var tour = allTours.Results.FirstOrDefault(t => t.Id == orderItemDto.TourId);
         if (tour == null)
@@ -52,10 +32,18 @@ public class ShoppingCartService : IShoppingCartService
         }
 
         var orderItem = _mapper.Map<OrderItem>(orderItemDto);
+
+        var cart = _shoppingCartRepository.GetByUserId(userId);
+        if (cart == null)
+        {
+            cart = new ShoppingCart();
+            _shoppingCartRepository.Create(cart);
+
+        }
+        
         orderItem.TourName = tour.Name;
         orderItem.Price = tour.Price;
         orderItem.UserId = userId;
-
         cart.AddItem(orderItem);
         _shoppingCartRepository.Update(cart);
 
