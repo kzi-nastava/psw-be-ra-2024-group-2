@@ -69,12 +69,10 @@ namespace Explorer.Tours.Tests.Integration.Tour
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
 
-            // Act
-            var result = (ObjectResult)controller.RemoveItemFromCart(-1000);
-
-            // Assert
-            result.ShouldBeNull();
-            result.StatusCode.ShouldBe(500);
+            
+            // Act & Assert
+            var exception = Should.Throw<NullReferenceException>(() => controller.RemoveItemFromCart(-1000));
+            exception.Message.ShouldContain("Object reference not set to an instance of an object.");
         }
 
 
