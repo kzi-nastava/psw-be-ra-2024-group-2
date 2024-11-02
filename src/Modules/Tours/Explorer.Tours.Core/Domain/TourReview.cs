@@ -53,6 +53,11 @@ namespace Explorer.Tours.Core.Domain
             Validate();
         }
 
+        public TourReview(long id)
+        {
+            Id = id;
+        }
+
         public TourReview() { }
 
         private void Validate()
