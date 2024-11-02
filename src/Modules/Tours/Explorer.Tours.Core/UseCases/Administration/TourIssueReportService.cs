@@ -37,27 +37,19 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 _transactionRepository.BeginTransaction();
                 var tour = _tourRepository.Get(tourId);
                 var pagedResult = base.GetPaged(1, int.MaxValue);
-
-
                 if (pagedResult.IsFailed)
                 {
                     return Result.Fail(pagedResult.Errors);
                 }
-
                 var filteredReviews = pagedResult.Value.Results
                     .Any(r => r.TourId == tourId && r.UserId == userId);
-
                 if (filteredReviews)
                 {
                     return Result.Fail("A report for this user and tour already exists.");
                 }
-
                 var tourIssue = MapToDomain(tourIssueReport);
-
                 var results = _tourIssueReportRepository.Create(tourIssue);
-
                 _transactionRepository.CommitTransaction();
-
                 return MapToDto(results);
             }
             catch(Exception e) 
@@ -73,20 +65,15 @@ namespace Explorer.Tours.Core.UseCases.Administration
             try
             {
                 _transactionRepository.BeginTransaction();
-
                 TourIssueReport tourIssueReport = MapToDomain(tourIssueReportDto);
                 var result = _tourIssueReportRepository.Update(tourIssueReport);
-
                 Tour tour = _tourRepository.Get(tourIssueReport.TourId);
                 long toUserId = tour.UserId;
-
                 TourIssueNotification notification = new TourIssueNotification(fromUserId, toUserId, 
-                    BuildingBlocks.Core.Domain.Enums.TourIssueNotificationStatus.Unread, tourIssueReport.Id);
+                TourIssueNotificationStatus.Unread, tourIssueReport.Id);
                 _tourIssueNotificationRepository.Create(notification);
-
                 _transactionRepository.CommitTransaction();
                 return MapToDto(result);
-
             }
             catch (Exception e)
             {
@@ -94,19 +81,16 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 return Result.Fail(FailureCode.Conflict).WithError(e.Message);
             }
         }
-
         public Result<TourIssueReportDto> CloseReport(TourIssueReportDto tourIssueReportDto)
         {
             try
             {
                 _transactionRepository.BeginTransaction();
-
-                TourIssueReport tourIssueReport = MapToDomain(tourIssueReportDto);
-                tourIssueReport.UpdateStatus(BuildingBlocks.Core.Domain.Enums.TourIssueReportStatus.Closed);
-                var result = _tourIssueReportRepository.Update(tourIssueReport);
-
+                TourIssueReport tourIssue = _tourIssueReportRepository.Get(tourIssueReportDto.Id);
+                tourIssue.CloseReport();
+                _tourIssueReportRepository.Update(tourIssue);
                 _transactionRepository.CommitTransaction();
-                return MapToDto(result);
+                return MapToDto(tourIssue);
             }
             catch (Exception e)
             {
@@ -119,19 +103,11 @@ namespace Explorer.Tours.Core.UseCases.Administration
             try
             {
                 _transactionRepository.BeginTransaction();
-
-                var tourIssue = MapToDomain(tourIssueReportDto);
-
-                var tourIssueGet = _tourIssueReportRepository.Get(tourIssue.Id) ?? throw new Exception();
-
-                tourIssueGet.UpdateStatus(TourIssueReportStatus.Closed);
-
-                var results = _tourIssueReportRepository.Update(tourIssueGet);
-
+                TourIssueReport tourIssueReport = _tourIssueReportRepository.Get(tourIssueReportDto.Id);
+                tourIssueReport.MarkAsDone();
+                _tourIssueReportRepository.Update(tourIssueReport);
                 _transactionRepository.CommitTransaction();
-
-                return MapToDto(results);
-                
+                return MapToDto(tourIssueReport);
             }
             catch (Exception e)
             {
@@ -145,19 +121,12 @@ namespace Explorer.Tours.Core.UseCases.Administration
             try
             {
                 _transactionRepository.BeginTransaction();
-
                 var tourIssue = MapToDomain(tourIssueReportDto);
-
                 var tourIssueGet = _tourIssueReportRepository.Get(tourIssue.Id) ?? throw new Exception();
-
-                tourIssueGet.UpdateFixUntil(DateTime.UtcNow.AddDays(2));
-
+                tourIssueGet.AlertNotDone();
                 var results = _tourIssueReportRepository.Update(tourIssueGet);
-
                 _transactionRepository.CommitTransaction();
-
                 return MapToDto(results);
-
             }
             catch (Exception e)
             {
@@ -165,6 +134,27 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 return Result.Fail(FailureCode.Conflict).WithError(e.Message);
             }
         }
-
+        public Result<TourIssueReportDto> ReadNotification(TourIssueReportDto tourIssueReportDto,long tourNotificationId)
+        {
+            try
+            {
+                _transactionRepository.BeginTransaction();
+                TourIssueReport tourIssueReport = _tourIssueReportRepository.Get(tourIssueReportDto.Id);
+                bool success = tourIssueReport.ReadNotification(tourNotificationId);
+                _tourIssueReportRepository.Update(tourIssueReport);
+                _transactionRepository.CommitTransaction();
+                if (success){
+                return MapToDto(tourIssueReport);
+                }
+                else{
+                return Result.Fail(FailureCode.NotFound).WithError("Tour notification doesn't exist");
+                }
+            }
+            catch (Exception e)
+            {
+                _transactionRepository.RollbackTransaction();
+                return Result.Fail(FailureCode.Conflict).WithError(e.Message);
+            }
+        }
     }
 }

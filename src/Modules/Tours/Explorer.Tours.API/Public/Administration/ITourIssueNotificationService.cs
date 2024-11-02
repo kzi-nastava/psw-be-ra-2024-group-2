@@ -13,7 +13,7 @@ namespace Explorer.Tours.API.Public.Administration
     {
         Result<PagedResult<TourIssueNotificationDto>> GetPaged(int page, int pageSize);
         Result<TourIssueNotificationDto> Get(int notificationId);
-        Result<TourIssueNotificationDto> GetByUserId(long userId);
+        Result<TourIssueNotificationDto> GetForUserId(long userId);
         Result<TourIssueNotificationDto> Create(TourIssueNotificationDto tourIssueNotificationDto);
         Result<TourIssueNotificationDto> Update(TourIssueNotificationDto tourIssueNotificationDto);
     }

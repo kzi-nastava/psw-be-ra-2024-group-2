@@ -37,7 +37,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
             var newDto = MapToDto( repository.Create(MapToDomain(tourIssueNotificationDto)));
             return newDto;
         }
-        public Result<TourIssueNotificationDto> GetByUserId(long userId)
+        public Result<TourIssueNotificationDto> GetForUserId(long userId)
         {
             var list = repository.GetPaged(1, int.MaxValue).Results;
             List<TourIssueNotificationDto> dtos = new List<TourIssueNotificationDto>();
@@ -48,6 +48,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
             }
             return dtos.FirstOrDefault() == null ? (Result<TourIssueNotificationDto>)Result.Ok() : Result.Ok(dtos.FirstOrDefault());
         }
+        //useless
         public Result<TourIssueNotificationDto> MarkAsOpened(TourIssueNotificationDto dto) {
             var notification = repository.Get(dto.Id);
             if (notification != null)
@@ -55,7 +56,8 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 return Result.Fail(FailureCode.Conflict).WithError("This notification doesn't exist");
             }
             var notif = MapToDomain(dto);
-            notif.UpdateStatus(TourIssueNotificationStatus.Read);
+            notif.Read();
+            repository.Update(notif);
             return Result.Ok(MapToDto(notif));
         }
     }

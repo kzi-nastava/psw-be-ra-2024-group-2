@@ -14,23 +14,23 @@ namespace Explorer.API.Controllers;
 [Route("api/tournotifiactions")]
 public class TourIssueNotificationController : BaseApiController
 {
-    private readonly ITourIssueNotificationService _commentService;
+    private readonly ITourIssueNotificationService _notificationService;
 
     public TourIssueNotificationController(TourIssueNotificationService notificationService)
     {
-        _commentService = notificationService;
+        _notificationService = notificationService;
     }
 
     [HttpPut]
     public ActionResult<TourIssueNotificationDto> Create([FromBody] TourIssueNotificationDto dto)
     {
-        var result = _commentService.Create(dto);
+        var result = _notificationService.Create(dto);
         return CreateResponse(result);
     }
     [HttpGet]
-    public ActionResult<TourIssueNotificationDto> GetByUserId(long userId)
+    public ActionResult<TourIssueNotificationDto> GetForUserId(long userId)
     {
-        var result = _commentService.GetByUserId(userId);
+        var result = _notificationService.GetForUserId(userId);
         return CreateResponse(result);
     }
 }

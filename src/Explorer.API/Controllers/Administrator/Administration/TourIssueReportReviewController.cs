@@ -30,7 +30,6 @@ namespace Explorer.API.Controllers.Administrator.Administration
             return CreateResponse(result);
         }
 
-
         [HttpGet("{tourId}")]
         public ActionResult<TourDto> GetById(long tourId)
         {
