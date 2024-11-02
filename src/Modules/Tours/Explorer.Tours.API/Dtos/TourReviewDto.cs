@@ -23,6 +23,8 @@ namespace Explorer.Tours.API.Dtos
 
         public DateTime VisitDate { get; set; }
 
+        public double Progress { get; set; }
+
         //public int TourId { get; set; } 
 
     }

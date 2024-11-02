@@ -23,10 +23,10 @@ namespace Explorer.Tours.Core.UseCases.Administration
         private readonly IImageRepository _imageRepository;
         private readonly ICrudRepository<TourReview> _reviewRepository;
         private readonly ICrudRepository<Tour> _tourRepository;
-        private readonly ICrudRepository<TourExecution> _tourExecutionRepository;
+        private readonly ITourExecutionRepository _tourExecutionRepository;
 
         public TourReviewService(ICrudRepository<TourReview> repository, IMapper mapper, IImageRepository imageRepository, 
-                                    ICrudRepository<TourReview> reviewRepository, ICrudRepository<Tour> tourRepository, ICrudRepository<TourExecution> tourExecutionRepository) : base(repository, mapper)
+                                    ICrudRepository<TourReview> reviewRepository, ICrudRepository<Tour> tourRepository, ITourExecutionRepository tourExecutionRepository) : base(repository, mapper)
         {
             _imageRepository = imageRepository;
             _reviewRepository = reviewRepository;
@@ -65,7 +65,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
 
 
-                /* var allTourExecutions = _tourExecutionRepository.GetPaged(1, int.MaxValue);
+                 var allTourExecutions = _tourExecutionRepository.GetPaged(1, int.MaxValue);
                  foreach (var te in allTourExecutions.Results)
                  {
                      if (dto.UserId == te.UserId && dto.TourId == te.TourId)
@@ -73,11 +73,11 @@ namespace Explorer.Tours.Core.UseCases.Administration
                          if ((te.GetProgress() < 0.35) || te.IsLastActivityOlderThanSevenDays())
                              return Result.Fail(FailureCode.InvalidArgument).WithError("You are not able to review this tour!");
                      }
-                 }*/
+                 }
 
-               // TourReview review = MapToDomain(dto);
-               
-                
+                // TourReview review = MapToDomain(dto);
+
+
 
                 TourReview review = new TourReview(dto.Id);
 
@@ -123,22 +123,16 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 if(dto.Grade < 1 || dto.Grade > 5)
                     return Result.Fail(FailureCode.InvalidArgument).WithError("Nonexistant tour Id"); //400
 
-
-                // KOD ISPOD JE ZAKOMENTARISAN IZ RAZLOGA STO JOS UVIJEK NISU IMPLEMENTIRANE OSTALE ZAVISNE FUNKCIONALNOSTI
-                // NE BRISATI!!!
-                // NAKON STO KOLEGE IMPLEMENTIRAJU OSTATAK SVOJIH ZAHTJEVA, KOD ISPOD CE SE USPJESNO INTEGRISATI
-
-
-
-               /* var allTourExecutions = _tourExecutionRepository.GetPaged(1, int.MaxValue);
+                var allTourExecutions = _tourExecutionRepository.GetPaged(1, int.MaxValue);
                 foreach (var te in allTourExecutions.Results)
                 {
                     if (dto.UserId == te.UserId && dto.TourId == te.TourId)
                     {
+                        dto.Progress = te.GetProgress();
                         if ((te.GetProgress() < 0.35) || te.IsLastActivityOlderThanSevenDays())
                             return Result.Fail(FailureCode.InvalidArgument).WithError("You are not able to review this tour!");
                     }
-                }*/
+                }
 
                 TourReview review = new TourReview();
 
@@ -148,7 +142,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 review.TourId = dto.TourId;
                 review.ReviewDate = DateTime.SpecifyKind(dto.ReviewDate, DateTimeKind.Utc); // Ensure UTC
                 review.VisitDate = DateTime.SpecifyKind(dto.VisitDate, DateTimeKind.Utc);   // Ensure UTC
-
+                review.Progress = dto.Progress; 
                 // Create the image and save it
                 if (dto.Image != null && !_imageRepository.Exists(dto.Image.Data))
                 {
