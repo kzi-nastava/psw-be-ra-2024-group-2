@@ -39,9 +39,9 @@ public static class ToursStartup
         services.AddScoped<IClubService, ClubService>();
         services.AddScoped<ICheckpointService, CheckpointService>();
         services.AddScoped<ITourPreferenceService, TourPreferenceService>();
+        services.AddScoped<ITourIssueCommentService, TourIssueCommentService>();
+        services.AddScoped<ITourIssueCommentService, TourIssueCommentService>();
         services.AddScoped<ITourExecutionCheckpointService,TourExecutionCheckpointService> ();
-        services.AddScoped<ITourExecutionService, TourExecutionService>();
-
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -56,12 +56,13 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourObject>), typeof(CrudDatabaseRepository<TourObject, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourIssueReport>), typeof(CrudDatabaseRepository<TourIssueReport, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourIssueComment>), typeof(CrudDatabaseRepository<TourIssueComment, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourIssueNotification>), typeof(CrudDatabaseRepository<TourIssueNotification, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourPreference>), typeof(CrudDatabaseRepository<TourPreference, ToursContext>));
 
         services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, ToursContext>));
 
         services.AddScoped(typeof(ITransactionRepository), typeof(TransactionRepository<ToursContext>));
-        services.AddScoped(typeof(ITourDurationByTransportRepository), typeof(TourDurationByTransportRepository));
         services.AddScoped(typeof(ICrudRepository<TourExecution>), typeof(CrudDatabaseRepository<TourExecution, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourExecutionCheckpoint>), typeof(CrudDatabaseRepository<TourExecutionCheckpoint, ToursContext>));
 

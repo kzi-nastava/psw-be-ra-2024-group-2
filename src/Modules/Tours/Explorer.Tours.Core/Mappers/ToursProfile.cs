@@ -12,6 +12,16 @@ public class ToursProfile : Profile
 {
     public ToursProfile()
     {
+
+        //CreateMap<TourIssueCommentDto, TourIssueComment>()
+        //    .ForMember(dest => dest.TourIssueReportId, opt => opt.MapFrom(src => src.TourIssueReportId.ToString()))
+        //    .ForMember(dest => dest.Comment, opt => opt.MapFrom(dest => dest.Comment.ToString()))
+        //    .ForMember(dest => dest.PublishedAt, opt => opt.MapFrom(dest => dest.PublishedAt.ToString()))
+        //    .ForMember(dest => dest.UserId, opt => opt.MapFrom(dest => dest.UserId.ToString()))
+        //    .ForMember(dest => dest.Id, opt => opt.MapFrom(dest => dest.Id.ToString()));
+
+        CreateMap<TourIssueCommentDto, TourIssueComment>().ReverseMap();
+
         CreateMap<EquipmentDto, Equipment>().ReverseMap();
         CreateMap<Tour, TourDto>()
             .ForMember(dest => dest.Equipment, opt => opt.MapFrom(src => src.Equipment.Select(e => e.Id)))
@@ -88,6 +98,7 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.ArrivalAt, opt => opt.MapFrom(src => src.ArrivalAt))
             .ForMember(dest => dest.TourExecutionId, opt => opt.MapFrom(src => src.TourExecutionId))
             .ForMember(dest => dest.Checkpoint, opt => opt.MapFrom(src => src.Checkpoint));
+
 
 
 
