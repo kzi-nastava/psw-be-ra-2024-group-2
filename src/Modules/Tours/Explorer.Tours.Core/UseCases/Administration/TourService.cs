@@ -14,15 +14,13 @@ namespace Explorer.Tours.Core.UseCases.Administration
         private readonly ICrudRepository<Equipment> _equipmentRepository;
         private readonly ICrudRepository<Checkpoint> _checkpointRepository;
         private readonly ITransactionRepository _transactionRepository;
-        private readonly ITourDurationByTransportRepository _tourDurationByTransportRepository;
 
-        public TourService(ICrudRepository<Tour> tourRepository, ICrudRepository<Equipment> equipmentRepository, ICrudRepository<Checkpoint> checkpointRepository, IMapper mapper, ITransactionRepository transactionRepository, ITourDurationByTransportRepository tourDurationByTransportRepository) : base(tourRepository, mapper)
+        public TourService(ICrudRepository<Tour> tourRepository, ICrudRepository<Equipment> equipmentRepository, ICrudRepository<Checkpoint> checkpointRepository, IMapper mapper, ITransactionRepository transactionRepository) : base(tourRepository, mapper)
         {
             _tourRepository = tourRepository;
             _equipmentRepository = equipmentRepository;
             _checkpointRepository = checkpointRepository;
             _transactionRepository = transactionRepository;
-            _tourDurationByTransportRepository = tourDurationByTransportRepository;
         }
 
         public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
@@ -53,8 +51,6 @@ namespace Explorer.Tours.Core.UseCases.Administration
                     tour.UpdatePublishDate(null);
                     tour.UpdateArhivedDate(DateTime.UtcNow);
                 }
-                    
-
 
                 tour.UpdateStatus(tourDto.Status);
                 tour.UpdatePrice(tourDto.Price);
@@ -114,14 +110,14 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
                 Validate(dto);
 
-                var result = _tourRepository.Create(tour);
+                tour.TourDurationByTransports = dto.TourDurationByTransportDtos
+                    .Select(tourDurationByTransportDto => 
+                        new TourDurationByTransport(
+                            Enum.Parse<TransportType>(tourDurationByTransportDto.Transport), 
+                            tourDurationByTransportDto.Duration))
+                    .ToList();
 
-                result.TourDurationByTransports = dto.TourDurationByTransportDtos.Select(tourDurationByTransportDto =>
-                {
-                    var tourDurationByTransport = new TourDurationByTransport(result.Id, tourDurationByTransportDto.Transport, tourDurationByTransportDto.Duration);
-                    _tourDurationByTransportRepository.Create(tourDurationByTransport);
-                    return tourDurationByTransport;
-                }).ToList();
+                var result = _tourRepository.Create(tour);
 
                 _transactionRepository.CommitTransaction();
 
