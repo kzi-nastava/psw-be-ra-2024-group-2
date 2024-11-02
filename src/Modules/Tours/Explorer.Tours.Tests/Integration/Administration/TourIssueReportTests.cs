@@ -331,7 +331,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 Priority = "High",
                 TourId = -4,
                 CreatedAt = DateTime.UtcNow,
-                FixUntil = DateTime.UtcNow.AddDays(2),
+                FixUntil = DateTime.UtcNow.AddSeconds(4),
                 Status = TourIssueReportStatus.Open, 
                 UserId = -20
             };
@@ -341,11 +341,11 @@ namespace Explorer.Tours.Tests.Integration.Administration
 
             // Assert
             result.ShouldNotBeNull();
-            result.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddDays(2).AddSeconds(-3));
+            result.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddSeconds(4).AddSeconds(-3));
 
             var storedReport = dbContext.TourIssueReports.FirstOrDefault(r => r.Id == existingReport.Id);
             storedReport.ShouldNotBeNull();
-            storedReport.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddDays(2).AddSeconds(-3));
+            storedReport.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddSeconds(4).AddSeconds(-3));
         }
 
         [Fact]
