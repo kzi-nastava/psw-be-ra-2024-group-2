@@ -13,7 +13,7 @@ namespace Explorer.Tours.Core.Domain
     {
         public long TourExecutionId {  get; private set; }
         public long CheckpointId {  get; private set; }
-        public Checkpoint Checkpoint { get; private set; }
+        public Checkpoint Checkpoint { get; private set; } //nisam sigurna da li treba
         public CheckpointStatus Status { get; private set; }
         public DateTime ArrivalAt {  get; private set; }
 

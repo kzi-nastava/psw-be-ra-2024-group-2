@@ -12,7 +12,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
     {
         public long UserId { get; private set; }
         public long TourId {  get; private set; }
-        public Tour Tour { get; private set; }
+        public Tour Tour { get; private set; } //ne treba jer je korjen drugog agregata
         public TourExecutionStatus Status { get; private set; }
         public DateTime? SessionEndingTime {  get; private set; }
         public DateTime LastActivity {  get; private set; }
