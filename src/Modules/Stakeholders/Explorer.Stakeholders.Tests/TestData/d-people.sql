@@ -3,6 +3,12 @@
 VALUES (-1, -1, 'Miki', 'Mikić', 'admin@gmail.com');
 INSERT INTO stakeholders."People"(
     "Id", "UserId", "Name", "Surname", "Email")
+VALUES (-2, -2, 'Riki', 'Rikić', 'turista@gmail.com');
+INSERT INTO stakeholders."People"(
+    "Id", "UserId", "Name", "Surname", "Email")
+VALUES (-3, -3, 'Siki', 'Sikić', 'autor@gmail.com');
+INSERT INTO stakeholders."People"(
+    "Id", "UserId", "Name", "Surname", "Email")
 VALUES (-11, -11, 'Ana', 'Anić', 'autor1@gmail.com');
 INSERT INTO stakeholders."People"(
     "Id", "UserId", "Name", "Surname", "Email")

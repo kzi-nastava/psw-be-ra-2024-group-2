@@ -17,7 +17,5 @@ public interface ITourService
         Result<TourDto> GetById(long tourId);
         Result<PagedResult<TourDto>> GetPaged(int page, int pageSize);
         Result<TourDto> UpdateTourCheckpoints(TourDto tourDto, long userId);
-
-
-
+        Result DeleteById(int tourId);
 }

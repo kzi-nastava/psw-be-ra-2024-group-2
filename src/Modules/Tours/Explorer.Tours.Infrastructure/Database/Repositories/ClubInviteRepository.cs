@@ -17,11 +17,19 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         }
         public bool Exists(long clubId, long touristId)
         {
-            return DbContext.ClubInvites.Where(t => t.ClubId == clubId && t.TouristId == touristId).Count()>0;
+            return DbContext.ClubInvites.Where(t => t.ClubId == clubId && t.TouristId == touristId).Count() > 0;
+        }
+        public bool Exists(long id)
+        {
+            return DbContext.ClubInvites.Where(t => t.Id == id).Count()>0;
         }
         public ClubInvite GetByClubTourist(long clubId, long touristId)
         {
             return DbContext.ClubInvites.Where(t => t.ClubId == clubId && t.TouristId == touristId).First();
+        }
+        public ClubInvite Get(long id)
+        {
+            return DbContext.ClubInvites.Where(t => t.Id == id).First();
         }
     }
 }

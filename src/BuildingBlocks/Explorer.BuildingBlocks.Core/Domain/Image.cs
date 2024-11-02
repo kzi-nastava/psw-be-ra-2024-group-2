@@ -1,4 +1,4 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.Domain.Enums;
 
 namespace Explorer.BuildingBlocks.Core.Domain;
 
@@ -49,9 +49,4 @@ public class Image : Entity
         if (!Enum.IsDefined(typeof(MimeType), MimeType)) throw new ArgumentException("MimeType is not valid");
     }
 }
-public enum MimeType
-{
-    Jpeg,
-    Png,
-    Gif
-}
+

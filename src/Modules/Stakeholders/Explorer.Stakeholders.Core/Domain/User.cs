@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 
 namespace Explorer.Stakeholders.Core.Domain;
 public class User : Entity
@@ -29,11 +30,4 @@ public class User : Entity
     {
         return Role.ToString().ToLower();
     }
-}
-
-public enum UserRole
-{
-    Administrator,
-    Author,
-    Tourist
 }

@@ -12,7 +12,7 @@ namespace Explorer.Tours.API.Public.Administration
     public interface IClubInviteService
     {
         Result<ClubInviteDTO> Invite(ClubInviteDTO dto);
-        Result<ClubInviteDTO> Remove(ClubInviteDTO dto);
+        Result<ClubInviteDTO> Remove(long clubId,long touristId);
         Result<PagedResult<ClubInviteDTO>> GetPaged(int page, int pageSize);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Explorer.API.Controllers.Author;
 using Explorer.API.Controllers.Tourist;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
@@ -96,7 +97,7 @@ public class ClubInvitationsTests: BaseToursIntegrationTest
             Date = new DateTime(),
             Status = TourInviteStatus.Pending,
         };
-        var result = (ObjectResult)controller.RemoveTourist(newEntity).Result;
+        var result = (ObjectResult)controller.RemoveTourist(newEntity.TouristId, newEntity.ClubId).Result;
 
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(200);
@@ -123,7 +124,7 @@ public class ClubInvitationsTests: BaseToursIntegrationTest
             Date = new DateTime(),
             Status = TourInviteStatus.Pending,
         };
-        var result = (ObjectResult)controller.RemoveTourist(newEntity).Result;
+        var result = (ObjectResult)controller.RemoveTourist(newEntity.TouristId, newEntity.ClubId).Result;
 
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(409);

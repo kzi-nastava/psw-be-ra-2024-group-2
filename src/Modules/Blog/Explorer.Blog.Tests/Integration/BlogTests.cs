@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 
 namespace Explorer.Blog.Tests.Integration
 {
@@ -21,6 +22,8 @@ namespace Explorer.Blog.Tests.Integration
         {
         }
 
+
+        [Fact]
         public void Creates_blog()
         {
             // Arrange
@@ -77,13 +80,12 @@ namespace Explorer.Blog.Tests.Integration
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
 
-            // Example of invalid blog data (missing title and authorId)
             var invalidBlog = new BlogDto
             {
-                Title = "", // Invalid: Empty title
+                Title = "", 
                 Description = "This blog should not be created because it has invalid data.",
                 Status = Status.Draft,
-                AuthorId = 0, // Invalid: AuthorId cannot be 0
+                AuthorId = 0, 
                 Images = new List<Image?>
         {
             new Image
