@@ -39,7 +39,7 @@ namespace Explorer.Blog.Core.UseCases
         }
 
 
-        public Result<CommentDTO> Update(long id, long userId, CommentDTO commentDto)
+        public Result<CommentDTO> Update(long id, long blogId, long userId, CommentDTO commentDto)
         {
             var comment = repository.Get(id);
             if (comment == null)
@@ -50,6 +50,10 @@ namespace Explorer.Blog.Core.UseCases
             {
                 return Result.Fail<CommentDTO>("User is not authorized to update this comment.");
             }
+            if(comment.BlogId != blogId)
+            {
+                return Result.Fail<CommentDTO>("You can't modify comment on other blog.");
+            }
             comment.UpdateLastModifiedAt();
             comment.Text = commentDto.Text;
             var result = repository.Update(comment);
@@ -58,7 +62,7 @@ namespace Explorer.Blog.Core.UseCases
 
 
 
-        public Result Delete(long commentId, long userId)
+        public Result Delete(long commentId, long blogId, long userId)
         {
             var comment = repository.Get(commentId);
             if (comment == null)
@@ -68,6 +72,10 @@ namespace Explorer.Blog.Core.UseCases
             if (comment.UserId != userId)
             {
                 return Result.Fail("User is not authorized to delete this comment.");
+            }
+            if (comment.BlogId != blogId)
+            {
+                return Result.Fail("You can't delete comment on other blog.");
             }
             repository.Delete(commentId);
             return Result.Ok();

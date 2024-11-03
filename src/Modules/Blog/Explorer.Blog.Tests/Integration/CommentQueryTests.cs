@@ -1,6 +1,6 @@
 ﻿using Explorer.API.Controllers.Administrator.Administration;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Blog.API.Dtos; // Uveri se da imaš pravilne uvoze
+using Explorer.Blog.API.Dtos; 
 using Explorer.Blog.API.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;

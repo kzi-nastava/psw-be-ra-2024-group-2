@@ -24,11 +24,13 @@ public static class BlogStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<ICommentService, CommentService>();
+        services.AddScoped<IBlogService, BlogService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped<ICrudRepository<Comment>, CrudDatabaseRepository<Comment, BlogContext>>();
+        services.AddScoped<ICrudRepository<Explorer.Blog.Core.Domain.Blog>, CrudDatabaseRepository<Explorer.Blog.Core.Domain.Blog, BlogContext>>();
         services.AddDbContext<BlogContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("blog"),
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", "blog")));
