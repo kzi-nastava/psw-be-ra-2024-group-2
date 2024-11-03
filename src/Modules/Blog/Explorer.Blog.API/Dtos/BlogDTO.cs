@@ -16,6 +16,7 @@ namespace Explorer.Blog.API.Dtos
         public int AuthorId { get; set; }
 
         public List<Image?> Images { get; set; } = new List<Image>();
+        public List<RatingDto?> RatingDtos { get; set; } = new List<RatingDto>();
 
     }
     public enum Status

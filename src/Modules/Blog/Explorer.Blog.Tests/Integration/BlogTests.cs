@@ -38,6 +38,20 @@ namespace Explorer.Blog.Tests.Integration
                     Description = "This is a test blog description.",
                     Status = Status.Published,
                     AuthorId = 1,
+                    RatingDtos = new List<RatingDto?> {
+                        new RatingDto
+                        {
+                            RatingType = "Upvote",
+                            CreatedAt = DateTime.UtcNow,
+                            Username = "mika123"
+                        },
+                        new RatingDto
+                        {
+                            RatingType = "Downvote",
+                            CreatedAt = DateTime.UtcNow,
+                            Username = "zika321"
+                        }
+                    },
                     Images = new List<Image?>
             {
                 new Image
@@ -53,6 +67,8 @@ namespace Explorer.Blog.Tests.Integration
                     MimeType = MimeType.Png
                 }
             }
+                    
+                    
                 };
 
                 // Act

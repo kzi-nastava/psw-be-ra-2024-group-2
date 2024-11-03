@@ -18,6 +18,10 @@ public class BlogContext : DbContext
         modelBuilder.HasDefaultSchema("blog");
 
         modelBuilder.Entity<Explorer.Blog.Core.Domain.Blog>()
+          .Property(b => b.Ratings)
+          .HasColumnType("jsonb");
+
+        modelBuilder.Entity<Explorer.Blog.Core.Domain.Blog>()
             .HasMany(b => b.Images)
             .WithOne()
             .HasForeignKey("BlogId")

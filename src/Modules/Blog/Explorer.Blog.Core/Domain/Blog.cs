@@ -20,6 +20,7 @@ namespace Explorer.Blog.Core.Domain
         public int AuthorId { get; set; }
         public List<Image> Images { get; set; } = new List<Image>();
         public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<Rating>? Ratings { get; set; } = new List<Rating>();
 
         public Blog(string title, string description, Status status, int authorId)
         {
