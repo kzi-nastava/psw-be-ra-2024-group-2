@@ -15,19 +15,17 @@ public class TourExecutionController : BaseApiController
 {
     private readonly ITourExecutionService _tourExecutionService;
     private readonly ITourReviewService _tourReviewService;
-    private readonly ITourExecutionCheckpointService _tourExecutionCheckpointService;
     private readonly ITourService _tourService;
 
-    public TourExecutionController(ITourReviewService tourReviewService, ITourService tourService, ITourExecutionService tourExecutionService, ITourExecutionCheckpointService tourExecutionCheckpointService)
+    public TourExecutionController(ITourReviewService tourReviewService, ITourService tourService, ITourExecutionService tourExecutionService)
     {
         _tourExecutionService = tourExecutionService;
         _tourReviewService = tourReviewService;
         _tourService = tourService;
-        _tourExecutionCheckpointService = tourExecutionCheckpointService;
     }
 
-    [HttpPost]
-    public ActionResult<TourExecutionDto> StartTour([FromBody] int tourId)
+    [HttpPost("{tourId}")]
+    public ActionResult<TourExecutionDto> StartTour(int tourId)
     {
         var result = _tourExecutionService.Create(tourId, User.UserId());
        

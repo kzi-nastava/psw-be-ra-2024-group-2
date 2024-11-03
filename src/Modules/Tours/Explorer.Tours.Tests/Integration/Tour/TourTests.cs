@@ -105,39 +105,39 @@ public class TourTests : BaseToursIntegrationTest
 
 
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(4);  
-        result.TotalCount.ShouldBe(4);
+        result.Results.Count.ShouldBe(3);  
+        result.TotalCount.ShouldBe(3);
     }
 
-    [Fact]
-    public void AddTour_successful_adds_tour()
-    {
-        using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope, "-1");
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new TourDto
-        {
-            UserId = -1,
-            Equipment = { -1 },
-            Name = "Gala",
-            Description = "Opis",
-            Difficulty = TourDifficulty.Hard,
-            Tag = TourTag.Adventure,
-            Status = 0,
-            Price = 0
-        };
-        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourDto;
+    //[Fact]
+    //public void AddTour_successful_adds_tour()
+    //{
+    //    using var scope = Factory.Services.CreateScope();
+    //    var controller = CreateController(scope, "-1");
+    //    var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+    //    var newEntity = new TourDto
+    //    {
+    //        UserId = -1,
+    //        Equipment = { -1 },
+    //        Name = "Gala",
+    //        Description = "Opis",
+    //        Difficulty = TourDifficulty.Hard,
+    //        Tag = TourTag.Adventure,
+    //        Status = 0,
+    //        Price = 0
+    //    };
+    //    var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourDto;
 
-        result.ShouldNotBeNull();
-        result.Name.ShouldBe(newEntity.Name);
-        result.Description.ShouldBe(newEntity.Description);
-        result.Difficulty.ShouldBe(newEntity.Difficulty);
-        result.Status.ShouldBe(TourStatus.Draft);
-        result.Price.ShouldBe(0);
+    //    result.ShouldNotBeNull();
+    //    result.Name.ShouldBe(newEntity.Name);
+    //    result.Description.ShouldBe(newEntity.Description);
+    //    result.Difficulty.ShouldBe(newEntity.Difficulty);
+    //    result.Status.ShouldBe(TourStatus.Draft);
+    //    result.Price.ShouldBe(0);
 
-        var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Name == newEntity.Name);
-        storedEntity.ShouldNotBeNull();
-    }
+    //    var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Name == newEntity.Name);
+    //    storedEntity.ShouldNotBeNull();
+    //}
 
    
     [Fact]

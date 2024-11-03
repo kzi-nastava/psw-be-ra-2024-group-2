@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
+using Explorer.Tours.API.Dtos;
 
 namespace Explorer.Tours.Core.Domain;
 
@@ -40,24 +41,36 @@ public class Tour  : Entity
         if(Tag != TourTag.Adventure && Tag != TourTag.Relaxation && Tag != TourTag.Historical && Tag != TourTag.Cultural && Tag != TourTag.Nature) throw new ArgumentException("Invalid Tag");
     }
 
-    public void UpdateStatus(TourStatus newStatus)
+    public void UpdateTransports(List<TourDurationByTransport> transports)
     {
-        Status = newStatus;
+
+        TourDurationByTransports.Clear();
+        TourDurationByTransports.AddRange(transports);
     }
 
-    public void UpdatePrice(double newPrice)
+    public void UpdateCheckpoints(List<Checkpoint> checkpoints)
     {
-        Price = newPrice;
+        Checkpoints.Clear();
+        Checkpoints.AddRange(checkpoints);
+    }
+   
+    public void UpdateTour(TourStatus status, double price, List<Equipment> _equipment)
+    {
+        Status = status;
+        Price = price;
+        Equipment = _equipment;
+
+        if (status.ToString() == "Published")
+        {
+            PublishedAt = DateTime.UtcNow;
+            ArchivedAt = null;
+        }
+        else if (status.ToString() == "Archived")
+        {
+            PublishedAt = null;
+            ArchivedAt = DateTime.UtcNow;
+        }
     }
 
-    public void UpdatePublishDate(DateTime? time) 
-    {
-        PublishedAt = time;
-    }
-
-    public void UpdateArhivedDate(DateTime? time)
-    {
-        ArchivedAt = time;
-    }
 
 }
