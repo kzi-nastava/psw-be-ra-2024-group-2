@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
@@ -92,30 +93,47 @@ namespace Explorer.Tours.Core.UseCases.Administration
             }
         }
 
-        public Result<TourDto> CreateTour(TourDto dto, int userId)
+        public Result<TourDto> CreateTour(TourDto tourDto, List<CheckpointDto> checkpointsDto ,int userId)
         {
             try
             {
-                dto.UserId = userId;
+                tourDto.UserId = userId;
 
                 _transactionRepository.BeginTransaction();
 
-                Tour tour = new(dto.UserId,
-                    dto.Name,
-                    dto.Description,
-                    dto.Difficulty,
-                    dto.Tag,
-                    dto.Status,
-                    dto.Price);
+                Tour tour = new(tourDto.UserId,
+                    tourDto.Name,
+                    tourDto.Description,
+                    tourDto.Difficulty,
+                    tourDto.Tag,
+                    tourDto.Status,
+                    tourDto.Price);
 
-                Validate(dto);
+                Validate(tourDto);
 
-                tour.TourDurationByTransports = dto.TourDurationByTransportDtos
+                List<TourDurationByTransport> TourDurationByTransports = tourDto.TourDurationByTransportDtos
                     .Select(tourDurationByTransportDto => 
                         new TourDurationByTransport(
                             Enum.Parse<TransportType>(tourDurationByTransportDto.Transport), 
                             tourDurationByTransportDto.Duration))
                     .ToList();
+
+                tour.UpdateTransports(TourDurationByTransports);
+
+                //convert checkpointdto to checkpoint
+                List<Checkpoint> checkpoints = checkpointsDto
+                    .Select(checkpointDto =>
+                        new Checkpoint(
+                            checkpointDto.Latitude,
+                            checkpointDto.Longitude,
+                            checkpointDto.Name,
+                            checkpointDto.Description,
+                            checkpointDto.Image != null
+                            ? new Image(checkpointDto.Image.Data, checkpointDto.Image.UploadedAt, checkpointDto.Image.MimeType)
+                            : null))
+                    .ToList();
+
+                tour.UpdateCheckpoints(checkpoints);
 
                 var result = _tourRepository.Create(tour);
 

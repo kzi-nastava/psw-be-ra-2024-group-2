@@ -40,6 +40,19 @@ public class Tour  : Entity
         if(Tag != TourTag.Adventure && Tag != TourTag.Relaxation && Tag != TourTag.Historical && Tag != TourTag.Cultural && Tag != TourTag.Nature) throw new ArgumentException("Invalid Tag");
     }
 
+    public void UpdateTransports(List<TourDurationByTransport> transports)
+    {
+
+        TourDurationByTransports.Clear();
+        TourDurationByTransports.AddRange(transports);
+    }
+
+    public void UpdateCheckpoints(List<Checkpoint> checkpoints)
+    {
+        Checkpoints.Clear();
+        Checkpoints.AddRange(checkpoints);
+    }
+    
     public void UpdateStatus(TourStatus newStatus)
     {
         Status = newStatus;
