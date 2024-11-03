@@ -33,7 +33,7 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         // Kreiramo komentar povezan sa postojećim blogom
         var newComment = new CommentDTO
         {
-            BlogId = existingBlog.Id,
+            BlogId = existingBlog.Id, // koristimo ID postojećeg bloga
             Text = "Ovo je test komentar.",
             CreatedAt = DateTime.UtcNow
         };
@@ -52,6 +52,8 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         storedComment.ShouldNotBeNull();
         storedComment.BlogId.ShouldBe(existingBlog.Id); // Provera BlogId-a
     }
+
+
 
     [Fact]
     public void Create_fails_invalid_data()
@@ -81,23 +83,26 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
 
+        // Dohvatanje postojećeg bloga iz baze podataka
         var existingBlog = dbContext.Blogs.FirstOrDefault();
         if (existingBlog == null)
         {
             throw new InvalidOperationException("Nema postojećih blogova u bazi.");
         }
 
+        // Kreirajte inicijalni komentar povezan sa postojećim blogom
         var initialComment = new CommentDTO
         {
-            BlogId = existingBlog.Id, 
+            BlogId = existingBlog.Id, // postavljamo na ID postojećeg bloga
             Text = "Originalni komentar."
         };
         var createdComment = ((ObjectResult)controller.Create(initialComment.BlogId, initialComment).Result)?.Value as CommentDTO;
 
+        // Ažurirajte komentar sa novim tekstom
         var updatedComment = new CommentDTO
         {
             Id = createdComment.Id,
-            BlogId = createdComment.BlogId, 
+            BlogId = createdComment.BlogId, // koristimo isti BlogId kao inicijalni komentar
             Text = "Ažuriran komentar."
         };
 
@@ -139,20 +144,17 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
 
-        // Kreirajte novi blog kako bi se komentar mogao pravilno povezati
-        var blog = new Explorer.Blog.Core.Domain.Blog(
-            title: "Test Blog za brisanje",
-            description: "Opis bloga za brisanje komentara.",
-            status: Explorer.Blog.Core.Domain.Status.Published,
-            authorId: 1
-        );
-        dbContext.Blogs.Add(blog);
-        dbContext.SaveChanges();
+        // Dohvatanje postojećeg bloga iz baze podataka
+        var existingBlog = dbContext.Blogs.FirstOrDefault();
+        if (existingBlog == null)
+        {
+            throw new InvalidOperationException("Nema postojećih blogova u bazi.");
+        }
 
-        // Kreiraj komentar koji će biti obrisan, povezan sa kreiranim blogom
+        // Kreiraj komentar koji će biti obrisan, povezan sa postojećim blogom
         var commentToDelete = new CommentDTO
         {
-            BlogId = blog.Id, // postavljamo ID kreiranog bloga
+            BlogId = existingBlog.Id, // koristimo ID postojećeg bloga
             Text = "Komentar za brisanje."
         };
         var createdComment = ((ObjectResult)controller.Create(commentToDelete.BlogId, commentToDelete).Result)?.Value as CommentDTO;

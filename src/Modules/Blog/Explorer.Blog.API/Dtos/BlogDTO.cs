@@ -12,10 +12,13 @@ namespace Explorer.Blog.API.Dtos
         public int Id { get; set; }
         public string Title {  get; set; }
         public string Description { get; set; }
+        public DateTime Date { get; set; }
         public Status Status { get; set; }
         public int AuthorId { get; set; }
 
         public List<Image?> Images { get; set; } = new List<Image>();
+        public List<RatingDto?> Ratings { get; set; } = new List<RatingDto>();
+        public List<CommentDTO> Comments { get; set; } = new List<CommentDTO>();
 
     }
     public enum Status
