@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
+using Explorer.Tours.API.Dtos;
 
 namespace Explorer.Tours.Core.Domain;
 
@@ -52,25 +53,24 @@ public class Tour  : Entity
         Checkpoints.Clear();
         Checkpoints.AddRange(checkpoints);
     }
-    
-    public void UpdateStatus(TourStatus newStatus)
+   
+    public void UpdateTour(TourStatus status, double price, List<Equipment> _equipment)
     {
-        Status = newStatus;
+        Status = status;
+        Price = price;
+        Equipment = _equipment;
+
+        if (status.ToString() == "Published")
+        {
+            PublishedAt = DateTime.UtcNow;
+            ArchivedAt = null;
+        }
+        else if (status.ToString() == "Archived")
+        {
+            PublishedAt = null;
+            ArchivedAt = DateTime.UtcNow;
+        }
     }
 
-    public void UpdatePrice(double newPrice)
-    {
-        Price = newPrice;
-    }
-
-    public void UpdatePublishDate(DateTime? time) 
-    {
-        PublishedAt = time;
-    }
-
-    public void UpdateArhivedDate(DateTime? time)
-    {
-        ArchivedAt = time;
-    }
 
 }

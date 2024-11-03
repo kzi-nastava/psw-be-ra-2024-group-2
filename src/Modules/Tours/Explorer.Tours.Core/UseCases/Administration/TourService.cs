@@ -36,25 +36,15 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
                 tour.Equipment.Clear();
 
+                List<Equipment> equipment = new List<Equipment>();
+
                 foreach (var elementId in tourDto.Equipment)
                 {
                     var newEquipment = _equipmentRepository.Get(elementId);
-                    tour.Equipment.Add(newEquipment);
+                    equipment.Add(newEquipment);
                 }
 
-                if(tourDto.Status.ToString() == "Published") 
-                {
-                    tour.UpdatePublishDate(DateTime.UtcNow);
-                    tour.UpdateArhivedDate(null);
-                }
-                else if(tourDto.Status.ToString() == "Archived") 
-                {
-                    tour.UpdatePublishDate(null);
-                    tour.UpdateArhivedDate(DateTime.UtcNow);
-                }
-
-                tour.UpdateStatus(tourDto.Status);
-                tour.UpdatePrice(tourDto.Price);
+                tour.UpdateTour(tourDto.Status,tourDto.Price,equipment);
 
                 _tourRepository.Update(tour);
                 _transactionRepository.CommitTransaction();
