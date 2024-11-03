@@ -35,20 +35,68 @@ namespace Explorer.Tours.Core.UseCases.Administration
             {
                 _transactionRepository.BeginTransaction();
                 TourIssueComment tourIssueReportComment = MapToDomain(tourIssueComment);
-                TourIssueReport report = _tourIssueReportRepository.Get(tourIssueReportComment.Id);
+                TourIssueReport report = _tourIssueReportRepository.Get(tourIssueReportComment.TourIssueReportId);
                 Tour tour = _tourRepository.Get(report.TourId);
                 if (report.UserId == fromId)
                 {
                     var notif = new TourIssueNotification(fromId, tour.UserId, BuildingBlocks.Core.Domain.Enums.TourIssueNotificationStatus.Unread, report.Id);
-                    _tourIssueNotificationRepository.Create(notif);
+                    var currentnotif = _tourIssueNotificationRepository.GetPaged(1, int.MaxValue).Results.FirstOrDefault(t => t.FromUserId == fromId && t.ToUserId == tour.UserId);
+
+                    if (currentnotif == null)
+                    {
+                        _tourIssueNotificationRepository.Create(notif);
+                    }
+                    else
+                    {
+                        currentnotif.UnRead();
+                        _tourIssueNotificationRepository.Update(currentnotif);
+                    }
+                }
+                else if (tour.UserId == fromId)
+                {
+                    var notif = new TourIssueNotification(fromId, report.UserId, BuildingBlocks.Core.Domain.Enums.TourIssueNotificationStatus.Unread, report.Id);
+                    var currentnotif = _tourIssueNotificationRepository.GetPaged(1, int.MaxValue).Results.FirstOrDefault(t => t.FromUserId == fromId && t.ToUserId == report.UserId);
+
+                    if (currentnotif == null)
+                    {
+                        _tourIssueNotificationRepository.Create(notif);
+                    }
+                    else
+                    {
+                        currentnotif.UnRead();
+                        _tourIssueNotificationRepository.Update(currentnotif);
+                    }
                 }
                 else
                 {
-                    var notif = new TourIssueNotification(fromId, tourIssueReportComment.UserId, BuildingBlocks.Core.Domain.Enums.TourIssueNotificationStatus.Unread, report.Id);
-                    _tourIssueNotificationRepository.Create(notif);
+                    var notifForTourUser = new TourIssueNotification(fromId, tour.UserId, BuildingBlocks.Core.Domain.Enums.TourIssueNotificationStatus.Unread, report.Id);
+                    var currentNotifForTourUser = _tourIssueNotificationRepository.GetPaged(1, int.MaxValue).Results
+                        .FirstOrDefault(t => t.FromUserId == fromId && t.ToUserId == tour.UserId);
+                    if (currentNotifForTourUser == null)
+                    {
+                        _tourIssueNotificationRepository.Create(notifForTourUser);
+                    }
+                    else
+                    {
+                        currentNotifForTourUser.UnRead();
+                        _tourIssueNotificationRepository.Update(currentNotifForTourUser);
+                    }
+
+                    var notifForReportUser = new TourIssueNotification(fromId, report.UserId, BuildingBlocks.Core.Domain.Enums.TourIssueNotificationStatus.Unread, report.Id);
+                    var currentNotifForReportUser = _tourIssueNotificationRepository.GetPaged(1, int.MaxValue).Results
+                        .FirstOrDefault(t => t.FromUserId == fromId && t.ToUserId == report.UserId);
+
+                    if (currentNotifForReportUser == null)
+                    {
+                        _tourIssueNotificationRepository.Create(notifForReportUser);
+                    }
+                    else
+                    {
+                        currentNotifForReportUser.UnRead();
+                        _tourIssueNotificationRepository.Update(currentNotifForReportUser);
+                    }
                 }
                 var results = _tourIssueCommentRepository.Create(tourIssueReportComment);
-
                 _transactionRepository.CommitTransaction();
                 return MapToDto(results);
             }

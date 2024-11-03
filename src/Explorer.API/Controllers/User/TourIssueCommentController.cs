@@ -21,7 +21,7 @@ namespace Explorer.API.Controllers.User
         }
 
         [HttpPost("comment/{fromId}")]
-        public ActionResult<TourIssueCommentDto> CreateComment([FromQuery] int fromId,[FromBody] TourIssueCommentDto comment)
+        public ActionResult<TourIssueCommentDto> CreateComment([FromRoute] int fromId,[FromBody] TourIssueCommentDto comment)
         {
             var result = _tourIssueCommentService.CreateComment(comment, fromId);
             return CreateResponse(result);
