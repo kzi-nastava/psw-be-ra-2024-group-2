@@ -42,7 +42,6 @@ public static class ToursStartup
         services.AddScoped<ITourIssueCommentService, TourIssueCommentService>();
         services.AddScoped<ITourIssueCommentService, TourIssueCommentService>();
         services.AddScoped<ITourExecutionService, TourExecutionService>();
-        services.AddScoped<ITourExecutionCheckpointService,TourExecutionCheckpointService> ();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
