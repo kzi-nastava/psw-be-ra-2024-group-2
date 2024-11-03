@@ -38,6 +38,18 @@ namespace Explorer.Tours.Core.Domain
             Description = description;
         }
 
+        public Checkpoint(double latitude, double longitude, string name, string description, Image ?image)
+        {
+            Validate(latitude, longitude, name, description);
+
+            Latitude = latitude;
+            Longitude = longitude;
+            Name = name;
+            Description = description;
+            Image = image;
+        }
+
+
         public Checkpoint() { }
         private void Validate(double latitude, double longitude, string name, string description)
         {
