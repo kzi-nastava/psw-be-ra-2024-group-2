@@ -38,6 +38,10 @@ public class ToursContext : DbContext
             .Property(c => c.OwnerId)
             .IsRequired();
 
+        modelBuilder.Entity<Tour>()
+            .HasMany(t => t.Checkpoints)
+            .WithMany(c => c.Tours);
+
         modelBuilder.Entity<TourReview>()
             .HasOne(p => p.Image)
             .WithOne()
