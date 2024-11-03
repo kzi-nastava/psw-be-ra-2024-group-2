@@ -1,5 +1,5 @@
-﻿using Explorer.API.Controllers;
-using Explorer.API.Controllers.Tourist;
+﻿using Explorer.API.Controllers.Tourist;
+using Explorer.API.Controllers.User;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;

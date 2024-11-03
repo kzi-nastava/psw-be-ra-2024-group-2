@@ -52,9 +52,12 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             List<TourIssueCommentDto> tourIssueCommentDtos = new List<TourIssueCommentDto>();
             var allIssueComments = _tourIssueCommentRepository.GetPaged(1, int.MaxValue);
-            
-            var comments = allIssueComments.Results.Where(t => t.TourIssueReportId == reportId).ToList();
-            foreach(var c in comments)
+
+            var comments = allIssueComments.Results
+                .Where(t => t.TourIssueReportId == reportId)
+                .OrderByDescending(c => c.PublishedAt)
+                .ToList();
+            foreach (var c in comments)
                 tourIssueCommentDtos.Add(MapToDto(c));
 
             return new PagedResult<TourIssueCommentDto>(tourIssueCommentDtos, tourIssueCommentDtos.Count());
