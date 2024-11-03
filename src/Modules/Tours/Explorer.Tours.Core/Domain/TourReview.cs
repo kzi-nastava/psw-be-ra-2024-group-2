@@ -28,6 +28,7 @@ namespace Explorer.Tours.Core.Domain
         public DateTime ReviewDate { get; set; }
 
         public DateTime VisitDate { get; set; }
+        public double Progress { get; set; } = 0;
 
 
         public TourReview(int grade, string comment, long userId, long tourId, DateTime reviewDate, DateTime visitDate, long imageId)
@@ -51,6 +52,11 @@ namespace Explorer.Tours.Core.Domain
             ReviewDate = reviewDate;
             VisitDate = visitDate;
             Validate();
+        }
+
+        public TourReview(long id)
+        {
+            Id = id;
         }
 
         public TourReview() { }

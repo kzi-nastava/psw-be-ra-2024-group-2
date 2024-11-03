@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.Core.Domain;
@@ -14,35 +15,32 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.UseCases.Tourist
 {
-    public class TourExecutionService : CrudService<TourExecutionDto,TourExecution>, ITourExecutionService
+    public class TourExecutionService : BaseService<TourExecutionDto,TourExecution>, ITourExecutionService
     {
-        private readonly ICrudRepository<TourExecution> _tourExecutionRepository;
-        private readonly ICrudRepository<TourExecutionCheckpoint> _tourExecutionCheckpointRepository;
+        private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly ICrudRepository<Tour> _tourRepository;
-        public TourExecutionService(ICrudRepository<TourExecution> tourExecutionRepository, IMapper mapper,ICrudRepository<Tour> tourRepository, ICrudRepository<TourExecutionCheckpoint> tourExecutionCheckpointRepository) : base(tourExecutionRepository, mapper)
+        public TourExecutionService(ITourExecutionRepository tourExecutionRepository, IMapper mapper, ICrudRepository<Tour> tourRepository) : base(mapper)
         {
             _tourExecutionRepository = tourExecutionRepository;
             _tourRepository = tourRepository;
-            _tourExecutionCheckpointRepository = tourExecutionCheckpointRepository;
         }
 
         public Result<TourExecutionDto> Create(int tourId, int userId)
         {
             try
             {
-                TourExecution tourExecution = new TourExecution(userId, tourId, TourExecutionStatus.InProgress, DateTime.UtcNow, DateTime.UtcNow);
-                var result = _tourExecutionRepository.Create(tourExecution);
+                TourExecution tourExecution = new TourExecution(userId, tourId, TourExecutionStatus.InProgress, DateTime.UtcNow);
+                
                 Tour tour = _tourRepository.Get(tourId);
                 foreach (Checkpoint checkpoint in tour.Checkpoints)
                 {
 
-                    TourExecutionCheckpoint tourExecutionCheckpoint = new TourExecutionCheckpoint(result.Id, CheckpointStatus.NotCompleted, DateTime.UtcNow, checkpoint.Id);
-                    _tourExecutionCheckpointRepository.Create(tourExecutionCheckpoint);
+                    TourExecutionCheckpoint tourExecutionCheckpoint = new TourExecutionCheckpoint(checkpoint.Id);
+                    tourExecution.TourExecutionCheckpoints.Add(tourExecutionCheckpoint);
 
                 }
-
-
-
+                var result = _tourExecutionRepository.Create(tourExecution);
+                
                 return MapToDto(result);
 
             }
