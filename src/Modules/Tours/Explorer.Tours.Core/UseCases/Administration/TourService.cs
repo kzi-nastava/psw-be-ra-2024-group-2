@@ -187,5 +187,11 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             return base.Delete(tourId);
         }
+
+        public PagedResult<TourDto> GetToursNearby(int loggedInUserId, LocationDto locationDto)
+        {
+            // TODO: Nemanja pravi implementaciju
+            throw new NotImplementedException();
+        }
     }
 }
