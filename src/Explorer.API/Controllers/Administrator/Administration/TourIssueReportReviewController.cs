@@ -23,19 +23,19 @@ namespace Explorer.API.Controllers.Administrator.Administration
             _tourService = tourService;
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public ActionResult<PagedResult<TourIssueReportDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _tourIssueReportService.GetPaged(page, pageSize);
             return CreateResponse(result);
-        }
+        }*/
 
-        [HttpGet("{tourId}")]
+        /*[HttpGet("{tourId}")]
         public ActionResult<TourDto> GetById(long tourId)
         {
             var tour = _tourService.GetById(tourId);
             return CreateResponse(tour);
-        }
+        }*/
 
         [HttpPut("setFixUntilDate/{fromUserId}")] //fromUserId is admin in this case
         public ActionResult<TourIssueReportDto> SetFixUntilDate([FromBody] TourIssueReportDto tourIssueReportDto, long fromUserId)

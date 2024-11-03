@@ -8,7 +8,7 @@ using Explorer.Tours.Core.UseCases.Administration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Explorer.API.Controllers;
+namespace Explorer.API.Controllers.User;
 
 [Authorize(Policy = "allLoggedPolicy")]
 [Route("api/tournotifiactions")]
