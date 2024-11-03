@@ -43,10 +43,12 @@ namespace Explorer.Stakeholders.Core.UseCases
 
                 if (person == null)
                     return Result.Fail(FailureCode.NotFound).WithError("User not found");
-                //tour.TouristPosition ??= new TouristPosition(latitude, longitude);
+
                 TouristPosition tp = new TouristPosition();
-                tp.UpdatePosition(latitude, longitude);
-                person.TouristPosition = tp;
+                tp.Latitude = latitude;
+                tp.Longitude = longitude;
+                person.UpdateTouristPosition(tp);
+
                 _personRepository.Update(person);
 
                 return MapToDto(person);
