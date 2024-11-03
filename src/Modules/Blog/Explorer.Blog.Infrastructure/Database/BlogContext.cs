@@ -22,5 +22,11 @@ public class BlogContext : DbContext
             .WithOne()
             .HasForeignKey("BlogId")
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Explorer.Blog.Core.Domain.Blog>()
+            .HasMany(b => b.Comments)
+            .WithOne()
+            .HasForeignKey("BlogId")
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
