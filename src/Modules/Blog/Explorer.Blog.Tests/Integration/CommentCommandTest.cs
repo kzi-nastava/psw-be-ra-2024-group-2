@@ -33,7 +33,7 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         // Kreiramo komentar povezan sa postojećim blogom
         var newComment = new CommentDTO
         {
-            BlogId = existingBlog.Id, // koristimo ID postojećeg bloga
+            BlogId = existingBlog.Id,
             Text = "Ovo je test komentar.",
             CreatedAt = DateTime.UtcNow
         };

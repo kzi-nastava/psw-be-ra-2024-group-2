@@ -22,7 +22,7 @@ namespace Explorer.Blog.Tests.Integration
         {
         }
 
-
+        
         [Fact]
         public void Creates_blog()
         {
@@ -68,7 +68,7 @@ namespace Explorer.Blog.Tests.Integration
                 result.Images.Count.ShouldBe(2);
 
                 // Assert - Database
-                var storedBlog = dbContext.Blogs.FirstOrDefault(b => b.Title == newBlog.Title);
+                var storedBlog = dbContext.Blogs.FirstOrDefault(b => b.Id == result.Id);
                 storedBlog.ShouldNotBeNull();
                 storedBlog.Description.ShouldBe(result.Description);
                 result.Status.ToString().ShouldBe(newBlog.Status.ToString());
@@ -123,6 +123,7 @@ namespace Explorer.Blog.Tests.Integration
                 ControllerContext = BuildContext("-1")
             };
         }
-
+           
     }
+
 }
