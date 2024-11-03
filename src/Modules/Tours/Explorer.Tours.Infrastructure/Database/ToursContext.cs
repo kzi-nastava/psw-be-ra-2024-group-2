@@ -1,7 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Tours.Infrastructure.Database;
@@ -24,7 +23,7 @@ public class ToursContext : DbContext
 
     public DbSet<TourExecution> TourExecutions { get; set; }
 
-    public DbSet<TourExecutionCheckpoint> TourExecutionCheckpoints { get; set; }
+    //public DbSet<TourExecutionCheckpoint> TourExecutionCheckpoints { get; set; }
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
@@ -46,9 +45,8 @@ public class ToursContext : DbContext
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<TourExecution>()
-            .HasMany(te => te.tourExecutionCheckpoints)
-            .WithOne()
-            .OnDelete(DeleteBehavior.Cascade);
+            .Property(te => te.TourExecutionCheckpoints)
+            .HasColumnType("jsonb");
 
         modelBuilder.Entity<Tour>()
             .Property(t => t.TourDurationByTransports)

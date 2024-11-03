@@ -44,6 +44,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 },
                 ReviewDate = DateTime.MinValue,
                 VisitDate = DateTime.MinValue,
+                Progress = 0
 
             };
 
@@ -85,6 +86,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 },
                 ReviewDate = DateTime.MinValue,
                 VisitDate = DateTime.MinValue,
+                Progress = 0,
 
             };
 
@@ -116,6 +118,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 },
                 ReviewDate = DateTime.MinValue,
                 VisitDate = DateTime.MinValue,
+                Progress= 0,
 
             };
            
