@@ -72,12 +72,5 @@ namespace Explorer.API.Controllers.Author
             var result = _equipmentService.GetPaged(1, int.MaxValue);
             return CreateResponse(result);
         }
-
-        [HttpGet("tours/nearby")]
-        public ActionResult<PagedResult<TourDto>> GetToursNearby([FromBody] LocationDto locationDto)
-        {
-            var result = _tourService.GetToursNearby(User.UserId(), locationDto);
-            return CreateResponse(result.ToResult());
-        }
     }
 }
