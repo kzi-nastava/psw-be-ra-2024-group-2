@@ -13,5 +13,6 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         public TourExecution Create(TourExecution execution);
         public TourExecution Update(TourExecution aggregateRoot);
         public PagedResult<TourExecution> GetPaged(int page, int pageSize);
+        public TourExecution GetByUserId(int userId);
     }
 }

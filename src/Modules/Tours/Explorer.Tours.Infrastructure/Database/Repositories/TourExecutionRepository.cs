@@ -47,5 +47,10 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             task.Wait();
             return task.Result;
         }
+
+        public TourExecution GetByUserId(int userId)
+        {
+            return _dbContext.TourExecutions.Where(t=> t.UserId == userId).FirstOrDefault();
+        }
     }
 }

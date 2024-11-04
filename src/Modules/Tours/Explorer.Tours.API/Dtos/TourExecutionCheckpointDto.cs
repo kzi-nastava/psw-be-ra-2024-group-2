@@ -11,6 +11,6 @@ namespace Explorer.Tours.API.Dtos
     {
         public int Id { get; set; }
         public long CheckpointId { get;  set; }
-        public DateTime ArrivalAt { get;  set; }
+        public DateTime? ArrivalAt { get;  set; }
     }
 }

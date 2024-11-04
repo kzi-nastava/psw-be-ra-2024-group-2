@@ -13,13 +13,13 @@ namespace Explorer.Tours.Core.Domain
     public class TourExecutionCheckpoint : ValueObject
     {
         public long CheckpointId {  get; private set; }
-        public DateTime? ArrivalAt { get; private set; } = null;
+        public DateTime? ArrivalAt { get; private set; }
 
         [JsonConstructor]
-
-        public TourExecutionCheckpoint(long checkpointId)
+        public TourExecutionCheckpoint(long checkpointId, DateTime? arrivalAt)
         {
             CheckpointId = checkpointId;
+            ArrivalAt = arrivalAt;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
