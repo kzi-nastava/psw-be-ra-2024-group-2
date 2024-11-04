@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers.User;
 
 [Authorize(Policy = "allLoggedPolicy")]
-[Route("api/tournotifiactions")]
+[Route("api/tourNotifications")]
 public class TourIssueNotificationController : BaseApiController
 {
     private readonly ITourIssueNotificationService _notificationService;
 
-    public TourIssueNotificationController(TourIssueNotificationService notificationService)
+    public TourIssueNotificationController(ITourIssueNotificationService notificationService)
     {
         _notificationService = notificationService;
     }
@@ -27,10 +27,23 @@ public class TourIssueNotificationController : BaseApiController
         var result = _notificationService.Create(dto);
         return CreateResponse(result);
     }
-    [HttpGet]
+    [HttpGet("{userId}")]
     public ActionResult<TourIssueNotificationDto> GetForUserId(long userId)
     {
         var result = _notificationService.GetForUserId(userId);
         return CreateResponse(result);
+    }
+    [HttpPut("markAsRead")]
+    public ActionResult MarkAsRead([FromBody] MarkAsReadDto dto)
+    {
+        _notificationService.ReadNotifications(dto.UserId, dto.TourIssueReportId);
+        return NoContent();
+    }
+
+    [HttpPut("markAllAsRead/{userId}")]
+    public ActionResult MarkAllAsRead(long userId)
+    {
+        _notificationService.ReadAllNotifications(userId);
+        return NoContent();
     }
 }

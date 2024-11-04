@@ -24,8 +24,9 @@ namespace Explorer.Tours.Core.UseCases.Administration
         private readonly ICrudRepository<TourReview> _reviewRepository;
         private readonly ICrudRepository<Tour> _tourRepository;
         private readonly ITourExecutionRepository _tourExecutionRepository;
+        private readonly ITransactionRepository _transactionRepository;
 
-        public TourReviewService(ICrudRepository<TourReview> repository, IMapper mapper, IImageRepository imageRepository, 
+        public TourReviewService(ICrudRepository<TourReview> repository, ITransactionRepository _transactionRepository, IMapper mapper, IImageRepository imageRepository, 
                                     ICrudRepository<TourReview> reviewRepository, ICrudRepository<Tour> tourRepository, ITourExecutionRepository tourExecutionRepository) : base(repository, mapper)
         {
             _imageRepository = imageRepository;
@@ -118,6 +119,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             try
             {
+                
                 _tourRepository.Get(dto.TourId);
                 
                 if(dto.Grade < 1 || dto.Grade > 5)
