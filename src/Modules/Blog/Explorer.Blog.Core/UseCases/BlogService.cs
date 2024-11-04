@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.Blog.Core.Domain;
 using Explorer.Blog.Core.Domain.RepositoryInterfaces;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
@@ -63,6 +64,16 @@ namespace Explorer.Blog.Core.UseCases
 
             return MapToDto(result);
         }
+
+        public void AddCommentToBlog(long blogId, Comment comment)
+        {
+            var blog = _blogRepository.GetById((int)blogId);
+            if (blog == null) throw new Exception("Blog not found");
+
+            blog.Comments.Add(comment);
+            _blogRepository.AddCommentToBlog(blogId, comment);
+        }
+
         public Result<BlogDto> GetBlogWithRatings(int blogId)
         {
             var blog = _blogRepository.GetById(blogId);

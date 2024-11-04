@@ -54,5 +54,20 @@ namespace Explorer.Blog.Infrastructure.Database.Repositories
             return blog?.Ratings ?? new List<Rating>();
         }
 
+        public Explorer.Blog.Core.Domain.Blog AddCommentToBlog(long blogId, Comment comment)
+        {
+            var blog = _dbContext.Blogs.FirstOrDefault(b => b.Id == blogId);
+            if (blog == null)
+            {
+                throw new KeyNotFoundException("Blog not found");
+            }
+            blog.Comments.Add(comment);
+            _dbContext.Blogs.Update(blog);
+            _dbContext.SaveChanges();
+
+            return blog;
+        }
+
+
     }
 }

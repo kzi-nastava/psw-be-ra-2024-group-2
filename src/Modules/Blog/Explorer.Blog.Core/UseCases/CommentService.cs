@@ -13,11 +13,12 @@ namespace Explorer.Blog.Core.UseCases
     {
         private readonly ICrudRepository<Comment> repository;
         private readonly IMapper mapper;
-
-        public CommentService(ICrudRepository<Comment> repository, IMapper mapper)
+        private readonly BlogService blogService;
+        public CommentService(ICrudRepository<Comment> repository, IMapper mapper, BlogService blogService)
         {
             this.repository = repository;
             this.mapper = mapper;
+            this.blogService = blogService;
         }
 
         public Result<CommentDTO> Create(long userId, CommentDTO commentDto)
@@ -35,8 +36,10 @@ namespace Explorer.Blog.Core.UseCases
             var comment = mapper.Map<Comment>(commentDto);
             comment.UserId = userId;
             var result = repository.Create(comment);
+            blogService.AddCommentToBlog(commentDto.BlogId, result);
             return Result.Ok(mapper.Map<CommentDTO>(result));
         }
+
 
 
         public Result<CommentDTO> Update(long id, long blogId, long userId, CommentDTO commentDto)
