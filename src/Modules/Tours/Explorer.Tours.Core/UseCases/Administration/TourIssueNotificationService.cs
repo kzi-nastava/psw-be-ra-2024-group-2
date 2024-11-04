@@ -37,18 +37,15 @@ namespace Explorer.Tours.Core.UseCases.Administration
             var newDto = MapToDto( repository.Create(MapToDomain(tourIssueNotificationDto)));
             return newDto;
         }
-        public Result<TourIssueNotificationDto> GetForUserId(long userId)
+        public Result<PagedResult<TourIssueNotificationDto>> GetForUserId(long userId)
         {
-            var list = repository.GetPaged(1, int.MaxValue).Results;
-            List<TourIssueNotificationDto> dtos = new List<TourIssueNotificationDto>();
-            dtos=dtos.Where(t=>t.ToUserId == userId).ToList();
-            foreach (var d in list)
-            {
-                dtos.Add(MapToDto(d));
-            }
-            return dtos.FirstOrDefault() == null ? (Result<TourIssueNotificationDto>)Result.Ok() : Result.Ok(dtos.FirstOrDefault());
+            List<TourIssueNotification> list = repository.GetPaged(1, int.MaxValue).Results;
+            List<TourIssueNotificationDto> dtos = list.Select(obj=>MapToDto(obj)).ToList();
+            dtos = dtos.Where(t => t.Status == TourIssueNotificationStatus.Unread).ToList();
+            dtos= dtos.Where(t=>t.ToUserId == userId).ToList();
+            var result = new PagedResult<TourIssueNotificationDto>(dtos.ToList(), dtos.Count);
+            return result;
         }
-        //useless
         public Result<TourIssueNotificationDto> MarkAsOpened(TourIssueNotificationDto dto) {
             var notification = repository.Get(dto.Id);
             if (notification != null)
@@ -59,6 +56,45 @@ namespace Explorer.Tours.Core.UseCases.Administration
             notif.Read();
             repository.Update(notif);
             return Result.Ok(MapToDto(notif));
+        }
+        //Create
+
+        Result<TourIssueNotificationDto> ITourIssueNotificationService.Create(TourIssueNotificationDto dto)
+        {
+            try
+            {
+                var notif = new TourIssueNotification(dto.FromUserId, dto.ToUserId, dto.Status, dto.TourIssueReportId);
+                repository.Create(notif);
+                return MapToDto(notif);
+            }
+            catch(Exception e)
+            {
+                return Result.Fail(FailureCode.Conflict).WithError("Error creating the tour.");
+            }
+        }
+        public void ReadNotifications(long userId, long tourIssueReportId)
+        {
+            var notifications = repository.GetPaged(1, int.MaxValue).Results;
+            foreach(var n in notifications)
+            {
+                if(n.ToUserId==userId && n.TourIssueReportId == tourIssueReportId)
+                {
+                    n.Read();
+                    repository.Update(n);
+                }
+            }
+        }
+        public void ReadAllNotifications(long userId)
+        {
+            var notifications = repository.GetPaged(1, int.MaxValue).Results;
+            foreach (var n in notifications)
+            {
+                if (n.ToUserId == userId)
+                {
+                    n.Read();
+                    repository.Update(n);
+                }
+            }
         }
     }
 }
