@@ -198,7 +198,10 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         public PagedResult<TourDto> GetToursNearby(int loggedInUserId, LocationDto locationDto)
         {
-            // TODO: Nemanja pravi implementaciju
+            var tours = _tourRepository.GetPaged(1, int.MaxValue);
+            var longitude = locationDto.Longitude;
+            var latitude = locationDto.Latitude;
+            var radius = locationDto.Radius;
             throw new NotImplementedException();
         }
     }
