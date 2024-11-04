@@ -75,7 +75,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
             };
 
             // Act
-            var result = ((ObjectResult)controller.CreateComment(newTourIssueComment).Result)?.Value as TourIssueCommentDto;
+            var result = ((ObjectResult)controller.CreateComment(-1,newTourIssueComment).Result)?.Value as TourIssueCommentDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -109,7 +109,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
             };
 
             // Act
-            var result = (ObjectResult)controller.CreateComment(newTourIssueComment).Result;
+            var result = (ObjectResult)controller.CreateComment(-1,newTourIssueComment).Result;
 
             // Assert
             result.ShouldNotBeNull();
