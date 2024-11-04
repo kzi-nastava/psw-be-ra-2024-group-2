@@ -1,8 +1,10 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Explorer.Blog.API.Dtos
@@ -11,6 +13,7 @@ namespace Explorer.Blog.API.Dtos
     {
 
         public string RatingType { get; set; } = string.Empty;
+
         public DateTime CreatedAt { get; set; }
         public string Username { get; set; } = string.Empty;
     }

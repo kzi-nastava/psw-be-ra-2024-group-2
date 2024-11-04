@@ -7,6 +7,8 @@ namespace Explorer.Blog.Core.Domain
     public class Rating : ValueObject
     {
         public RatingType RatingType { get; private set; }
+
+        [JsonConverter(typeof(DateTimeConverter))]
         public DateTime CreatedAt { get; private set; }
         public string Username { get; private set; }
 
