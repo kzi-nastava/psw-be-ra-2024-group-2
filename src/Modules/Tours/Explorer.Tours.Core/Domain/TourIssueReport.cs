@@ -90,7 +90,7 @@ namespace Explorer.Tours.Core.Domain
         {
             if (Status != TourIssueReportStatus.Open)
                 throw new InvalidOperationException("Only open reports can be marked as not done.");
-            FixUntil = DateTime.UtcNow.AddSeconds(4);
+            FixUntil = DateTime.UtcNow;
         }
         public bool ReadNotification(long notificationId)
         {
