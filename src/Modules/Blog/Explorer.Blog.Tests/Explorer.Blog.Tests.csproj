@@ -17,7 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="TestData\a-delete.sql" />
+    <Content Include="TestData\a-delete.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="TestData\b-blogs.sql" />
     <EmbeddedResource Include="TestData\c-comment.sql" />
     <EmbeddedResource Include="TestData\d-images.sql" />

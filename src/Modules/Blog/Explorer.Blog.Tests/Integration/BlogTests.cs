@@ -16,6 +16,7 @@ using Explorer.BuildingBlocks.Core.Domain.Enums;
 
 namespace Explorer.Blog.Tests.Integration
 {
+    [Collection("Sequential")]
     public class BlogTests : BaseBlogIntegrationTest
     {
         public BlogTests(BlogTestFactory factory) : base(factory)
