@@ -46,7 +46,6 @@ namespace Explorer.Tours.Core.UseCases.Administration
             var result = new PagedResult<TourIssueNotificationDto>(dtos.ToList(), dtos.Count);
             return result;
         }
-        //useless
         public Result<TourIssueNotificationDto> MarkAsOpened(TourIssueNotificationDto dto) {
             var notification = repository.Get(dto.Id);
             if (notification != null)
@@ -58,7 +57,21 @@ namespace Explorer.Tours.Core.UseCases.Administration
             repository.Update(notif);
             return Result.Ok(MapToDto(notif));
         }
+        //Create
 
+        Result<TourIssueNotificationDto> ITourIssueNotificationService.Create(TourIssueNotificationDto dto)
+        {
+            try
+            {
+                var notif = new TourIssueNotification(dto.FromUserId, dto.ToUserId, dto.Status, dto.TourIssueReportId);
+                repository.Create(notif);
+                return MapToDto(notif);
+            }
+            catch(Exception e)
+            {
+                return Result.Fail(FailureCode.Conflict).WithError("Error creating the tour.");
+            }
+        }
         public void ReadNotifications(long userId, long tourIssueReportId)
         {
             var notifications = repository.GetPaged(1, int.MaxValue).Results;
