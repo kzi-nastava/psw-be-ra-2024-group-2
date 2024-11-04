@@ -57,11 +57,6 @@ public class ToursContext : DbContext
             .Property(t => t.TourDurationByTransports)
             .HasColumnType("jsonb");
 
-        modelBuilder.Entity<Tour>()
-            .HasMany(t => t.TourIssueReports)
-            .WithOne(t => t.Tour)
-            .HasForeignKey(t => t.TourId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<TourIssueReport>()
             .HasMany(t => t.TourIssueComments)
