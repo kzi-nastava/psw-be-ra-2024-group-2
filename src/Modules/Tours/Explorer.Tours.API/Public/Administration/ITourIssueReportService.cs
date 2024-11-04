@@ -11,7 +11,7 @@ namespace Explorer.Tours.API.Public.Administration
 {
     public interface ITourIssueReportService
     {
-        Result<PagedResult<TourIssueReportDto>> GetPaged(int page, int pageSize);
+        Result<PagedResult<TourIssueReportDto>> GetPaged(long userId, int page, int pageSize);
         //Result<TourIssueReportDto> Create(TourIssueReportDto report);
         Result<TourIssueReportDto> Create(long userId, long tourId, TourIssueReportDto tourIssueReport);
         Result<TourIssueReportDto> MarkAsDone(TourIssueReportDto tourIssueReport);

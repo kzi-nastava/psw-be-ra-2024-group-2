@@ -1,6 +1,7 @@
 ﻿using Explorer.API.Controllers.Administrator.Administration;
 using Explorer.API.Controllers.Author;
 using Explorer.API.Controllers.Tourist;
+using Explorer.API.Controllers.User;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
@@ -59,6 +60,22 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 }
             };
         }
+        private static TourIssueReportViewController CreateControllerView(IServiceScope scope, string number)
+        {
+            return new TourIssueReportViewController(scope.ServiceProvider.GetRequiredService<ITourIssueReportService>(), scope.ServiceProvider.GetRequiredService<ITourService>())
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext
+                    {
+                        User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                        {
+                            new Claim("personId", number)
+                        }))
+                    }
+                }
+            };
+        }
 
 
         [Fact]
@@ -66,10 +83,10 @@ namespace Explorer.Tours.Tests.Integration.Administration
         {
             // Arrange
             using var scope = Factory.Services.CreateScope();
-            var controller = CreateControllerReview(scope, "-1");
+            var controller = CreateControllerView(scope, "-1");
 
             // Act
-            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<TourIssueReportDto>;
+            var result = ((ObjectResult)controller.GetAll(-1, 0, 0).Result)?.Value as PagedResult<TourIssueReportDto>;
 
             // Assert
             result.ShouldNotBeNull();
@@ -331,7 +348,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 Priority = "High",
                 TourId = -4,
                 CreatedAt = DateTime.UtcNow,
-                FixUntil = DateTime.UtcNow.AddDays(2),
+                FixUntil = DateTime.UtcNow.AddSeconds(4),
                 Status = TourIssueReportStatus.Open, 
                 UserId = -20
             };
@@ -341,11 +358,11 @@ namespace Explorer.Tours.Tests.Integration.Administration
 
             // Assert
             result.ShouldNotBeNull();
-            result.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddDays(2).AddSeconds(-3));
+            result.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddSeconds(-3));
 
             var storedReport = dbContext.TourIssueReports.FirstOrDefault(r => r.Id == existingReport.Id);
             storedReport.ShouldNotBeNull();
-            storedReport.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddDays(2).AddSeconds(-3));
+            storedReport.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddSeconds(-3));
         }
 
         [Fact]

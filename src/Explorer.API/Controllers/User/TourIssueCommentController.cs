@@ -5,7 +5,7 @@ using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Explorer.API.Controllers
+namespace Explorer.API.Controllers.User
 {
     [Authorize(Policy = "allLoggedPolicy")]
     [Route("api/tourIssueComment")]
@@ -20,15 +20,15 @@ namespace Explorer.API.Controllers
             _tourIssueReportService = tourIssueReportService;
         }
 
-        [HttpPost("comment")]
-        public ActionResult<TourIssueCommentDto> CreateComment([FromBody] TourIssueCommentDto comment)
+        [HttpPost("comment/{fromId}")]
+        public ActionResult<TourIssueCommentDto> CreateComment([FromRoute] int fromId,[FromBody] TourIssueCommentDto comment)
         {
-            var result = _tourIssueCommentService.CreateComment(comment);
+            var result = _tourIssueCommentService.CreateComment(comment, fromId);
             return CreateResponse(result);
         }
 
-        [HttpGet("comments")]
-        public ActionResult<PagedResult<TourIssueCommentDto>> GetAllComments([FromQuery] long tourIssueReportId, [FromQuery] int page, [FromQuery] int pageSize)
+        [HttpGet("comments/{tourIssueReportId}")]
+        public ActionResult<PagedResult<TourIssueCommentDto>> GetAllComments(long tourIssueReportId, [FromQuery] int page, [FromQuery] int pageSize)
         {
             var pagedResult = _tourIssueCommentService.GetPaged(tourIssueReportId, page, pageSize);
 
