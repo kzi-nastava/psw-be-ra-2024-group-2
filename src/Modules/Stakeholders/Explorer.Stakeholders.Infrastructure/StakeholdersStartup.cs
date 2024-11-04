@@ -37,6 +37,7 @@ public static class StakeholdersStartup
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudDatabaseRepository<User, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, StakeholdersContext>));
         services.AddScoped(typeof(ITransactionRepository), typeof(TransactionRepository<StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<RatingApplication>), typeof(CrudDatabaseRepository<RatingApplication, StakeholdersContext>));
