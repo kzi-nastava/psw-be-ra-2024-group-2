@@ -1,7 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Tours.Infrastructure.Database;
@@ -21,11 +20,9 @@ public class ToursContext : DbContext
     public DbSet<Checkpoint> Checkpoints { get; set; }
     public DbSet<TourPreference> TourPreferences { get; set; }
     public DbSet<TourPreferenceTag> PreferenceTags { get; set; }
-    public DbSet<TourDurationByTransport> TourDurationByTransports { get; set; }
 
     public DbSet<TourExecution> TourExecutions { get; set; }
 
-    public DbSet<TourExecutionCheckpoint> TourExecutionCheckpoints { get; set; }
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
 
@@ -42,23 +39,24 @@ public class ToursContext : DbContext
             .Property(c => c.OwnerId)
             .IsRequired();
 
+        modelBuilder.Entity<Tour>()
+            .HasMany(t => t.Checkpoints)
+            .WithMany(c => c.Tours);
+
         modelBuilder.Entity<TourReview>()
             .HasOne(p => p.Image)
             .WithOne()
             .HasForeignKey<TourReview>(s => s.ImageId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Tour>()
-            .HasMany(t => t.TourDurationByTransports)
-            .WithOne(t => t.Tour)
-            .HasForeignKey(t => t.TourId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         modelBuilder.Entity<TourExecution>()
-            .HasMany(te => te.tourExecutionCheckpoints)
-            .WithOne()
-            .OnDelete(DeleteBehavior.Cascade);
-       
+            .Property(te => te.TourExecutionCheckpoints)
+            .HasColumnType("jsonb");
+
+        modelBuilder.Entity<Tour>()
+            .Property(t => t.TourDurationByTransports)
+            .HasColumnType("jsonb");
+
         modelBuilder.Entity<Tour>()
             .HasMany(t => t.TourIssueReports)
             .WithOne(t => t.Tour)

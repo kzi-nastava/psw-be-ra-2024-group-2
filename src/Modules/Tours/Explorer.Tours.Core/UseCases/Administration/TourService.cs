@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
@@ -14,15 +15,13 @@ namespace Explorer.Tours.Core.UseCases.Administration
         private readonly ICrudRepository<Equipment> _equipmentRepository;
         private readonly ICrudRepository<Checkpoint> _checkpointRepository;
         private readonly ITransactionRepository _transactionRepository;
-        private readonly ITourDurationByTransportRepository _tourDurationByTransportRepository;
 
-        public TourService(ICrudRepository<Tour> tourRepository, ICrudRepository<Equipment> equipmentRepository, ICrudRepository<Checkpoint> checkpointRepository, IMapper mapper, ITransactionRepository transactionRepository, ITourDurationByTransportRepository tourDurationByTransportRepository) : base(tourRepository, mapper)
+        public TourService(ICrudRepository<Tour> tourRepository, ICrudRepository<Equipment> equipmentRepository, ICrudRepository<Checkpoint> checkpointRepository, IMapper mapper, ITransactionRepository transactionRepository) : base(tourRepository, mapper)
         {
             _tourRepository = tourRepository;
             _equipmentRepository = equipmentRepository;
             _checkpointRepository = checkpointRepository;
             _transactionRepository = transactionRepository;
-            _tourDurationByTransportRepository = tourDurationByTransportRepository;
         }
 
         public Result<TourDto> UpdateTour(TourDto tourDto, long userId)
@@ -37,27 +36,15 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
                 tour.Equipment.Clear();
 
+                List<Equipment> equipment = new List<Equipment>();
+
                 foreach (var elementId in tourDto.Equipment)
                 {
                     var newEquipment = _equipmentRepository.Get(elementId);
-                    tour.Equipment.Add(newEquipment);
+                    equipment.Add(newEquipment);
                 }
 
-                if(tourDto.Status.ToString() == "Published") 
-                {
-                    tour.UpdatePublishDate(DateTime.UtcNow);
-                    tour.UpdateArhivedDate(null);
-                }
-                else if(tourDto.Status.ToString() == "Archived") 
-                {
-                    tour.UpdatePublishDate(null);
-                    tour.UpdateArhivedDate(DateTime.UtcNow);
-                }
-                    
-
-
-                tour.UpdateStatus(tourDto.Status);
-                tour.UpdatePrice(tourDto.Price);
+                tour.UpdateTour(tourDto.Status,tourDto.Price,equipment);
 
                 _tourRepository.Update(tour);
                 _transactionRepository.CommitTransaction();
@@ -96,32 +83,49 @@ namespace Explorer.Tours.Core.UseCases.Administration
             }
         }
 
-        public Result<TourDto> CreateTour(TourDto dto, int userId)
+        public Result<TourDto> CreateTour(TourDto tourDto, List<CheckpointDto> checkpointsDto ,int userId)
         {
             try
             {
-                dto.UserId = userId;
+                tourDto.UserId = userId;
 
                 _transactionRepository.BeginTransaction();
 
-                Tour tour = new(dto.UserId,
-                    dto.Name,
-                    dto.Description,
-                    dto.Difficulty,
-                    dto.Tag,
-                    dto.Status,
-                    dto.Price);
+                Tour tour = new(tourDto.UserId,
+                    tourDto.Name,
+                    tourDto.Description,
+                    tourDto.Difficulty,
+                    tourDto.Tag,
+                    tourDto.Status,
+                    tourDto.Price);
 
-                Validate(dto);
+                Validate(tourDto);
+
+                List<TourDurationByTransport> TourDurationByTransports = tourDto.TourDurationByTransportDtos
+                    .Select(tourDurationByTransportDto => 
+                        new TourDurationByTransport(
+                            Enum.Parse<TransportType>(tourDurationByTransportDto.Transport), 
+                            tourDurationByTransportDto.Duration))
+                    .ToList();
+
+                tour.UpdateTransports(TourDurationByTransports);
+
+                //convert checkpointdto to checkpoint
+                List<Checkpoint> checkpoints = checkpointsDto
+                    .Select(checkpointDto =>
+                        new Checkpoint(
+                            checkpointDto.Latitude,
+                            checkpointDto.Longitude,
+                            checkpointDto.Name,
+                            checkpointDto.Description,
+                            checkpointDto.Image != null
+                            ? new Image(checkpointDto.Image.Data, checkpointDto.Image.UploadedAt, checkpointDto.Image.MimeType)
+                            : null))
+                    .ToList();
+
+                tour.UpdateCheckpoints(checkpoints);
 
                 var result = _tourRepository.Create(tour);
-
-                result.TourDurationByTransports = dto.TourDurationByTransportDtos.Select(tourDurationByTransportDto =>
-                {
-                    var tourDurationByTransport = new TourDurationByTransport(result.Id, tourDurationByTransportDto.Transport, tourDurationByTransportDto.Duration);
-                    _tourDurationByTransportRepository.Create(tourDurationByTransport);
-                    return tourDurationByTransport;
-                }).ToList();
 
                 _transactionRepository.CommitTransaction();
 
@@ -190,6 +194,12 @@ namespace Explorer.Tours.Core.UseCases.Administration
         public Result DeleteById(int tourId)
         {
             return base.Delete(tourId);
+        }
+
+        public PagedResult<TourDto> GetToursNearby(int loggedInUserId, LocationDto locationDto)
+        {
+            // TODO: Nemanja pravi implementaciju
+            throw new NotImplementedException();
         }
     }
 }

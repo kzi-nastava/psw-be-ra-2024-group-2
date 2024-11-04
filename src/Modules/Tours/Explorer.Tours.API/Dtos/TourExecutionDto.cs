@@ -13,7 +13,6 @@ namespace Explorer.Tours.API.Dtos
 
         public long UserId { get;  set; }
         public long TourId { get;  set; }
-        public TourDto Tour { get;  set; }
         public TourExecutionStatus Status { get;  set; }
         public DateTime SessionEndingTime { get;  set; }
         public DateTime LastActivity { get;  set; }

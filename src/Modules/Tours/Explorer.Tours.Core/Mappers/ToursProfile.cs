@@ -88,17 +88,13 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
             .ForMember(dest => dest.SessionEndingTime, opt => opt.MapFrom(src => src.SessionEndingTime))
             .ForMember(dest => dest.LastActivity, opt => opt.MapFrom(src => src.LastActivity))
-            .ForMember(dest => dest.Tour, opt => opt.MapFrom(src => src.Tour)) 
             .ForMember(dest => dest.tourExecutionCheckpoints,
-                       opt => opt.MapFrom(src => src.tourExecutionCheckpoints));
+                       opt => opt.MapFrom(src => src.TourExecutionCheckpoints));
 
 
         CreateMap<TourExecutionCheckpoint, TourExecutionCheckpointDto>()
             .ForMember(dest => dest.CheckpointId, opt => opt.MapFrom(src => src.CheckpointId))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
-            .ForMember(dest => dest.ArrivalAt, opt => opt.MapFrom(src => src.ArrivalAt))
-            .ForMember(dest => dest.TourExecutionId, opt => opt.MapFrom(src => src.TourExecutionId))
-            .ForMember(dest => dest.Checkpoint, opt => opt.MapFrom(src => src.Checkpoint));
+            .ForMember(dest => dest.ArrivalAt, opt => opt.MapFrom(src => src.ArrivalAt));
 
         CreateMap<OrderItemDto, OrderItem>().ReverseMap();
       
