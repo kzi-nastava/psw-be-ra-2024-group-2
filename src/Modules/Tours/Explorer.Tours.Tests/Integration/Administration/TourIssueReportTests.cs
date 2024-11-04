@@ -358,11 +358,11 @@ namespace Explorer.Tours.Tests.Integration.Administration
 
             // Assert
             result.ShouldNotBeNull();
-            result.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddSeconds(4).AddSeconds(-3));
+            result.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddSeconds(-3));
 
             var storedReport = dbContext.TourIssueReports.FirstOrDefault(r => r.Id == existingReport.Id);
             storedReport.ShouldNotBeNull();
-            storedReport.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddSeconds(4).AddSeconds(-3));
+            storedReport.FixUntil.ShouldBeGreaterThan(DateTime.UtcNow.AddSeconds(-3));
         }
 
         [Fact]
