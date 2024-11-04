@@ -20,10 +20,10 @@ namespace Explorer.API.Controllers.User
             _tourIssueReportService = tourIssueReportService;
         }
 
-        [HttpPost("comment")]
-        public ActionResult<TourIssueCommentDto> CreateComment([FromBody] TourIssueCommentDto comment)
+        [HttpPost("comment/{fromId}")]
+        public ActionResult<TourIssueCommentDto> CreateComment([FromRoute] int fromId,[FromBody] TourIssueCommentDto comment)
         {
-            var result = _tourIssueCommentService.CreateComment(comment);
+            var result = _tourIssueCommentService.CreateComment(comment, fromId);
             return CreateResponse(result);
         }
 
