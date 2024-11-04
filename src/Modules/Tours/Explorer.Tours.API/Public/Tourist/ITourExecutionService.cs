@@ -11,6 +11,9 @@ namespace Explorer.Tours.API.Public.Tourist
     public interface ITourExecutionService
     {
         Result<TourExecutionDto> Create(int tourId, int userId);
+        Result<TourExecutionDto> EndTour(int v, TourExecutionDto dto);
+        Result<TourExecutionDto> GetByUserId(int userId);
+        Result<TourExecutionDto> Update(TourExecutionDto tourExecutionDto);
 
     }
 }

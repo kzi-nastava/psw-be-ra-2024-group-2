@@ -13,6 +13,7 @@ using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Explorer.Tours.Core.UseCases.Author
 {
@@ -27,6 +28,27 @@ namespace Explorer.Tours.Core.UseCases.Author
             _imageRepository = imageRepository;
             _checkpointRepository = checkpointRepository;
             _tourRepository = tourRepository;
+        }
+
+        public List<TourExecutionCheckpointDto> CheckDistance(List<TourExecutionCheckpointDto> execCheckpoints, double lon, double lat)
+        {
+
+
+                foreach(TourExecutionCheckpointDto exeCheckpoint in execCheckpoints)
+                {
+                    if (exeCheckpoint.ArrivalAt != null)
+                    continue;
+
+                    Checkpoint cp = _checkpointRepository.Get(exeCheckpoint.CheckpointId);
+                
+                    if (cp.CheckRadius(lon, lat))
+                    {
+                    exeCheckpoint.ArrivalAt = DateTime.UtcNow;
+                    break;
+                    }
+                }
+
+            return execCheckpoints;
         }
 
         public override Result<CheckpointDto> Create(CheckpointDto dto)

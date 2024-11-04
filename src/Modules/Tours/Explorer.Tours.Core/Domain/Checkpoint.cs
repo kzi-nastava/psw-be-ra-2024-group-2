@@ -73,5 +73,28 @@ namespace Explorer.Tours.Core.Domain
                 throw new ArgumentException("Description cannot be null.");
             }
         }
+
+        public bool CheckRadius(double otherLongitude, double otherLatitude)
+        {
+            const double earthRadius = 6371000; // Earth's radius in meters
+            double dLat = DegreesToRadians(otherLatitude - Latitude);
+            double dLon = DegreesToRadians(otherLongitude - Longitude);
+
+            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                       Math.Cos(DegreesToRadians(Latitude)) * Math.Cos(DegreesToRadians(otherLatitude)) *
+                       Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            double distance = earthRadius * c;
+
+            Console.WriteLine("Calculated Distance: " + distance); // Debug line
+
+            return distance <= 150; // Check if distance is within 50 meters
+        }
+
+        private double DegreesToRadians(double degrees)
+        {
+            return degrees * Math.PI / 180;
+        }
+
     }
 }
