@@ -26,9 +26,17 @@ namespace Explorer.Tours.Core.Domain
             Status = status;
             TourIssueReportId = tourIssueReportId;
         }
-        public void UpdateStatus(TourIssueNotificationStatus status) 
+        public void UpdateStatus(TourIssueNotificationStatus status)
         {
             Status = status;
+        }
+        public void Read()
+        {
+            Status = TourIssueNotificationStatus.Read;
+        }
+        public void UnRead()
+        {
+            Status = TourIssueNotificationStatus.Unread;
         }
     }
 }

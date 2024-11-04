@@ -20,7 +20,6 @@ namespace Explorer.Tours.Core.Domain
         public DateTime FixUntil { get; private set; }
         public long UserId { get; private set; }
         public long TourId { get; private set; }
-        public Tour Tour { get; private set; }
         public TourIssueReportStatus Status { get; private set; }
         public List<TourIssueComment>? TourIssueComments { get; private set; } = new List<TourIssueComment>();
         public List<TourIssueNotification>? TourIssueNotifications { get; private set; } = new List<TourIssueNotification>();
@@ -67,6 +66,49 @@ namespace Explorer.Tours.Core.Domain
         public void UpdateStatus(TourIssueReportStatus status)
         {
             Status = status;
+        }
+        public void CloseReport()
+        {
+            this.Status = TourIssueReportStatus.Closed;
+        }
+        public void MarkAsDone()
+        {
+            if (this.Status != TourIssueReportStatus.Open)
+                throw new InvalidOperationException("Only open reports can be marked as done.");
+
+            this.Status = TourIssueReportStatus.Closed;
+        }
+
+        public void SetFixUntil(DateTime date)
+        {
+            if (date <= DateTime.UtcNow)
+                throw new ArgumentException("Fix until date must be in the future.");
+
+            this.FixUntil = date;
+        }
+        public void AlertNotDone()
+        {
+            if (Status != TourIssueReportStatus.Open)
+                throw new InvalidOperationException("Only open reports can be marked as not done.");
+            FixUntil = DateTime.UtcNow;
+        }
+        public bool ReadNotification(long notificationId)
+        {
+            TourIssueNotification notification = TourIssueNotifications.FirstOrDefault(t => t.Id == notificationId);
+            if(notification != null)
+            {
+                notification.Read();
+                return true;
+            }
+            return false;
+        }
+        public void UnReadNotification(long notificationId)
+        {
+            TourIssueNotification notification = TourIssueNotifications.FirstOrDefault(t => t.Id == notificationId);
+            if(notification != null)
+            {
+                notification.UnRead();
+            }
         }
     }
 }
