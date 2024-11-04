@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.Blog.Core.Domain.RepositoryInterfaces;
 using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
@@ -15,16 +17,18 @@ namespace Explorer.Blog.Core.UseCases
 {
     public class BlogService : CrudService<BlogDto, Explorer.Blog.Core.Domain.Blog>, IBlogService
     {
-        public ICrudRepository<Explorer.Blog.Core.Domain.Blog> _blogRepository;
+        public IBlogRepository _blogRepository;
+        public ICrudRepository<Explorer.Blog.Core.Domain.Blog> _blogCrudRepository;
         private readonly IImageRepository _imageRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
 
-        public BlogService(ICrudRepository<Explorer.Blog.Core.Domain.Blog> crudRepository, ITransactionRepository transactionRepository, IImageRepository imageRepository, IMapper mapper) : base(crudRepository, mapper)
+        public BlogService(ICrudRepository<Explorer.Blog.Core.Domain.Blog> crudRepository, ITransactionRepository transactionRepository, IImageRepository imageRepository, IBlogRepository blogRepository, IMapper mapper) : base(crudRepository, mapper)
         {
             _imageRepository = imageRepository;
-            _blogRepository = crudRepository;
+            _blogCrudRepository = crudRepository;
             _mapper = mapper;
+            _blogRepository = blogRepository;
             _transactionRepository = transactionRepository;
         }
 
@@ -34,7 +38,7 @@ namespace Explorer.Blog.Core.UseCases
             {
                 var blog = _mapper.Map<Core.Domain.Blog>(blogDto);
 
-                var createdBlog = _blogRepository.Create(blog);
+                var createdBlog = _blogCrudRepository.Create(blog);
 
                 if (blogDto.Images != null && blogDto.Images.Any())
                 {
@@ -50,6 +54,24 @@ namespace Explorer.Blog.Core.UseCases
             {
                 return Result.Fail<BlogDto>("An error occurred while creating the blog: " + ex.Message);
             }
+        }
+
+        public Result<BlogDto> UpdateRating(int blogId, string username, RatingType ratingType)
+        {
+            var result = _blogRepository.UpdateRating(blogId, username, ratingType);
+
+            return MapToDto(result);
+        }
+        public Result<BlogDto> GetBlogWithRatings(int blogId)
+        {
+            var blog = _blogRepository.GetById(blogId); // Pretpostavljam da imate ovu metodu u repozitorijumu
+            if (blog == null)
+            {
+                return Result.Fail<BlogDto>("Blog not found.");
+            }
+
+            var blogDto = _mapper.Map<BlogDto>(blog);
+            return Result.Ok(blogDto);
         }
     }
 }

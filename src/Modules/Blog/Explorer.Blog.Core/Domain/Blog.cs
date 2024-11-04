@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -38,7 +39,30 @@ namespace Explorer.Blog.Core.Domain
             if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description");
             if (AuthorId == 0) throw new ArgumentException("Blog must have an Author");
         }
+
+
+
+        public Rating AddRating( RatingType ratingType, string username)
+        {
+            var rating = new Rating(ratingType, DateTime.UtcNow, username);
+            var ratingCheck = Ratings.FirstOrDefault(rating => rating.Username == username);
+
+            if (ratingCheck == null) Ratings.Add(rating);
+            return rating;
+        }
+
+        public void RemoveRating(string username)
+        {
+            var ratingToRemove = Ratings.FirstOrDefault(rating => rating.Username == username);
+            if (ratingToRemove != null) Ratings.Remove(ratingToRemove);
+        }
+
+
+
+
     }
+
+
     public enum Status
     {
         Draft,
