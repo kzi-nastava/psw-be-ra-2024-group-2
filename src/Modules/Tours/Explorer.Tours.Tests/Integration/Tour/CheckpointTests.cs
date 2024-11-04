@@ -42,7 +42,9 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     MimeType = "image/png"
                 },*/
                 Name = "Trg Nikole Pasica",
-                Description = "Testni opis2"
+                Description = "Testni opis2",
+                Secret = "Ovo je tajna"
+                
 
             };
             // Act
@@ -71,7 +73,8 @@ namespace Explorer.Tours.Tests.Integration.Tour
                     MimeType = "image/jpeg"
                 },*/
                 Name = "",
-                Description = "Testni opis"
+                Description = "Testni opis",
+                Secret = "Ovo je druga tajna"
             };
 
             //Act

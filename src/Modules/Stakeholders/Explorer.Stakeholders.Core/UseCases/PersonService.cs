@@ -44,9 +44,8 @@ namespace Explorer.Stakeholders.Core.UseCases
                 if (person == null)
                     return Result.Fail(FailureCode.NotFound).WithError("User not found");
 
-                TouristPosition tp = new TouristPosition();
-                tp.Latitude = latitude;
-                tp.Longitude = longitude;
+                TouristPosition tp = new TouristPosition(latitude, longitude);
+
                 person.UpdateTouristPosition(tp);
 
                 _personRepository.Update(person);

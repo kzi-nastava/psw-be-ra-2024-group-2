@@ -60,6 +60,7 @@ namespace Explorer.Tours.Core.UseCases.Author
                 checkpoint.Name = dto.Name;
                 checkpoint.Description = dto.Description;
                 checkpoint.Longitude = dto.Longitude;
+                checkpoint.Secret = dto.Secret;
 
                 /*foreach(var elementId in dto.Tours)
                 {
