@@ -6,6 +6,7 @@ namespace Explorer.Blog.Core.Domain
 {
     public class Rating : ValueObject
     {
+        //[JsonConverter(typeof(JsonStringEnumConverter))]
         public RatingType RatingType { get; private set; }
 
         [JsonConverter(typeof(DateTimeConverter))]

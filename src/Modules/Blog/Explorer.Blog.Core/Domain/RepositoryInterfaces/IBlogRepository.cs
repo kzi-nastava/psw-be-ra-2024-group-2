@@ -13,6 +13,5 @@ namespace Explorer.Blog.Core.Domain.RepositoryInterfaces
 
         Blog Create(Blog blog);
         Blog UpdateRating(int blogId, string username, RatingType type);
-        Blog AddCommentToBlog(long blogId, Comment comment);
     }
 }

@@ -6,24 +6,25 @@ using Explorer.Blog.Core.Domain;
 using FluentResults;
 using System.Collections.Generic;
 using System.Linq;
+using Explorer.Blog.Core.Domain.RepositoryInterfaces;
 
 namespace Explorer.Blog.Core.UseCases
 {
     public class CommentService : ICommentService
     {
         private readonly ICrudRepository<Comment> repository;
+        private readonly ICrudRepository<Explorer.Blog.Core.Domain.Blog> blogRepository;
         private readonly IMapper mapper;
-        private readonly BlogService blogService;
-        public CommentService(ICrudRepository<Comment> repository, IMapper mapper, BlogService blogService)
+
+        public CommentService(ICrudRepository<Comment> repository, ICrudRepository<Explorer.Blog.Core.Domain.Blog> blogRepository, IMapper mapper)
         {
             this.repository = repository;
+            this.blogRepository = blogRepository;
             this.mapper = mapper;
-            this.blogService = blogService;
         }
 
         public Result<CommentDTO> Create(long userId, CommentDTO commentDto)
         {
-            // Proveri validnost podataka pre nego što pokušaš da kreiraš komentar
             if (commentDto.BlogId <= 0)
             {
                 return Result.Fail<CommentDTO>("Invalid BlogId");
@@ -33,14 +34,22 @@ namespace Explorer.Blog.Core.UseCases
                 return Result.Fail<CommentDTO>("Invalid Text");
             }
 
+            var blog = blogRepository.Get(commentDto.BlogId);
+            if (blog == null)
+            {
+                return Result.Fail<CommentDTO>("Blog not found");
+            }
+
             var comment = mapper.Map<Comment>(commentDto);
             comment.UserId = userId;
-            var result = repository.Create(comment);
-            blogService.AddCommentToBlog(commentDto.BlogId, result);
-            return Result.Ok(mapper.Map<CommentDTO>(result));
+            repository.Create(comment);
+
+            // Pozivamo metodu Blog entiteta za dodavanje komentara
+            blog.AddComment(comment);
+            blogRepository.Update(blog); // Ažuriramo blog u skladištu
+
+            return Result.Ok(mapper.Map<CommentDTO>(comment));
         }
-
-
 
         public Result<CommentDTO> Update(long id, long blogId, long userId, CommentDTO commentDto)
         {
@@ -53,24 +62,34 @@ namespace Explorer.Blog.Core.UseCases
             {
                 return Result.Fail<CommentDTO>("User is not authorized to update this comment.");
             }
-            if(comment.BlogId != blogId)
+            if (comment.BlogId != blogId)
             {
-                return Result.Fail<CommentDTO>("You can't modify comment on other blog.");
+                return Result.Fail<CommentDTO>("You can't modify a comment on a different blog.");
             }
-            comment.UpdateLastModifiedAt();
+
+            var blog = blogRepository.Get(blogId);
+            if (blog == null)
+            {
+                return Result.Fail<CommentDTO>("Blog not found");
+            }
+
             comment.Text = commentDto.Text;
-            var result = repository.Update(comment);
-            return Result.Ok(mapper.Map<CommentDTO>(result));
+            comment.UpdateLastModifiedAt();
+            repository.Update(comment);
+
+            // Pozivamo metodu Blog entiteta za ažuriranje komentara
+            blog.UpdateComment(comment);
+            blogRepository.Update(blog); // Ažuriramo blog u skladištu
+
+            return Result.Ok(mapper.Map<CommentDTO>(comment));
         }
-
-
 
         public Result Delete(long commentId, long blogId, long userId)
         {
             var comment = repository.Get(commentId);
             if (comment == null)
             {
-                return Result.Fail("Comment not found."); 
+                return Result.Fail("Comment not found.");
             }
             if (comment.UserId != userId)
             {
@@ -78,9 +97,21 @@ namespace Explorer.Blog.Core.UseCases
             }
             if (comment.BlogId != blogId)
             {
-                return Result.Fail("You can't delete comment on other blog.");
+                return Result.Fail("You can't delete a comment on a different blog.");
             }
+
+            var blog = blogRepository.Get(blogId);
+            if (blog == null)
+            {
+                return Result.Fail("Blog not found");
+            }
+
             repository.Delete(commentId);
+
+            // Pozivamo metodu Blog entiteta za brisanje komentara
+            blog.DeleteComment(comment);
+            blogRepository.Update(blog); // Ažuriramo blog u skladištu
+
             return Result.Ok();
         }
 
