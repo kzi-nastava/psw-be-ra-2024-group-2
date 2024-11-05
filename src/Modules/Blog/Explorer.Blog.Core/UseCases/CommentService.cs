@@ -42,11 +42,9 @@ namespace Explorer.Blog.Core.UseCases
 
             var comment = mapper.Map<Comment>(commentDto);
             comment.UserId = userId;
-            repository.Create(comment);
 
-            // Pozivamo metodu Blog entiteta za dodavanje komentara
             blog.AddComment(comment);
-            blogRepository.Update(blog); // Ažuriramo blog u skladištu
+            blogRepository.Update(blog);
 
             return Result.Ok(mapper.Map<CommentDTO>(comment));
         }

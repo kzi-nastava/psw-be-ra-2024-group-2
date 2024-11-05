@@ -31,7 +31,6 @@ namespace Explorer.Blog.Core.Domain
             Date = DateTime.UtcNow;
             AuthorId = authorId;
             Validate();
-            CheckStatus();
         }
 
         private void Validate()
@@ -43,7 +42,7 @@ namespace Explorer.Blog.Core.Domain
 
         private void CheckStatus()
         {
-            /*
+            
             Console.WriteLine("Blog Details:");
             Console.WriteLine($"- Title: {Title}");
             Console.WriteLine($"- Description: {Description}");
@@ -69,7 +68,7 @@ namespace Explorer.Blog.Core.Domain
                 Console.WriteLine("  No ratings found.");
             }
 
-            */
+            
             int upvotes = Ratings?.Count(rating => rating.RatingType == RatingType.Upvote) ?? 0;
             int downvotes = Ratings?.Count(rating => rating.RatingType == RatingType.Downvote) ?? 0;
             int score = upvotes - downvotes;
