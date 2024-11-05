@@ -4,6 +4,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -144,7 +145,42 @@ namespace Explorer.Tours.Tests.Integration.Tour
             result.Results.Count.ShouldBe(2);
             result.TotalCount.ShouldBe(2);
         }
+        [Fact]
+        public void Update_successful()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope, "-1");
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
+            var updatedReviewDto = new TourReviewDto
+            {
+                UserId = -1,
+                TourId = -1,
+                Grade = 5,
+                Comment = "Updated Comment",
+                Image = new TourImageDto
+                {
+                    Data = "updated data",
+                    UploadedAt = DateTime.UtcNow,
+                    MimeType = "image/png"
+                },
+                ReviewDate = DateTime.UtcNow,
+                VisitDate = DateTime.UtcNow.AddDays(-5),
+                Progress = 100
+            };
+
+            //Act
+            var result = ((ObjectResult)controller.UpdateReview(updatedReviewDto).Result)?.Value as TourReviewDto;
+
+            //Assert - Response
+            //result.Id.ShouldBe(-1);
+
+            //Assert - Database
+
+            result.ShouldNotBeNull();
+            //storedEntity.Id.ShouldBe(result.Id);
+        }
         private static TourReviewController CreateController(IServiceScope scope, string number)
         {
             return new TourReviewController(scope.ServiceProvider.GetRequiredService<ITourReviewService>(), scope.ServiceProvider.GetRequiredService<ITourService>())

@@ -31,7 +31,7 @@ namespace Explorer.Tours.Core.Domain
 
         public double GetProgress()
         {
-            return TourExecutionCheckpoints.Where(c => c.ArrivalAt != null).Count() / TourExecutionCheckpoints.Count();
+            return TourExecutionCheckpoints.Where(c => c.ArrivalAt != null).Count() / (double)TourExecutionCheckpoints.Count();
         }
 
         public bool IsLastActivityOlderThanSevenDays()
