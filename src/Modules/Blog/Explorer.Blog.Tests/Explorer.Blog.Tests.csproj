@@ -10,6 +10,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestData\a-delete.sql" />
+    <None Remove="TestData\b-blogs.sql" />
+    <None Remove="TestData\c-comment.sql" />
+    <None Remove="TestData\d-images.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestData\a-delete.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="TestData\b-blogs.sql" />
+    <EmbeddedResource Include="TestData\c-comment.sql" />
+    <EmbeddedResource Include="TestData\d-images.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
     <PackageReference Include="Shouldly" Version="4.2.1" />
