@@ -47,7 +47,6 @@ namespace Explorer.Blog.Core.Domain
             Console.WriteLine($"- Title: {Title}");
             Console.WriteLine($"- Description: {Description}");
 
-            // Ispis rejtinga (Rating) za proveru podataka
             Console.WriteLine("Ratings:");
             if (Ratings != null && Ratings.Any())
             {
@@ -75,7 +74,6 @@ namespace Explorer.Blog.Core.Domain
 
             int commentCount = Comments?.Count ?? 0;
 
-            // Ažuriranje statusa na osnovu uslova
             if (score < -10)
             {
                 Status = Status.Closed;
@@ -95,9 +93,6 @@ namespace Explorer.Blog.Core.Domain
 
             Console.WriteLine($"Updated Status: {Status}");
         }
-
-
-
 
         public Image AddImage(Image image)
         {

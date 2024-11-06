@@ -13,7 +13,6 @@ namespace Explorer.Blog.Tests.Integration;
 public class CommentCommandTests : BaseBlogIntegrationTest
 {
     public CommentCommandTests(BlogTestFactory factory) : base(factory) { }
-    /*
 
     [Fact]
     public void Creates_Comment()
@@ -23,17 +22,15 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
 
-        // Dohvatanje postojećeg bloga iz baze podataka
         var existingBlog = dbContext.Blogs.FirstOrDefault();
         if (existingBlog == null)
         {
             throw new InvalidOperationException("Nema postojećih blogova u bazi.");
         }
 
-        // Kreiramo komentar povezan sa postojećim blogom
         var newComment = new CommentDTO
         {
-            BlogId = existingBlog.Id, // koristimo ID postojećeg bloga
+            BlogId = existingBlog.Id,
             Text = "Ovo je test komentar.",
             CreatedAt = DateTime.UtcNow
         };
@@ -50,7 +47,7 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         // Assert - Database
         var storedComment = dbContext.Comments.FirstOrDefault(c => c.Text == newComment.Text);
         storedComment.ShouldNotBeNull();
-        storedComment.BlogId.ShouldBe(existingBlog.Id); // Provera BlogId-a
+        storedComment.BlogId.ShouldBe(existingBlog.Id);
     }
 
 
@@ -191,5 +188,4 @@ public class CommentCommandTests : BaseBlogIntegrationTest
             ControllerContext = BuildContext("-1")
         };
     }
-    */
 }

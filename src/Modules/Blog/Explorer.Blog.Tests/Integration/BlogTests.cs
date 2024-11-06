@@ -23,7 +23,6 @@ namespace Explorer.Blog.Tests.Integration
         {
         }
 
-        /*
         [Fact]
         public void Creates_blog()
         {
@@ -138,7 +137,6 @@ namespace Explorer.Blog.Tests.Integration
                 ControllerContext = BuildContext("-1")
             };
         }
-             */
     }
 
 }
