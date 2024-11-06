@@ -53,6 +53,5 @@ namespace Explorer.Blog.Infrastructure.Database.Repositories
             var blog = _dbContext.Blogs.FirstOrDefault(b => b.Id == blogId);
             return blog?.Ratings ?? new List<Rating>();
         }
-
     }
 }
