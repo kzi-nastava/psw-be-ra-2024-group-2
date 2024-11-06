@@ -13,21 +13,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Explorer.Tours.Core.UseCases.Tourist
 {
     public class TourExecutionService : BaseService<TourExecutionDto,TourExecution>, ITourExecutionService
     {
         private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly ICrudRepository<Tour> _tourRepository;
-        public TourExecutionService(ITourExecutionRepository tourExecutionRepository, IMapper mapper, ICrudRepository<Tour> tourRepository) : base(mapper)
+        private readonly IShoppingCartRepository _shoppingCartRepository;
+        public TourExecutionService(ITourExecutionRepository tourExecutionRepository, IMapper mapper, ICrudRepository<Tour> tourRepository, IShoppingCartRepository shoppingCartRepository) : base(mapper)
         {
             _tourExecutionRepository = tourExecutionRepository;
             _tourRepository = tourRepository;
+            _shoppingCartRepository = shoppingCartRepository;
         }
 
         public Result<TourExecutionDto> GetByUserId(int userId)
         {
-
             var result = _tourExecutionRepository.GetByUserId(userId);
             if (result == null)
             {
@@ -39,6 +41,14 @@ namespace Explorer.Tours.Core.UseCases.Tourist
 
         public Result<TourExecutionDto> Create(int tourId, int userId)
         {
+            var cart = _shoppingCartRepository.GetByUserId(userId);
+            foreach(var item in cart.Items)
+            {
+                if (item.TourId != tourId && item.Token == false) 
+                {
+                    return Result.Fail(FailureCode.Conflict).WithError("Tour is not bought");
+                }
+            }
             try
             {
                 TourExecution tourExecution = new TourExecution(userId, tourId, TourExecutionStatus.InProgress, DateTime.UtcNow);
