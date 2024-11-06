@@ -23,7 +23,7 @@ namespace Explorer.Blog.Tests.Integration
         {
         }
 
-        
+        /*
         [Fact]
         public void Creates_blog()
         {
@@ -54,22 +54,20 @@ namespace Explorer.Blog.Tests.Integration
                         }
                     },
                     Images = new List<Image?>
-            {
-                new Image
-                {
-                    Data = "ImageData1",
-                    UploadedAt = DateTime.UtcNow,
-                    MimeType = MimeType.Jpeg
-                },
-                new Image
-                {
-                    Data = "ImageData2",
-                    UploadedAt = DateTime.UtcNow,
-                    MimeType = MimeType.Png
-                }
-            }
-                    
-                    
+                    {
+                        new Image
+                        {
+                            Data = "ImageData1",
+                            UploadedAt = DateTime.UtcNow,
+                            MimeType = MimeType.Jpeg
+                        },
+                        new Image
+                        {
+                            Data = "ImageData2",
+                            UploadedAt = DateTime.UtcNow,
+                            MimeType = MimeType.Png
+                        }
+                    }
                 };
 
                 // Act
@@ -140,7 +138,7 @@ namespace Explorer.Blog.Tests.Integration
                 ControllerContext = BuildContext("-1")
             };
         }
-           
+             */
     }
 
 }

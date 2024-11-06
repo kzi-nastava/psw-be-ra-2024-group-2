@@ -101,6 +101,4 @@ namespace Explorer.Blog.Core.Domain
         Published,
         Closed
     }
-
-
 }

@@ -45,10 +45,8 @@ namespace Explorer.Blog.Core.UseCases
                     foreach (var image in blogDto.Images)
                     {
                         _imageRepository.Create(image);
-                        blog.AddImage(image);
                     }
                 }
-                
                 return Result.Ok(_mapper.Map<BlogDto>(createdBlog));
             }
             catch (Exception ex)

@@ -31,4 +31,5 @@ public class CommentQueryTests : BaseBlogIntegrationTest
             ControllerContext = BuildContext("-1") // Uveri se da je ovaj deo ispravan za tvoj kontekst
         };
     }
+
 }
