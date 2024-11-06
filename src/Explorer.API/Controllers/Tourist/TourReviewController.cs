@@ -45,8 +45,8 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPut("update/review")]
         public ActionResult<PagedResult<TourReviewDto>> UpdateReview([FromBody] TourReviewDto review)
         {
-            var result = _tourReviewService.Update(review);
-            return CreateResponse(result);
+            var reslt = _tourReviewService.Update(review);
+            return CreateResponse(reslt);
         }
 
 

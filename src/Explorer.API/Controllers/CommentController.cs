@@ -8,7 +8,7 @@ using Explorer.Stakeholders.Infrastructure.Authentication;
 namespace Explorer.API.Controllers
 {
     //[Authorize(Policy = "authorPolicy")]
-    [Route("api/blog/comment")]
+    [Route("api/blog/{blogId:long}")]
     public class CommentController : BaseApiController
     {
         private readonly ICommentService _commentService;
@@ -18,31 +18,32 @@ namespace Explorer.API.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet("{id:long}")]
+        /*[HttpGet("{id:long}")]
         public ActionResult<CommentDTO> GetById(long id)
         {
             var result = _commentService.GetById(id);
             return CreateResponse(result);
-        }
+        }*/
 
-        [HttpGet("blog/{blogId:long}")]
+        [HttpGet]
         public ActionResult<IEnumerable<CommentDTO>> GetByBlogId(long blogId)
         {
             var result = _commentService.GetByBlogId(blogId);
             return CreateResponse(result);
         }
 
-        [HttpGet]
-        public ActionResult<PagedResult<CommentDTO>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
-        {
-            var result = _commentService.GetPaged(page, pageSize);
-            return CreateResponse(result);
-        }
-
+        /* [HttpGet]
+         public ActionResult<PagedResult<CommentDTO>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+         {
+             var result = _commentService.GetPaged(page, pageSize);
+             return CreateResponse(result);
+         }
+        */
         [HttpPost]
-        public ActionResult<CommentDTO> Create([FromBody] CommentDTO comment)
+        public ActionResult<CommentDTO> Create(long blogId, [FromBody] CommentDTO comment)
         {
             var userId = User.PersonId();
+            comment.BlogId = blogId;
             var result = _commentService.Create(userId, comment);
 
             if (result.IsFailed)
@@ -54,18 +55,18 @@ namespace Explorer.API.Controllers
         }
 
         [HttpPut("{id:long}")]
-        public ActionResult<CommentDTO> Update(long id, [FromBody] CommentDTO comment)
+        public ActionResult<CommentDTO> Update(long id, long blogId, [FromBody] CommentDTO comment)
         {
             var userId = User.PersonId();
-            var result = _commentService.Update(id, userId, comment);
+            var result = _commentService.Update(id, blogId, userId, comment);
             return CreateResponse(result);
         }
 
         [HttpDelete("{id:long}")]
-        public ActionResult Delete(long id)
+        public ActionResult Delete(long id, long blogId)
         {
             var userId = User.PersonId();
-            var result = _commentService.Delete(id, userId);
+            var result = _commentService.Delete(id, blogId, userId);
 
             if (result.IsFailed)
             {
