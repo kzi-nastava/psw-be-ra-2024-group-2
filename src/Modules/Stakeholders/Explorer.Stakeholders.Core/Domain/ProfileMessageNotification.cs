@@ -10,13 +10,28 @@ namespace Explorer.Stakeholders.Core.Domain
 {
     public class ProfileMessageNotification : Entity
     {
-        public int SenderId { get; set; }
-        public int RecipientId { get; set; }
-        public ProfileMessageNotificationStatus Status { get; private set; }
-        public long ProfileMessageId { get; private set; }
-        public ProfileMessage ProfileMessage { get; private set; }
+        public long SenderId { get; set; }
+        public long RecipientId { get; set; }
+        public ProfileMessageNotificationStatus Status { get; set; }
+        public long ProfileMessageId { get; set; }
+        public ProfileMessage ProfileMessage { get; set; }
 
-        public ProfileMessageNotification(int recipientId, int senderId, ProfileMessageNotificationStatus status, int messageId)
+        public ProfileMessageNotification() { }
+
+        public ProfileMessageNotification(long recipientId, long senderId) 
+        {
+            RecipientId = recipientId;
+            SenderId = senderId;
+        }
+
+        public ProfileMessageNotification(long recipientId, long senderId, ProfileMessageNotificationStatus status)
+        {
+            RecipientId = recipientId;
+            SenderId = senderId;
+            Status = status;
+        }
+
+        public ProfileMessageNotification(long recipientId, long senderId, ProfileMessageNotificationStatus status, int messageId)
         {
             RecipientId = recipientId;
             SenderId = senderId;

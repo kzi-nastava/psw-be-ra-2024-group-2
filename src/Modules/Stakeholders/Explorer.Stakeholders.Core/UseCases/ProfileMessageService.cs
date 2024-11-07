@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.API.Dtos;
@@ -16,12 +17,14 @@ namespace Explorer.Stakeholders.Core.UseCases
     public class ProfileMessageService : CrudService<ProfileMessageDto, ProfileMessage>, IProfileMessageService
     {
         private readonly ICrudRepository<ProfileMessage> _profileMessageRepository;
+        private readonly ICrudRepository<ProfileMessageNotification> _notificationRepository;
         private readonly ITransactionRepository _transactionRepository;
 
-        public ProfileMessageService(ICrudRepository<ProfileMessage> repository, ITransactionRepository transactionRepository, IMapper mapper) :
+        public ProfileMessageService(ICrudRepository<ProfileMessage> repository, ICrudRepository<ProfileMessageNotification> notificationRepository, ITransactionRepository transactionRepository, IMapper mapper) :
             base(repository, mapper)
         {
             _profileMessageRepository = repository;
+            _notificationRepository = notificationRepository;
             _transactionRepository = transactionRepository;
         }
 
@@ -39,6 +42,15 @@ namespace Explorer.Stakeholders.Core.UseCases
                     SentAt = DateTime.UtcNow
                 };
                 var result = _profileMessageRepository.Create(profileMessage);
+
+                var notification = new ProfileMessageNotification
+                {
+                    ProfileMessageId = result.Id,
+                    SenderId = userId,
+                    RecipientId = result.RecipientId,
+                    Status = ProfileMessageNotificationStatus.Unread
+                };
+                _notificationRepository.Create(notification);
 
                 _transactionRepository.CommitTransaction();
 

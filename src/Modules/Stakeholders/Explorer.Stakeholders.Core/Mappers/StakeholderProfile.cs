@@ -49,6 +49,7 @@ public class StakeholderProfile : Profile
             .ForMember(dest => dest.IsBlocked, opt => opt.MapFrom(src => src.User.IsBlocked));
 
         CreateMap<ProfileMessageDto, ProfileMessage>().ReverseMap();
+        CreateMap<ProfileMessageNotificationDto, ProfileMessageNotification>().ReverseMap();
 
     }
 }
