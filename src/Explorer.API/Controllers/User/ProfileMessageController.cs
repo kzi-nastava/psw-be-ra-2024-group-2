@@ -23,7 +23,7 @@ namespace Explorer.API.Controllers.User
         [HttpPost("new/message")]
         public ActionResult<ProfileMessageDto> Create([FromBody] ProfileMessageDto profileMessage)
         {
-            var result = _profileMessageService.Create(profileMessage);
+            var result = _profileMessageService.Create(profileMessage, User.PersonId());
             return CreateResponse(result);
         }
     }

@@ -11,14 +11,14 @@ namespace Explorer.Stakeholders.Core.Domain
 {
     public class ProfileMessage : Entity
     {
-        public int SenderId { get; set; }
-        public int RecipientId { get; set; }
+        public long SenderId { get; set; }
+        public long RecipientId { get; set; }
         public string Text { get; set; }
         //public AttachedResource Resource { get; set; }
         public string Resource { get; set; }
         public DateTime SentAt { get; set; }
         public ProfileMessage() { }
-        public ProfileMessage(int senderId, int recipientId, string text, string resource)
+        public ProfileMessage(long senderId, long recipientId, string text, string resource)
         {
             SenderId = senderId;
             RecipientId = recipientId;

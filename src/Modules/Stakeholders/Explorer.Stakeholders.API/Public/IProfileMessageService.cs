@@ -10,6 +10,6 @@ namespace Explorer.Stakeholders.API.Public
 {
     public interface IProfileMessageService
     {
-        Result<ProfileMessageDto> Create(ProfileMessageDto message);
+        Result<ProfileMessageDto> Create(ProfileMessageDto message, long userId);
     }
 }

@@ -8,8 +8,8 @@ namespace Explorer.Stakeholders.API.Dtos
 {
     public class ProfileMessageDto
     {
-        public int SenderId { get; set; }
-        public int RecipientId { get; set; }
+        public long SenderId { get; private set; }
+        public long RecipientId { get; set; }
         public string Text { get; set; }
         public string Resource { get; set; }
         public DateTime SentAt { get; set; }
