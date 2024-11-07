@@ -11,6 +11,7 @@ public class StakeholdersContext : DbContext
     public DbSet<Image> Images { get; set; }
     public DbSet<RatingApplication> RatingsApplication { get; set; }
     public DbSet<TouristEquipment> TouristEquipments { get; set; }
+    public DbSet<ProfileMessage> ProfileMessages { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
 
