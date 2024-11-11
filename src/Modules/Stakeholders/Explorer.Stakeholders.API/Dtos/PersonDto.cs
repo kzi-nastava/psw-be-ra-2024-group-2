@@ -13,7 +13,7 @@ namespace Explorer.Stakeholders.API.Dtos
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
-        public TouristPositionDto Position { get; set; }
+        public TouristPositionDto TouristPosition { get; set; }
 
     }
 }

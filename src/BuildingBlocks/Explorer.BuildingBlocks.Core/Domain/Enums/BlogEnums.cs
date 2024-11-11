@@ -1,3 +1,7 @@
 ﻿namespace Explorer.BuildingBlocks.Core.Domain.Enums;
 
-// TODO: Add tests for the BlogEnums
+public enum RatingType
+{
+    Upvote,
+    Downvote
+}

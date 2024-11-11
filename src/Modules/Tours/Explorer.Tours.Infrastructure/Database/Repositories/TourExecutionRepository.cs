@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Tours.Core.Domain;
@@ -46,6 +47,11 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             var task = _dbSet.IncludeRelatedEntities().GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
+        }
+
+        public TourExecution GetByUserId(int userId)
+        {
+            return _dbContext.TourExecutions.Where(t => t.UserId == userId && t.Status == TourExecutionStatus.InProgress).FirstOrDefault();
         }
     }
 }
