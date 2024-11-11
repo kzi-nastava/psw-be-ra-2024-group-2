@@ -105,8 +105,8 @@ public class TourTests : BaseToursIntegrationTest
 
 
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(3);  
-        result.TotalCount.ShouldBe(3);
+        result.Results.Count.ShouldBe(4);  
+        result.TotalCount.ShouldBe(4);
     }
 
     //[Fact]
@@ -139,7 +139,69 @@ public class TourTests : BaseToursIntegrationTest
     //    storedEntity.ShouldNotBeNull();
     //}
 
-   
+    [Fact]
+    public void AddTourWithCheckpoints_successful()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope, "-1");
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        var tourWithCheckpoints = new TourWithCheckpointsDto
+        {
+            Tour = new TourDto
+            {
+                UserId = -1,
+                Name = "AddTourWithCheckpoints",
+                Description = "Opis",
+                Difficulty = TourDifficulty.Hard,
+                Tag = TourTag.Adventure,
+                Status = 0,
+                Price = 0
+            },
+            Checkpoints = new List<CheckpointDto>
+                {
+                new CheckpointDto
+                {
+                    Latitude = 1,
+                    Longitude = 1,
+                    Name = "Checkpoint1",
+                    Description = "Description1",
+                    Image = new TourImageDto { Data = "PRVASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" }
+                },
+                new CheckpointDto
+                {
+                    Latitude = 2,
+                    Longitude = 2,
+                    Name = "Checkpoint2",
+                    Description = "Description2",
+                    Image = new TourImageDto { Data = "DRUGASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" }
+                },
+                new CheckpointDto
+                {
+                    Latitude = 3,
+                    Longitude = 3,
+                    Name = "Checkpoint3",
+                    Description = "Description3",
+                    Image = new TourImageDto { Data = "TRECASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" }
+                }
+            }
+        };
+
+        // Act
+        var result = (ObjectResult)controller.Add(tourWithCheckpoints).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(200);
+
+        //Assert - Database
+        var storedTour = dbContext.Tours.FirstOrDefault(i => i.Name == tourWithCheckpoints.Tour.Name);
+        storedTour.ShouldNotBeNull();
+        storedTour.Checkpoints.Count.ShouldBe(3);
+    }
+
+
     [Fact]
     public void UpdateEquipment_unsuccessful_unauthorized_user()
     {
