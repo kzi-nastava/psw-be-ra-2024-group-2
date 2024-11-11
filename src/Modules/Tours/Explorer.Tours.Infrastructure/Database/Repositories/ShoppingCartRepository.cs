@@ -24,8 +24,11 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
     public ShoppingCart GetByUserId(long userId)
     {
-        return _dbContext.ShoppingCarts.FirstOrDefault(cart => cart.TouristId == userId);
+        return _dbContext.ShoppingCarts
+                         .Include(cart => cart.Items) 
+                         .FirstOrDefault(cart => cart.TouristId == userId);
     }
+
 
     public ShoppingCart Create(ShoppingCart shoppingCart)
     {

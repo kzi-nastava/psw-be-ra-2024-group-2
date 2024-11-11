@@ -11,6 +11,7 @@ namespace Explorer.Tours.API.Public.Tourist
         Result RemoveItemFromCart(long userId, OrderItemDto orderItem);
         Result Checkout(long userId); 
         double GetTotalPrice(long userId);
-      
+        IEnumerable<OrderItemDto> GetOrderItems(long userId);
+
     }
 }
