@@ -10,7 +10,7 @@ public class ShoppingCart : Entity
     public ShoppingCart(long touristId)
     {
         TouristId = touristId;
-      //  Items =  = new List<OrderItem>();
+        Items =  new List<OrderItem>();
     }
 
     public void AddItem(OrderItem item)

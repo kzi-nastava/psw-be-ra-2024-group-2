@@ -48,6 +48,12 @@ namespace Explorer.API.Controllers.Tourist
             return Ok(result);
         }
 
-     
+
+        [HttpGet("items")]
+        public ActionResult<IEnumerable<OrderItemDto>> GetOrderItems()
+        {
+            var result = _shoppingCartService.GetOrderItems(User.PersonId());
+            return Ok(result);
+        }
     }
 }
