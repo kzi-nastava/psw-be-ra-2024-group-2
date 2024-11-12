@@ -18,7 +18,8 @@ namespace Explorer.Tours.Core.Domain
         public long? ImageId {  get; set; }
         public Image? Image { get; set; }
         public List<Tour> Tours { get; set; } = new List<Tour>();
-        public Checkpoint(double latitude, double longitude, string name, string description, long? imageId)
+        public string Secret {  get; set; }
+        public Checkpoint(double latitude, double longitude, string name, string description, long? imageId, string secret)
         {
             Validate(latitude, longitude, name, description);
 
@@ -27,8 +28,9 @@ namespace Explorer.Tours.Core.Domain
             Name = name;
             Description = description;
             ImageId = imageId;
+            Secret = secret;
         }
-        public Checkpoint(double latitude, double longitude, string name, string description)
+        public Checkpoint(double latitude, double longitude, string name, string description, string secret)
         {
             Validate(latitude, longitude, name, description);
 
@@ -36,9 +38,10 @@ namespace Explorer.Tours.Core.Domain
             Longitude = longitude;
             Name = name;
             Description = description;
+            Secret = secret;
         }
 
-        public Checkpoint(double latitude, double longitude, string name, string description, Image ?image)
+        public Checkpoint(double latitude, double longitude, string name, string description, Image ?image, string secret)
         {
             Validate(latitude, longitude, name, description);
 
@@ -47,6 +50,7 @@ namespace Explorer.Tours.Core.Domain
             Name = name;
             Description = description;
             Image = image;
+            Secret = secret;
         }
 
 
