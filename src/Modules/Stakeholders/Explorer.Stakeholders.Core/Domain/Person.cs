@@ -37,6 +37,11 @@ public class Person : Entity
         Validate();
     }
 
+    public void UpdateTouristPosition(TouristPosition touristPosition)
+    {
+        TouristPosition = touristPosition;
+    }
+
     private void Validate()
     {
         if (UserId == 0) throw new ArgumentException("Invalid UserId");
