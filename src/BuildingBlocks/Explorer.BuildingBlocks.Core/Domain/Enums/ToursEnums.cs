@@ -48,6 +48,7 @@ public enum DifficultyLevel
 public enum TourExecutionStatus
 {
     InProgress,
+    Abandoned,
     Completed
 }
 public enum CheckpointStatus

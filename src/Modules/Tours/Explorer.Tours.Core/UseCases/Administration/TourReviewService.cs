@@ -60,25 +60,18 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             try
             {
-                // KOD ISPOD JE ZAKOMENTARISAN IZ RAZLOGA STO JOS UVIJEK NISU IMPLEMENTIRANE OSTALE ZAVISNE FUNKCIONALNOSTI
-                // NE BRISATI!!!
-                // NAKON STO KOLEGE IMPLEMENTIRAJU OSTATAK SVOJIH ZAHTJEVA, KOD ISPOD CE SE USPJESNO INTEGRISATI
-
-
-
+                // Da bi se promijenio ostavojeni review, vaze isti uslovi kao kod kreiranja reviewa treba da se doda da je tura kupljena
                  var allTourExecutions = _tourExecutionRepository.GetPaged(1, int.MaxValue);
+                double currentProgress = 0;
                  foreach (var te in allTourExecutions.Results)
                  {
                      if (dto.UserId == te.UserId && dto.TourId == te.TourId)
                      {
+                        currentProgress = te.GetProgress();
                          if ((te.GetProgress() < 0.35) || te.IsLastActivityOlderThanSevenDays())
                              return Result.Fail(FailureCode.InvalidArgument).WithError("You are not able to review this tour!");
                      }
                  }
-
-                // TourReview review = MapToDomain(dto);
-
-
 
                 TourReview review = new TourReview(dto.Id);
 
@@ -86,8 +79,8 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 review.Comment = dto.Comment;
                 review.UserId = dto.UserId;
                 review.TourId = dto.TourId;
-                review.ReviewDate = DateTime.SpecifyKind(dto.ReviewDate, DateTimeKind.Utc); // Ensure UTC
-                review.VisitDate = DateTime.SpecifyKind(dto.VisitDate, DateTimeKind.Utc);   // Ensure UTC
+                review.ReviewDate = DateTime.SpecifyKind(dto.ReviewDate, DateTimeKind.Utc); 
+                review.VisitDate = DateTime.SpecifyKind(dto.VisitDate, DateTimeKind.Utc);  
                 var newImage = new Image(
                        dto.Image.Data,
                        dto.Image.UploadedAt,
@@ -102,9 +95,10 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 dto.Comment = newReview.Comment;
                 dto.UserId = newReview.UserId;
                 dto.TourId = newReview.TourId;
-                dto.ReviewDate = DateTime.SpecifyKind(newReview.ReviewDate, DateTimeKind.Utc); // Ensure UTC
-                dto.VisitDate = DateTime.SpecifyKind(newReview.VisitDate, DateTimeKind.Utc);  // Ensure UTC
+                dto.ReviewDate = DateTime.SpecifyKind(newReview.ReviewDate, DateTimeKind.Utc);
+                dto.VisitDate = DateTime.SpecifyKind(newReview.VisitDate, DateTimeKind.Utc); 
                 dto.Image = dto.Image;
+                dto.Progress = currentProgress; // u trenutku pravljenja recenzije
 
 
 
@@ -121,18 +115,23 @@ namespace Explorer.Tours.Core.UseCases.Administration
             {
                 
                 _tourRepository.Get(dto.TourId);
-                
+                double currentProgress = 0;
                 if(dto.Grade < 1 || dto.Grade > 5)
                     return Result.Fail(FailureCode.InvalidArgument).WithError("Nonexistant tour Id"); //400
 
-                var allTourExecutions = _tourExecutionRepository.GetPaged(1, int.MaxValue);
+                 // Dodati da je tura kupljena kao uslov, ta kartica jos nije implementirana od strane drugog tima
+
+                var allTourExecutions = _tourExecutionRepository.GetPaged(1, int.MaxValue); 
+
                 foreach (var te in allTourExecutions.Results)
                 {
-                    if (dto.UserId == te.UserId && dto.TourId == te.TourId)
+                    if  (dto.TourId == te.TourId && dto.UserId == te.UserId )
                     {
                         dto.Progress = te.GetProgress();
-                        if ((te.GetProgress() < 0.35) || te.IsLastActivityOlderThanSevenDays())
-                            return Result.Fail(FailureCode.InvalidArgument).WithError("You are not able to review this tour!");
+                        currentProgress = te.GetProgress();
+
+                        if ((te.GetProgress() < 0.35) || te.IsLastActivityOlderThanSevenDays()) // uslov
+                            return Result.Fail(FailureCode.InvalidArgument).WithError("You are not able to review this tour!"); //exception
                     }
                 }
 
@@ -144,7 +143,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 review.TourId = dto.TourId;
                 review.ReviewDate = DateTime.SpecifyKind(dto.ReviewDate, DateTimeKind.Utc); // Ensure UTC
                 review.VisitDate = DateTime.SpecifyKind(dto.VisitDate, DateTimeKind.Utc);   // Ensure UTC
-                review.Progress = dto.Progress; 
+                review.Progress = currentProgress; 
                 // Create the image and save it
                 if (dto.Image != null && !_imageRepository.Exists(dto.Image.Data))
                 {
@@ -156,10 +155,10 @@ namespace Explorer.Tours.Core.UseCases.Administration
                     );
 
                     // Save the new image to the repository
-                    _imageRepository.Create(newImage);
+                    // _imageRepository.Create(newImage);
 
                     // Update the person with the new image
-                    review.ImageId = newImage.Id;
+                    // review.ImageId = newImage.Id;
                     review.Image = newImage;
                 }
                 else if (dto.Image != null && _imageRepository.Exists(dto.Image.Data))
