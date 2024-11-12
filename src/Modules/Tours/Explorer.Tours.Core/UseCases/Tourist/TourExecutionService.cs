@@ -41,14 +41,25 @@ namespace Explorer.Tours.Core.UseCases.Tourist
 
         public Result<TourExecutionDto> Create(int tourId, int userId)
         {
-            var cart = _shoppingCartRepository.GetByUserId(userId);
-            foreach(var item in cart.Items)
-            {
-                if (item.TourId != tourId && item.Token == false) 
-                {
-                    return Result.Fail(FailureCode.Conflict).WithError("Tour is not bought");
-                }
+            /*var cart = _shoppingCartRepository.GetByUserId(userId);
+            if (cart == null) {
+                return Result.Fail(FailureCode.Conflict).WithError("Tour is not bought");
             }
+            var items = new List<OrderItem>(cart.Items ?? Enumerable.Empty<OrderItem>());
+
+            if (items.Count != 0)
+            {
+                foreach (var item in items)
+                {
+                    if (item.TourId != tourId || item.Token == false)
+                    {
+                        return Result.Fail(FailureCode.Conflict).WithError("Tour is not bought");
+                    }
+                }
+            }else
+            {
+                return Result.Fail(FailureCode.Conflict).WithError("Tour is not bought");
+            }*/
             try
             {
                 TourExecution tourExecution = new TourExecution(userId, tourId, TourExecutionStatus.InProgress, DateTime.UtcNow);
