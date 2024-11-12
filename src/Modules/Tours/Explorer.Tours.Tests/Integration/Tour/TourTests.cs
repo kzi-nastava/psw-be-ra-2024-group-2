@@ -167,7 +167,8 @@ public class TourTests : BaseToursIntegrationTest
                     Longitude = 1,
                     Name = "Checkpoint1",
                     Description = "Description1",
-                    Image = new TourImageDto { Data = "PRVASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" }
+                    Image = new TourImageDto { Data = "PRVASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" },
+                    Secret = "Tajna1"
                 },
                 new CheckpointDto
                 {
@@ -175,7 +176,8 @@ public class TourTests : BaseToursIntegrationTest
                     Longitude = 2,
                     Name = "Checkpoint2",
                     Description = "Description2",
-                    Image = new TourImageDto { Data = "DRUGASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" }
+                    Image = new TourImageDto { Data = "DRUGASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" },
+                    Secret = "Tajna2"
                 },
                 new CheckpointDto
                 {
@@ -183,7 +185,8 @@ public class TourTests : BaseToursIntegrationTest
                     Longitude = 3,
                     Name = "Checkpoint3",
                     Description = "Description3",
-                    Image = new TourImageDto { Data = "TRECASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" }
+                    Image = new TourImageDto { Data = "TRECASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" },
+                    Secret = "Tajna3"
                 }
             }
         };
