@@ -35,5 +35,26 @@ namespace Explorer.Tours.Core.UseCases.Tourist
 
             return new PagedResult<TourPreferenceDto>(filteredTourPreferences, filteredTourPreferences.Count());
         }
+
+        public Result<TourPreferenceDto> Update(TourPreferenceDto tourPreference)
+        {
+            try
+            {
+                var existingPreference = _repository.Get(tourPreference.Id);
+                if (existingPreference == null) return Result.Fail(FailureCode.NotFound);
+
+                // Provera da li korisnik ažurira svoje preference
+                if (existingPreference.TouristId != tourPreference.TouristId)
+                    return Result.Fail(FailureCode.InvalidArgument);
+
+                var result = _repository.Update(MapToDomain(tourPreference));
+                return Result.Ok(MapToDto(result));
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
     }
 }

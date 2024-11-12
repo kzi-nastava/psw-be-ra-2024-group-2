@@ -23,16 +23,25 @@ namespace Explorer.API.Controllers.Tourist
         [HttpGet]
         public ActionResult<PagedResult<TourPreferenceDto>> GetByTouristId()
         {
-            var allTourPreferences = _tourPreferenceService.GetByTouristId(User.PersonId());
+            var user = User.PersonId();
+            var allTourPreferences = _tourPreferenceService.GetByTouristId(user);
             return CreateResponse(allTourPreferences.ToResult());
         }
 
         [HttpPost]
         public ActionResult<TourPreferenceDto> Create([FromBody] TourPreferenceDto tourPreference)
         {
+            tourPreference.TouristId = User.PersonId();
             var result = _tourPreferenceService.Create(tourPreference);
             return CreateResponse(result);
         }
 
+        [HttpPut]
+        public ActionResult<TourPreferenceDto> Update([FromBody] TourPreferenceDto tourPreference)
+        {
+            tourPreference.TouristId = User.PersonId();
+            var result = _tourPreferenceService.Update(tourPreference);
+            return CreateResponse(result);
+        }
     }
 }
