@@ -4,6 +4,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
+using Explorer.Tours.API.Public.Tourist.DTOs;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
@@ -21,11 +22,13 @@ namespace Explorer.Tours.Core.UseCases.Tourist
         private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly ICrudRepository<Tour> _tourRepository;
         private readonly IShoppingCartRepository _shoppingCartRepository;
-        public TourExecutionService(ITourExecutionRepository tourExecutionRepository, IMapper mapper, ICrudRepository<Tour> tourRepository, IShoppingCartRepository shoppingCartRepository) : base(mapper)
+        private readonly ICrudRepository<TourPurchaseToken> _tourPurchaseTokenRepository;
+        public TourExecutionService(ITourExecutionRepository tourExecutionRepository, IMapper mapper, ICrudRepository<Tour> tourRepository, IShoppingCartRepository shoppingCartRepository, ICrudRepository<TourPurchaseToken> tourPurchaseTokenRepository) : base(mapper)
         {
             _tourExecutionRepository = tourExecutionRepository;
             _tourRepository = tourRepository;
             _shoppingCartRepository = shoppingCartRepository;
+            _tourPurchaseTokenRepository = tourPurchaseTokenRepository;
         }
 
         public Result<TourExecutionDto> GetByUserId(int userId)
@@ -41,47 +44,42 @@ namespace Explorer.Tours.Core.UseCases.Tourist
 
         public Result<TourExecutionDto> Create(int tourId, int userId)
         {
-            /*var cart = _shoppingCartRepository.GetByUserId(userId);
-            if (cart == null) {
+            var tokens = _tourPurchaseTokenRepository.GetPaged(1, int.MaxValue)
+                .Results
+                .Where(t => t.UserId == userId && t.TourId == tourId)
+                .ToList();
+            if (tokens.Count == 0)
+            {
                 return Result.Fail(FailureCode.Conflict).WithError("Tour is not bought");
             }
-            var items = new List<OrderItem>(cart.Items ?? Enumerable.Empty<OrderItem>());
 
-            if (items.Count != 0)
+            var t = _tourRepository.Get(tourId);
+            if (t.Status == TourStatus.Archived || t.Status == TourStatus.Published)
             {
-                foreach (var item in items)
+
+                try
                 {
-                    if (item.TourId != tourId || item.Token == false)
+                    TourExecution tourExecution = new TourExecution(userId, tourId, TourExecutionStatus.InProgress, DateTime.UtcNow);
+
+                    Tour tour = _tourRepository.Get(tourId);
+                    foreach (Checkpoint checkpoint in tour.Checkpoints)
                     {
-                        return Result.Fail(FailureCode.Conflict).WithError("Tour is not bought");
+
+                        TourExecutionCheckpoint tourExecutionCheckpoint = new TourExecutionCheckpoint(checkpoint.Id, null);
+                        tourExecution.TourExecutionCheckpoints.Add(tourExecutionCheckpoint);
+
                     }
+                    var result = _tourExecutionRepository.Create(tourExecution);
+
+                    return MapToDto(result);
+
                 }
-            }else
-            {
-                return Result.Fail(FailureCode.Conflict).WithError("Tour is not bought");
-            }*/
-            try
-            {
-                TourExecution tourExecution = new TourExecution(userId, tourId, TourExecutionStatus.InProgress, DateTime.UtcNow);
-                
-                Tour tour = _tourRepository.Get(tourId);
-                foreach (Checkpoint checkpoint in tour.Checkpoints)
+                catch (Exception)
                 {
-
-                    TourExecutionCheckpoint tourExecutionCheckpoint = new TourExecutionCheckpoint(checkpoint.Id,null);
-                    tourExecution.TourExecutionCheckpoints.Add(tourExecutionCheckpoint);
-
+                    return Result.Fail(FailureCode.Conflict).WithError("An unexpected error occurred");
                 }
-                var result = _tourExecutionRepository.Create(tourExecution);
-                
-                return MapToDto(result);
-
             }
-            catch(Exception) 
-            {
-                return Result.Fail(FailureCode.Conflict).WithError("An unexpected error occurred");
-            }
-
+            return Result.Fail(FailureCode.Conflict).WithError("Tour is in Draft mode");
         }
 
         public Result<TourExecutionDto> Update(TourExecutionDto tourExecutionDto)
