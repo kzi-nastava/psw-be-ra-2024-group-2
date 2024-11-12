@@ -121,10 +121,10 @@ namespace Explorer.Tours.Tests.Integration.Tour
                 },
                 ReviewDate = DateTime.MinValue,
                 VisitDate = DateTime.MinValue,
-                Progress= 0,
+                Progress = 0,
 
             };
-           
+
             //act
             var result = (ObjectResult)controller.Create(newEntity).Result;
 
@@ -147,7 +147,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
             result.Results.Count.ShouldBe(2);
             result.TotalCount.ShouldBe(2);
         }
-       
+
         [Fact]
         public void Update_Unsuccessful_Negative_Grade()
         {
