@@ -32,6 +32,8 @@ public static class StakeholdersStartup
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IRatingApplicationService, RatingApplicationService>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
+        services.AddScoped<IProfileMessageService, ProfileMessageService>();
+        services.AddScoped<IProfileMessageNotificationService, ProfileMessageNotificationService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -44,6 +46,10 @@ public static class StakeholdersStartup
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IImageRepository, ImageRepository<StakeholdersContext>>();
         services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<ProfileMessage>), typeof(CrudDatabaseRepository<ProfileMessage, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<ProfileMessageNotification>), typeof(CrudDatabaseRepository<ProfileMessageNotification, StakeholdersContext>));
+
+
 
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
