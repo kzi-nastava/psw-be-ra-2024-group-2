@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist.DTOs;
 using FluentResults;
 
@@ -12,6 +13,6 @@ namespace Explorer.Tours.API.Public.Tourist
         Result Checkout(long userId); 
         double GetTotalPrice(long userId);
         IEnumerable<OrderItemDto> GetOrderItems(long userId);
-
+        IEnumerable<TourDto> GetPurchasedTours(long userId);
     }
 }

@@ -4,6 +4,7 @@ using Explorer.Tours.API.Public.Tourist.DTOs;
 using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.Core.Domain;
 using FluentResults;
+using Explorer.Tours.API.Dtos;
 
 public class ShoppingCartService : IShoppingCartService
 {
@@ -39,6 +40,7 @@ public class ShoppingCartService : IShoppingCartService
         var orderItem = _mapper.Map<OrderItem>(orderItemDto);
         orderItem.Price = tour.Price;
         orderItem.TourName = tour.Name;
+        orderItem.UserId = userId;
 
         var cart = _shoppingCartRepository.GetByUserId(userId);
         if (cart == null)
@@ -110,4 +112,25 @@ public class ShoppingCartService : IShoppingCartService
 
         return orderItems;
     }
+
+    public IEnumerable<TourDto> GetPurchasedTours(long userId)
+    {
+        // Pronađi sve TourPurchaseTokene za zadati userId
+        var tokens = _tourPurchaseTokenRepository.GetPaged(1, int.MaxValue).Results
+            .Where(token => token.UserId == userId)
+            .ToList();
+
+        // Ekstraktuj sve tourId vrednosti iz tih tokena
+        var tourIds = tokens.Select(token => token.TourId).Distinct();
+
+        // Pronađi sve ture koje odgovaraju tim tourId vrednostima
+        var tours = _tourRepository.GetPaged(1, int.MaxValue).Results
+            .Where(tour => tourIds.Contains(tour.Id))
+            .ToList();
+
+        // Mapiraj ture na DTOs i vrati ih
+        var tourDtos = _mapper.Map<IEnumerable<TourDto>>(tours);
+        return tourDtos;
+    }
+
 }

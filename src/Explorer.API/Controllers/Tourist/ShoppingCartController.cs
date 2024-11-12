@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.Infrastructure.Authentication;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.API.Public.Tourist.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -55,5 +56,14 @@ namespace Explorer.API.Controllers.Tourist
             var result = _shoppingCartService.GetOrderItems(User.PersonId());
             return Ok(result);
         }
+
+        [HttpGet("purchasedTours")]
+        public ActionResult<IEnumerable<TourDto>> GetPurchasedTours()
+        {
+            var userId = User.PersonId();
+            var result = _shoppingCartService.GetPurchasedTours(userId);
+            return Ok(result);
+        }
+
     }
 }
