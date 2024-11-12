@@ -2,6 +2,8 @@ using AutoMapper;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain;
+using System.Security.AccessControl;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 
 namespace Explorer.Stakeholders.Core.Mappers;
 
@@ -45,6 +47,9 @@ public class StakeholderProfile : Profile
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => (int)src.User.Role))
             .ForMember(dest => dest.IsBlocked, opt => opt.MapFrom(src => src.User.IsBlocked));
+
+        CreateMap<ProfileMessageDto, ProfileMessage>().ReverseMap();
+        CreateMap<ProfileMessageNotificationDto, ProfileMessageNotification>().ReverseMap();
 
     }
 }
