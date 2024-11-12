@@ -96,7 +96,8 @@ namespace Explorer.Tours.Core.UseCases.Administration
                             checkpointDto.Description,
                             checkpointDto.Image != null
                             ? new Image(checkpointDto.Image.Data, checkpointDto.Image.UploadedAt, checkpointDto.Image.MimeType)
-                            : null))
+                            : null,
+                            checkpointDto.Secret))
                     .ToList();
 
                 tour.UpdateCheckpoints(checkpoints);
