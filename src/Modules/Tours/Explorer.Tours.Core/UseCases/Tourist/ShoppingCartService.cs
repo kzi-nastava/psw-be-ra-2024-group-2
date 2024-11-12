@@ -61,10 +61,11 @@ public class ShoppingCartService : IShoppingCartService
     {
         var cart = _shoppingCartRepository.GetByUserId(userId);
         var orderItem = _mapper.Map<OrderItem>(orderItemDto);
-
-        cart.RemoveItem(orderItem);
-        _shoppingCartRepository.Update(cart);
-
+        //cart.RemoveItem(orderItem);
+        //_shoppingCartRepository.Update(cart);#
+        var allItems = _orderItemRepository.GetPaged(1, int.MaxValue);
+        var order = allItems.Results.FirstOrDefault(o => o.TourId == orderItemDto.TourId && o.ShoppingCartId == cart.Id);
+        _orderItemRepository.Delete(order.Id);
         return Result.Ok();
     }
 
