@@ -60,8 +60,12 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             try
             {
+                if (dto.Grade < 1 || dto.Grade > 5)
+                    return Result.Fail(FailureCode.InvalidArgument).WithError("Grade can not be negative"); //400
+
+
                 // Da bi se promijenio ostavojeni review, vaze isti uslovi kao kod kreiranja reviewa treba da se doda da je tura kupljena
-                 var allTourExecutions = _tourExecutionRepository.GetPaged(1, int.MaxValue);
+                var allTourExecutions = _tourExecutionRepository.GetPaged(1, int.MaxValue);
                 double currentProgress = 0;
                  foreach (var te in allTourExecutions.Results)
                  {

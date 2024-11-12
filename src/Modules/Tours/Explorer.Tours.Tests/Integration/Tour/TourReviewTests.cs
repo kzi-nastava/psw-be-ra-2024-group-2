@@ -6,6 +6,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Infrastructure.Database;
+using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -181,6 +182,152 @@ namespace Explorer.Tours.Tests.Integration.Tour
             result.ShouldNotBeNull();
             //storedEntity.Id.ShouldBe(result.Id);
         }
+        [Fact]
+        public void Update_successful_comment()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope, "-1");
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+            var updatedReviewDto = new TourReviewDto
+            {
+                UserId = -1,
+                TourId = -1,
+                Grade = 5,
+                Comment = "Updated Comment another version",
+                Image = new TourImageDto
+                {
+                    Data = "updated dataaaaaa",
+                    UploadedAt = DateTime.UtcNow,
+                    MimeType = "image/png"
+                },
+                ReviewDate = DateTime.UtcNow,
+                VisitDate = DateTime.UtcNow.AddDays(-5),
+                Progress = 100
+            };
+
+            //Act
+            var result = ((ObjectResult)controller.UpdateReview(updatedReviewDto).Result)?.Value as TourReviewDto;
+
+            //Assert - Response
+            //result.Id.ShouldBe(-1);
+
+            //Assert - Database
+
+            result.ShouldNotBeNull();
+            //storedEntity.Id.ShouldBe(result.Id);
+        }
+        [Fact]
+        public void Update_successful_grade()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope, "-1");
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+            var updatedReviewDto = new TourReviewDto
+            {
+                UserId = -1,
+                TourId = -1,
+                Grade = 4,
+                Comment = "Updated Comment another version",
+                Image = new TourImageDto
+                {
+                    Data = "updated dataaaaaa",
+                    UploadedAt = DateTime.UtcNow,
+                    MimeType = "image/png"
+                },
+                ReviewDate = DateTime.UtcNow,
+                VisitDate = DateTime.UtcNow.AddDays(-5),
+                Progress = 100
+            };
+
+            //Act
+            var result = ((ObjectResult)controller.UpdateReview(updatedReviewDto).Result)?.Value as TourReviewDto;
+
+            //Assert - Response
+            //result.Id.ShouldBe(-1);
+
+            //Assert - Database
+
+            result.Grade.ShouldBeInRange(1,5);
+            result.Grade.ShouldBePositive();
+            //storedEntity.Id.ShouldBe(result.Id);
+        }
+        [Fact]
+        public void Update_Unsuccessful_Negative_Grade()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope, "-1");
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+            var updatedReviewDto = new TourReviewDto
+            {
+                UserId = -1,
+                TourId = -1,
+                Grade = -2, // Invalid negative grade
+                Comment = "Invalid grade test",
+                Image = new TourImageDto
+                {
+                    Data = "some image data",
+                    UploadedAt = DateTime.UtcNow,
+                    MimeType = "image/jpeg"
+                },
+                ReviewDate = DateTime.UtcNow,
+                VisitDate = DateTime.UtcNow.AddDays(-5),
+                Progress = 100
+            };
+
+            // Act
+            var result = (ObjectResult)controller.UpdateReview(updatedReviewDto).Result;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(400); // 400 indicates a bad request due to invalid input
+            result.Value.ShouldBeOfType<ProblemDetails>(); // Adjusted to check for ProblemDetails
+
+            var problemDetails = result.Value as ProblemDetails;
+            problemDetails.ShouldNotBeNull();
+        }
+        [Fact]
+        public void Update_Unsuccessful_Large_Grade()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope, "-1");
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+            var updatedReviewDto = new TourReviewDto
+            {
+                UserId = -1,
+                TourId = -1,
+                Grade = 50, // Invalid negative grade
+                Comment = "Invalid grade test",
+                Image = new TourImageDto
+                {
+                    Data = "some immmage data",
+                    UploadedAt = DateTime.UtcNow,
+                    MimeType = "image/jpeg"
+                },
+                ReviewDate = DateTime.UtcNow,
+                VisitDate = DateTime.UtcNow.AddDays(-5),
+                Progress = 100
+            };
+
+            // Act
+            var result = (ObjectResult)controller.UpdateReview(updatedReviewDto).Result;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(400); // 400 indicates a bad request due to invalid input
+            result.Value.ShouldBeOfType<ProblemDetails>(); // Adjusted to check for ProblemDetails
+
+            var problemDetails = result.Value as ProblemDetails;
+            problemDetails.ShouldNotBeNull();
+        }
+
         private static TourReviewController CreateController(IServiceScope scope, string number)
         {
             return new TourReviewController(scope.ServiceProvider.GetRequiredService<ITourReviewService>(), scope.ServiceProvider.GetRequiredService<ITourService>())
