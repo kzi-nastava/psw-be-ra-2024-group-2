@@ -15,6 +15,7 @@ public class ProfileService : CrudService<ProfileDto, Person>, IProfileService
     private readonly IUserRepository _userRepository;
     private readonly ICrudRepository<Person> _personRepository;
     private readonly ITransactionRepository _transactionRepository;
+    private readonly IMapper _mapper;
 
     public ProfileService(IUserRepository userRepository,
         ICrudRepository<Person> personRepository,
@@ -27,6 +28,7 @@ public class ProfileService : CrudService<ProfileDto, Person>, IProfileService
         _personRepository = personRepository;
         _transactionRepository = transactionRepository;
         _imageRepository = imageRepository;
+        _mapper = mapper;
     }
 
     public Result<ProfileDto> Get(long personId)
@@ -34,7 +36,6 @@ public class ProfileService : CrudService<ProfileDto, Person>, IProfileService
         try
         {
             var person = _personRepository.Get(personId);
-
             return MapToDto(person);
         }
         catch (KeyNotFoundException e)
@@ -65,32 +66,25 @@ public class ProfileService : CrudService<ProfileDto, Person>, IProfileService
             _userRepository.Update(user);
 
             // Create the image and save it
-            if(profile.Image != null && !_imageRepository.Exists(profile.Image.Data))
+            if (profile.Image != null && !_imageRepository.Exists(profile.Image.Data))
             {
-                // If the profile has an image, create a new image object with the data from the profile
                 var newImage = new Image(
                     profile.Image.Data,
                     profile.Image.UploadedAt,
                     profile.Image.MimeType
                 );
 
-                // Save the new image to the repository
                 _imageRepository.Create(newImage);
-
-                // Update the person with the new image
                 person.ImageId = newImage.Id;
                 person.Image = newImage;
-            } else if(profile.Image != null && _imageRepository.Exists(profile.Image.Data))
+            }
+            else if (profile.Image != null && _imageRepository.Exists(profile.Image.Data))
             {
-                // If the image already exists, get the image from the repository
                 var image = _imageRepository.GetByData(profile.Image.Data);
-
-                // Update the person with the existing image
                 person.ImageId = image.Id;
                 person.Image = image;
             }
 
-            // Update the person with all the necessary data
             person.Email = profile.Email;
             person.Name = profile.Name;
             person.Surname = profile.LastName;
@@ -101,25 +95,45 @@ public class ProfileService : CrudService<ProfileDto, Person>, IProfileService
 
             var newPerson = _personRepository.Update(person);
 
-            // Commit the transaction
             _transactionRepository.CommitTransaction();
 
-            // Create the new DTO to return
             return MapToDto(newPerson);
         }
         catch (KeyNotFoundException e)
         {
-            // If user or person is not found, rollback the transaction
-            if(_transactionRepository.HasActiveTransacation()) _transactionRepository.RollbackTransaction();
-
+            if (_transactionRepository.HasActiveTransacation()) _transactionRepository.RollbackTransaction();
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
         }
         catch (ArgumentException e)
         {
-            // If something goes wrong, rollback the transaction
             if (_transactionRepository.HasActiveTransacation()) _transactionRepository.RollbackTransaction();
-
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
     }
+    public Result<List<ProfileDto>> GetAllUsers()
+    {
+        try
+        {
+            var users = _userRepository.GetAll();
+            return Result.Ok(users.Select(user => new ProfileDto
+            {
+                Username = user.Username,
+                Id = user.Id,
+                // Ostala polja će biti null jer nisu dostupna u User klasi
+                Name = null,
+                LastName = null,
+                Email = null,
+                Biography = null,
+                Moto = null,
+                Image = null
+            }).ToList());
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(FailureCode.Internal).WithError(e.Message);
+        }
+    }
+
+
+
 }

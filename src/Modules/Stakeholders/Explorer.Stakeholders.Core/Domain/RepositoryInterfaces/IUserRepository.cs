@@ -1,4 +1,5 @@
-﻿namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+﻿
+namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 
 public interface IUserRepository
 {
@@ -7,4 +8,5 @@ public interface IUserRepository
     User Create(User user);
     long GetPersonId(long userId);
     User Update(User user);
+    IEnumerable<User> GetAll();
 }
