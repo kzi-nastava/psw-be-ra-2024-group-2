@@ -95,6 +95,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
                        dto.Image.MimeType
                    );
                 review.Image = newImage;
+                review.Progress = currentProgress;
                
                 TourReview newReview = _reviewRepository.Update(review);
 
