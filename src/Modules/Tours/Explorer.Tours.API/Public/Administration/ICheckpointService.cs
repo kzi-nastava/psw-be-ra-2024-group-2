@@ -12,7 +12,11 @@ namespace Explorer.Tours.API.Public.Administration
     public interface ICheckpointService
     {
         Result<PagedResult<CheckpointDto>> GetPaged(int page, int pageSize);
-        Result<CheckpointDto> Create(CheckpointDto checkpoint);
-        //Result<CheckpointDto> Update(CheckpointDto checkpoint);
+        PagedResult <CheckpointDto> GetAllById(List<long> ids);
+
+        List<TourExecutionCheckpointDto> CheckDistance(List<TourExecutionCheckpointDto> execCheckpoints, double lon, double lat);
+
+
+
     }
 }

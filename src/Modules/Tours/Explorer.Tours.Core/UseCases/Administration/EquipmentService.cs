@@ -12,15 +12,20 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
 {
     private readonly ICrudRepository<Equipment> _equipmentRepository;
     private readonly ICrudRepository<TouristEquipment> _touristEquipmentRepository;
-    public EquipmentService(ICrudRepository<Equipment> repository,ICrudRepository<TouristEquipment> touristEquipmentRepository, IMapper mapper) : base(repository, mapper) 
+    private readonly IMapper _mapper;
+
+    public EquipmentService(ICrudRepository<Equipment> repository, ICrudRepository<TouristEquipment> touristEquipmentRepository, IMapper mapper)
+        : base(repository, mapper)
     {
         _equipmentRepository = repository;
         _touristEquipmentRepository = touristEquipmentRepository;
+        _mapper = mapper;
     }
+
 
     public Result AddEquipmentTourist(long userId, long equipmentId)
     {
-        
+
         var userEquipmentPagedResult = _touristEquipmentRepository.GetPaged(1, int.MaxValue);
 
         var exists = userEquipmentPagedResult.Results
@@ -52,6 +57,26 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
         _touristEquipmentRepository.Delete(userEquipment.Id);
         return Result.Ok();
     }
+    public IList<EquipmentDto> GetEquipmentForTourist(long touristId)
+    {
+
+        var equipmentIds = _touristEquipmentRepository.GetPaged(1, int.MaxValue)
+            .Results
+            .Where(te => te.UserId == touristId)
+            .Select(te => te.EquipmentId)
+            .ToList();
+
+
+        var equipmentList = _equipmentRepository.GetPaged(1, int.MaxValue)
+            .Results
+            .Where(e => equipmentIds.Contains(e.Id))
+            .ToList();
+
+        var equipmentDtoList = _mapper.Map<IList<EquipmentDto>>(equipmentList);
+        return equipmentDtoList;
+    }
+
+
 
 
 }

@@ -1,6 +1,12 @@
 ﻿INSERT INTO stakeholders."Users"(
     "Id", "Username", "Password", "Role", "IsActive", "IsBlocked")
 VALUES (-1, 'admin@gmail.com', 'admin', 0, true, false);
+INSERT INTO stakeholders."Users"(
+    "Id", "Username", "Password", "Role", "IsActive", "IsBlocked")
+VALUES (-2, 'nekiTurista', 'tourist', 2, true, false);
+INSERT INTO stakeholders."Users"(
+    "Id", "Username", "Password", "Role", "IsActive", "IsBlocked")
+VALUES (-3, 'nekiAutor', 'author', 1, true, false);
 
 INSERT INTO stakeholders."Users"(
     "Id", "Username", "Password", "Role", "IsActive", "IsBlocked")

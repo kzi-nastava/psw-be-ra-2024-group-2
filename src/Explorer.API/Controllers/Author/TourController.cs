@@ -14,17 +14,12 @@ namespace Explorer.API.Controllers.Author
     {
         private readonly ITourService _tourService;
         private readonly IEquipmentService _equipmentService;
-        public TourController(ITourService tourService, IEquipmentService equipmentService)
+        private readonly ICheckpointService _checkpointService;
+        public TourController(ITourService tourService, IEquipmentService equipmentService, ICheckpointService checkpointService)
         {
             _tourService = tourService;
             _equipmentService = equipmentService;
-        }
-
-        [HttpPut("checkpoints")]
-        public ActionResult<TourDto> UpdateCheckpoints([FromBody] TourDto tour)
-        {
-            var result = _tourService.UpdateTourCheckpoints(tour, User.PersonId());
-            return CreateResponse(result);
+            _checkpointService = checkpointService;
         }
 
         [HttpPut("equipment")]
@@ -34,7 +29,6 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(result);
         }
 
-
         [HttpGet]
         public ActionResult<PagedResult<TourDto>> GetAllByUserId()
         {
@@ -42,11 +36,10 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(allTours.ToResult());
         }
 
-        [HttpPost]
-        public ActionResult<TourDto> Create([FromBody] TourDto dto)
+        [HttpPost("addNew")]
+        public ActionResult<TourDto> Add([FromBody] TourWithCheckpointsDto dto)
         {
-
-            var addedTour = _tourService.CreateTour(dto,User.UserId());
+            var addedTour = _tourService.CreateTour(dto.Tour, dto.Checkpoints,User.UserId());
             return CreateResponse(addedTour);
         }
 

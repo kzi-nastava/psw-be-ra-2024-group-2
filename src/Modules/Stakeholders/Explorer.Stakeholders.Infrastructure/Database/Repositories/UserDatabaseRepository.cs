@@ -42,4 +42,10 @@ public class UserDatabaseRepository : IUserRepository
         _dbContext.SaveChanges();
         return user;
     }
+
+    public IEnumerable<User> GetAll()
+    {
+        return _dbContext.Users.ToList(); 
+    }
+
 }

@@ -1,4 +1,5 @@
 ﻿using Explorer.API.Controllers.Author;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
@@ -9,14 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Explorer.Tours.Tests.Integration.Tour;
 
@@ -115,37 +109,102 @@ public class TourTests : BaseToursIntegrationTest
         result.TotalCount.ShouldBe(4);
     }
 
+    //[Fact]
+    //public void AddTour_successful_adds_tour()
+    //{
+    //    using var scope = Factory.Services.CreateScope();
+    //    var controller = CreateController(scope, "-1");
+    //    var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+    //    var newEntity = new TourDto
+    //    {
+    //        UserId = -1,
+    //        Equipment = { -1 },
+    //        Name = "Gala",
+    //        Description = "Opis",
+    //        Difficulty = TourDifficulty.Hard,
+    //        Tag = TourTag.Adventure,
+    //        Status = 0,
+    //        Price = 0
+    //    };
+    //    var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourDto;
+
+    //    result.ShouldNotBeNull();
+    //    result.Name.ShouldBe(newEntity.Name);
+    //    result.Description.ShouldBe(newEntity.Description);
+    //    result.Difficulty.ShouldBe(newEntity.Difficulty);
+    //    result.Status.ShouldBe(TourStatus.Draft);
+    //    result.Price.ShouldBe(0);
+
+    //    var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Name == newEntity.Name);
+    //    storedEntity.ShouldNotBeNull();
+    //}
+
     [Fact]
-    public void AddTour_successful_adds_tour()
+    public void AddTourWithCheckpoints_successful()
     {
+        // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope, "-1");
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new TourDto
+
+        var tourWithCheckpoints = new TourWithCheckpointsDto
         {
-            UserId = -1,
-            Equipment = { -1 },
-            Name = "Gala",
-            Description = "Opis",
-            Difficulty = TourDto.TourDifficulty.Hard,
-            Tag = TourDto.TourTag.Adventure,
-            Status = 0,
-            Price = 0
+            Tour = new TourDto
+            {
+                UserId = -1,
+                Name = "AddTourWithCheckpoints",
+                Description = "Opis",
+                Difficulty = TourDifficulty.Hard,
+                Tag = TourTag.Adventure,
+                Status = 0,
+                Price = 0
+            },
+            Checkpoints = new List<CheckpointDto>
+                {
+                new CheckpointDto
+                {
+                    Latitude = 1,
+                    Longitude = 1,
+                    Name = "Checkpoint1",
+                    Description = "Description1",
+                    Image = new TourImageDto { Data = "PRVASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" },
+                    Secret = "Tajna1"
+                },
+                new CheckpointDto
+                {
+                    Latitude = 2,
+                    Longitude = 2,
+                    Name = "Checkpoint2",
+                    Description = "Description2",
+                    Image = new TourImageDto { Data = "DRUGASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" },
+                    Secret = "Tajna2"
+                },
+                new CheckpointDto
+                {
+                    Latitude = 3,
+                    Longitude = 3,
+                    Name = "Checkpoint3",
+                    Description = "Description3",
+                    Image = new TourImageDto { Data = "TRECASLIKAZATESTIRANJE", UploadedAt = DateTime.UtcNow, MimeType = "image/jpeg" },
+                    Secret = "Tajna3"
+                }
+            }
         };
-        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourDto;
 
+        // Act
+        var result = (ObjectResult)controller.Add(tourWithCheckpoints).Result;
+
+        // Assert - Response
         result.ShouldNotBeNull();
-        result.Name.ShouldBe(newEntity.Name);
-        result.Description.ShouldBe(newEntity.Description);
-        result.Difficulty.ShouldBe(newEntity.Difficulty);
-        result.Status.ShouldBe(TourDto.TourStatus.Draft);
-        result.Price.ShouldBe(0);
+        result.StatusCode.ShouldBe(200);
 
-        var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Name == newEntity.Name);
-        storedEntity.ShouldNotBeNull();
+        //Assert - Database
+        var storedTour = dbContext.Tours.FirstOrDefault(i => i.Name == tourWithCheckpoints.Tour.Name);
+        storedTour.ShouldNotBeNull();
+        storedTour.Checkpoints.Count.ShouldBe(3);
     }
 
-   
+
     [Fact]
     public void UpdateEquipment_unsuccessful_unauthorized_user()
     {
@@ -225,7 +284,7 @@ public class TourTests : BaseToursIntegrationTest
 
     private static TourController CreateController(IServiceScope scope, string number)
     {
-        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>(), scope.ServiceProvider.GetRequiredService<IEquipmentService>())
+        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>(), scope.ServiceProvider.GetRequiredService<IEquipmentService>(), scope.ServiceProvider.GetRequiredService<ICheckpointService>())
         {
             ControllerContext = new ControllerContext
             {

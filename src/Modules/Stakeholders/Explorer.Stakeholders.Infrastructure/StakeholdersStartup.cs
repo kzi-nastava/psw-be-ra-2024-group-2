@@ -27,22 +27,29 @@ public static class StakeholdersStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IAuthenticationService, AuthenticationService>();
-        services.AddScoped<ITransactionService, TransactionService>();
         services.AddScoped<IProfileService, ProfileService>();
+        services.AddScoped<IPersonService, PersonService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IRatingApplicationService, RatingApplicationService>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
+        services.AddScoped<IProfileMessageService, ProfileMessageService>();
+        services.AddScoped<IProfileMessageNotificationService, ProfileMessageNotificationService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudDatabaseRepository<User, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<Image>), typeof(CrudDatabaseRepository<Image, StakeholdersContext>));
-        services.AddScoped(typeof(ITransactionRepository), typeof(TransactionRepository));
+        services.AddScoped(typeof(ITransactionRepository), typeof(TransactionRepository<StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<RatingApplication>), typeof(CrudDatabaseRepository<RatingApplication, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IImageRepository, ImageRepository<StakeholdersContext>>();
         services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<ProfileMessage>), typeof(CrudDatabaseRepository<ProfileMessage, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<ProfileMessageNotification>), typeof(CrudDatabaseRepository<ProfileMessageNotification, StakeholdersContext>));
+
+
 
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
