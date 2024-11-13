@@ -80,11 +80,12 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 else if (dto.Image != null && _imageRepository.Exists(dto.Image.Data))
                 {
                     // If the image already exists, get the image from the repository
-                    var image = _imageRepository.GetByData(dto.Image.Data);
+                    //var image = _imageRepository.GetByData(dto.Image.Data);
 
                     // Update the person with the existing image
-                    tourObject.ImageId = image.Id;
-                    tourObject.Image = image;
+                    //tourObject.ImageId = image.Id;
+                    //tourObject.Image = image;
+                    return Result.Fail(FailureCode.Conflict).WithError("Image already exists!");
                 }
                 // DODATO SAMO RADI TESTIRANJA BACKENDA PROMIJENICE SE INTEGRACIJOM MAPE
 
