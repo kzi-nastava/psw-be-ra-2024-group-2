@@ -50,7 +50,7 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
     //        return Result.Fail("Equipment already assigned to the user.");
     //    }
 
-    //    var touristEquipment = new Equipment(userId, equipmentId);
+    //    var touristEquipment = new TouristEquipment(userId, equipmentId);
 
     //    _touristEquipmentRepository.Create(touristEquipment);
     //    return Result.Ok();
@@ -74,7 +74,7 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
     //public IList<EquipmentDto> GetEquipmentForTourist(long touristId)
     //{
 
-    //    var equipmentIds = _equipmentService.GetFullPaged(1, int.MaxValue)
+    //    var equipmentIds = _equipmentService.GetPaged(1, int.MaxValue)
     //        .Value.Results
     //        .Where(te => te.UserId == touristId)
     //        .Select(te => te.EquipmentId)
