@@ -1,5 +1,6 @@
 ﻿using Explorer.API.Controllers;
 using Explorer.API.Controllers.Administrator;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
@@ -53,7 +54,7 @@ namespace Explorer.Stakeholders.Tests.Integration.User
                 UserId = -11,
                 Username = "autor1@gmail.com",
                 Email = "autor1@gmail.com",
-                Role = 1,
+                Role = UserRole.Author,
                 IsBlocked = true
             };
 
@@ -87,7 +88,7 @@ namespace Explorer.Stakeholders.Tests.Integration.User
                 UserId = -5,
                 Username = "autor1@gmail.com",
                 Email = "autor1@gmail.com",
-                Role = 1,
+                Role = UserRole.Author,
                 IsBlocked = true
             };
 
