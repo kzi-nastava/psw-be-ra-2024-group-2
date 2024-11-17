@@ -13,6 +13,8 @@ public class StakeholdersContext : DbContext
     public DbSet<ProfileMessage> ProfileMessages { get; set; }
     public DbSet<ProfileMessageNotification> ProfileMessageNotifications { get; set; }
 
+    public DbSet<FAQ> FAQs { get; set; }
+
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
