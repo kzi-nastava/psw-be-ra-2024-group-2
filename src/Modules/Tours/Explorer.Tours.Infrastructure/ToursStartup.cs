@@ -13,7 +13,6 @@ using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Explorer.Stakeholders.Core.Domain;
 
 
 namespace Explorer.Tours.Infrastructure;

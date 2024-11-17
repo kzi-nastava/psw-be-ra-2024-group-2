@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Tours.Core.Domain;
+
+namespace Explorer.Tours.Core.Domain;
 
 public class ShoppingCart : Entity
 {

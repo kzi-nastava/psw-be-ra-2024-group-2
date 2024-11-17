@@ -2,6 +2,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+namespace Explorer.BuildingBlocks.Core;
+
 public class DateTimeConverter : JsonConverter<DateTime>
 {
     private readonly string _format = "yyyy-MM-ddTHH:mm:ss.fffffffZ"; 

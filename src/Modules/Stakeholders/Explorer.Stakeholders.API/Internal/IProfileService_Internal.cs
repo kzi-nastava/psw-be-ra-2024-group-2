@@ -1,9 +1,9 @@
 ﻿using Explorer.Stakeholders.API.Dtos;
 using FluentResults;
 
-namespace Explorer.Stakeholders.API.Public;
+namespace Explorer.Stakeholders.API.Internal;
 
-public interface IPersonService
+public interface IProfileService_Internal
 {
     public Result<PersonDto> UpdateTouristPosition(int userId, double latitude, double longitude);
     public Result<PersonDto> GetPositionByUserId(int userId);
