@@ -25,7 +25,7 @@ public class ToursContext : DbContext
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
-
+    public DbSet<TouristEquipment> TouristEquipments { get; set; }
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -75,6 +75,14 @@ public class ToursContext : DbContext
         .HasMany(s => s.Items)
         .WithOne(i => i.ShoppingCart)
         .HasForeignKey(i => i.ShoppingCartId);
+
+        modelBuilder.Entity<TouristEquipment>()
+            .Property(ue => ue.UserId)
+            .IsRequired();
+
+        modelBuilder.Entity<TouristEquipment>()
+            .Property(ue => ue.EquipmentId)
+            .IsRequired();
 
     }
 }

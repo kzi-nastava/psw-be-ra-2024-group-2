@@ -73,6 +73,8 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<TourPurchaseToken>), typeof(CrudDatabaseRepository<TourPurchaseToken, ToursContext>));
         services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
         services.AddScoped(typeof(ITourExecutionRepository), typeof(TourExecutionRepository<ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, ToursContext>));
+
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),

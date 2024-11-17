@@ -1,5 +1,4 @@
-﻿using Explorer.API.Controllers.Administrator.Administration;
-using Explorer.API.Controllers.Tourist;
+﻿using Explorer.API.Controllers.Tourist;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Infrastructure.Database;
@@ -12,12 +11,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Stakeholders.Tests.Integration.User
+namespace Explorer.Tours.Tests.Integration.Administration
 {
     [Collection("Sequential")]
-    public class TouristEquipmentTests : BaseStakeholdersIntegrationTest
+    public class TouristEquipmentTests : BaseToursIntegrationTest
     {
-        public TouristEquipmentTests(StakeholdersTestFactory factory) : base(factory) { }
+        public TouristEquipmentTests(ToursTestFactory factory) : base(factory) { }
 
         [Fact]
         public void Deletes()
@@ -25,10 +24,10 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
             // Act
-            var result = (OkResult)controller.RemoveEquipmentFromTourist(-1);
+            var result = (ObjectResult)controller.RemoveEquipmentFromTourist(-1);
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -45,10 +44,10 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
             // Act
-            var result = (OkResult)controller.AddEquipmentToTourist(-2);
+            var result = (ObjectResult)controller.AddEquipmentToTourist(-2);
 
             // Assert - Response
             result.ShouldNotBeNull();
