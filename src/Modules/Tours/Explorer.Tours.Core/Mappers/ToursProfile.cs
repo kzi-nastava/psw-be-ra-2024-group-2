@@ -3,6 +3,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
+using Explorer.Payment.API.Dtos;
 
 namespace Explorer.Tours.Core.Mappers;
 
@@ -94,7 +95,7 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.CheckpointId, opt => opt.MapFrom(src => src.CheckpointId))
             .ForMember(dest => dest.ArrivalAt, opt => opt.MapFrom(src => src.ArrivalAt));
 
+        CreateMap<TourPaymentDto, TourDto>().ReverseMap();
+        CreateMap<TourDurationByTransportPaymentDto, TourDurationByTransportDto>().ReverseMap();
     }
-
-
 }
