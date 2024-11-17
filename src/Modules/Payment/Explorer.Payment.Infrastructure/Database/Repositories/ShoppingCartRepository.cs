@@ -1,16 +1,21 @@
-﻿using System;
-using System.Linq;
-using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.BuildingBlocks.Infrastructure.Database;
-using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Infrastructure.Database;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payment.Core.Domain;
+using Explorer.Payment.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Explorer.Payment.Infrastructure.Database.Repositories;
 
 public class ShoppingCartRepository : IShoppingCartRepository
 {
-    private readonly ToursContext _dbContext;
 
-    public ShoppingCartRepository(ToursContext dbContext)
+    private readonly PaymentContext _dbContext;
+
+    public ShoppingCartRepository(PaymentContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -25,7 +30,7 @@ public class ShoppingCartRepository : IShoppingCartRepository
     public ShoppingCart GetByUserId(long userId)
     {
         return _dbContext.ShoppingCarts
-                         .Include(cart => cart.Items) 
+                         .Include(cart => cart.Items)
                          .FirstOrDefault(cart => cart.TouristId == userId);
     }
 
@@ -45,7 +50,7 @@ public class ShoppingCartRepository : IShoppingCartRepository
             throw new KeyNotFoundException("Shopping cart not found.");
         }
 
-      //  existingCart.UpdateItems(shoppingCart.Items);
+        //  existingCart.UpdateItems(shoppingCart.Items);
         _dbContext.ShoppingCarts.Update(existingCart);
         _dbContext.SaveChanges();
         return existingCart;
@@ -70,7 +75,6 @@ public class ShoppingCartRepository : IShoppingCartRepository
             .Take(pageSize)
             .ToList();
 
-        return new PagedResult<ShoppingCart>(items, totalItems); 
+        return new PagedResult<ShoppingCart>(items, totalItems);
     }
-
 }
