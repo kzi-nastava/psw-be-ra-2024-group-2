@@ -15,4 +15,5 @@ public interface IAccountService
     Result<PagedResult<AccountDto>> GetPagedTourists(int page, int pageSize);
     Result<AccountDto> Get(long personId);
     Result<AccountDto> Block(long personId);
+    Result<AccountDto> Unblock(long personId);
 }
