@@ -13,7 +13,6 @@ using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Explorer.Stakeholders.Core.Domain;
 
 
 namespace Explorer.Tours.Infrastructure;
@@ -40,6 +39,7 @@ public static class ToursStartup
         services.AddScoped<ICheckpointService, CheckpointService>();
         services.AddScoped<ITourPreferenceService, TourPreferenceService>();
         services.AddScoped<ITourIssueCommentService, TourIssueCommentService>();
+        services.AddScoped<IShoppingCartService, ShoppingCartService>();
         services.AddScoped<ITourIssueNotificationService, TourIssueNotificationService>();
         services.AddScoped<ITourExecutionService, TourExecutionService>();
     }
@@ -63,7 +63,18 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, ToursContext>));
 
         services.AddScoped(typeof(ITransactionRepository), typeof(TransactionRepository<ToursContext>));
+
+        //services.AddScoped(typeof(ITourDurationByTransportRepository), typeof(TourDurationByTransportRepository));
+
+        services.AddScoped(typeof(ICrudRepository<TourExecution>), typeof(CrudDatabaseRepository<TourExecution, ToursContext>));
+
+        //services.AddScoped(typeof(ICrudRepository<TourExecutionCheckpoint>), typeof(CrudDatabaseRepository<TourExecutionCheckpoint, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<OrderItem>), typeof(CrudDatabaseRepository<OrderItem, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourPurchaseToken>), typeof(CrudDatabaseRepository<TourPurchaseToken, ToursContext>));
+        services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
         services.AddScoped(typeof(ITourExecutionRepository), typeof(TourExecutionRepository<ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, ToursContext>));
+
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),

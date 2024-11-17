@@ -19,12 +19,6 @@ namespace Explorer.API.Controllers.Author
             _checkpointService = checkpointService;
         }
 
-        [HttpPost]
-        public ActionResult<CheckpointDto> Create([FromBody] CheckpointDto checkpoint) {
-            var result = _checkpointService.Create(checkpoint);
-            return CreateResponse(result);
-        }
-
         [HttpGet("checkpoints/getAll")]
         public ActionResult<PagedResult<CheckpointDto>> GetAll()
         {

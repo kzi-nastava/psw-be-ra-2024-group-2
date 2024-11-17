@@ -36,7 +36,7 @@ public class AccountService : CrudService<AccountDto, Person>, IAccountService
             UserId = person.UserId,
             Username = person.User.Username,
             Email = person.Email,
-            Role = (int)person.User.Role,
+            Role = person.User.Role,
             IsBlocked = person.User.IsBlocked
         }).ToList();
         var filteredPagedResult = new PagedResult<AccountDto>(mappedResults, pagedResult.TotalCount);

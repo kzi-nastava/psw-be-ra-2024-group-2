@@ -40,7 +40,10 @@ namespace Explorer.Tours.Tests.Integration.Tour
 
         private static TourPreferenceController CreateController(IServiceScope scope)
         {
-            return new TourPreferenceController(scope.ServiceProvider.GetRequiredService<ITourPreferenceService>());
+            return new TourPreferenceController(scope.ServiceProvider.GetRequiredService<ITourPreferenceService>())
+            {
+                ControllerContext = BuildContext("-22")
+            };
         }
     }
 }

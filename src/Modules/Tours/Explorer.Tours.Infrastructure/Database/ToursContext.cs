@@ -1,5 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,8 +22,10 @@ public class ToursContext : DbContext
 
     public DbSet<TourExecution> TourExecutions { get; set; }
 
-    //public DbSet<TourExecutionCheckpoint> TourExecutionCheckpoints { get; set; }
-
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
+    public DbSet<TouristEquipment> TouristEquipments { get; set; }
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -69,5 +70,19 @@ public class ToursContext : DbContext
             .WithOne(t => t.TourIssueReport)
             .HasForeignKey(t => t.TourIssueReportId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ShoppingCart>()
+        .HasMany(s => s.Items)
+        .WithOne(i => i.ShoppingCart)
+        .HasForeignKey(i => i.ShoppingCartId);
+
+        modelBuilder.Entity<TouristEquipment>()
+            .Property(ue => ue.UserId)
+            .IsRequired();
+
+        modelBuilder.Entity<TouristEquipment>()
+            .Property(ue => ue.EquipmentId)
+            .IsRequired();
+
     }
 }

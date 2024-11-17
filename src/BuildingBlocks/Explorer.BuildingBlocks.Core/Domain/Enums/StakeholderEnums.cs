@@ -6,3 +6,15 @@ public enum UserRole
     Author,
     Tourist
 }
+
+public enum AttachedResourceType
+{
+    Tour,
+    BlogPost
+}
+
+public enum ProfileMessageNotificationStatus
+{
+    Read,
+    Unread
+}

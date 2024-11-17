@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
-using Explorer.Stakeholders.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.Core.Domain;
@@ -18,13 +11,11 @@ namespace Explorer.Tours.Core.UseCases.Tourist
     {
         public ICrudRepository<Club> _clubRepository;
         private readonly IImageRepository _imageRepository;
-        private readonly IUserRepository _userRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
 
-        public ClubService(ICrudRepository<Club> clubRepository, IImageRepository imageRepository, IUserRepository userRepository, ITransactionRepository transactionRepository, ITokenGenerator generator, IMapper mapper) : base(clubRepository, mapper)
+        public ClubService(ICrudRepository<Club> clubRepository, IImageRepository imageRepository, ITransactionRepository transactionRepository, IMapper mapper) : base(clubRepository, mapper)
         {
-            _userRepository = userRepository;
             _clubRepository = clubRepository;
             _transactionRepository = transactionRepository;
             _imageRepository = imageRepository;

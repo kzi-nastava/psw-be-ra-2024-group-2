@@ -10,7 +10,8 @@ public class StakeholdersContext : DbContext
     public DbSet<Person> People { get; set; }
     public DbSet<Image> Images { get; set; }
     public DbSet<RatingApplication> RatingsApplication { get; set; }
-    public DbSet<TouristEquipment> TouristEquipments { get; set; }
+    public DbSet<ProfileMessage> ProfileMessages { get; set; }
+    public DbSet<ProfileMessageNotification> ProfileMessageNotifications { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
 
@@ -19,16 +20,6 @@ public class StakeholdersContext : DbContext
         modelBuilder.HasDefaultSchema("stakeholders");
 
         modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
-        modelBuilder.Entity<TouristEquipment>()
-       .HasKey(ue => new { ue.UserId, ue.EquipmentId }); 
-
-        modelBuilder.Entity<TouristEquipment>()
-            .Property(ue => ue.UserId)
-            .IsRequired(); 
-
-        modelBuilder.Entity<TouristEquipment>()
-            .Property(ue => ue.EquipmentId)
-            .IsRequired();
         ConfigureStakeholder(modelBuilder);
 
 
@@ -48,11 +39,8 @@ public class StakeholdersContext : DbContext
             .WithOne()
             .HasForeignKey<Person>(s => s.ImageId)
             .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<Person>()
-                .OwnsOne(p => p.TouristPosition, tp =>
-                {
-                    tp.Property(t => t.Latitude).HasColumnName("Latitude");
-                    tp.Property(t => t.Longitude).HasColumnName("Longitude");
-                });
+                .Property(t => t.TouristPosition).HasColumnType("jsonb");
     }
 }

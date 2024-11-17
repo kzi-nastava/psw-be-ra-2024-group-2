@@ -5,13 +5,13 @@ namespace Explorer.Tours.Core.Domain;
 
 public class TourPreference : Entity
 {
-    public long TouristId { get; private set; }
-    public DifficultyLevel Difficulty { get; private set; }
-    public int WalkRating { get; private set; }
-    public int BicycleRating { get; private set; }
-    public int CarRating { get; private set; }
-    public int BoatRating { get; private set; }
-    public List<TourPreferenceTag>? Tags { get; private set; }
+    public long TouristId { get; set; }
+    public DifficultyLevel Difficulty { get; set; }
+    public int WalkRating { get; set; }
+    public int BicycleRating { get; set; }
+    public int CarRating { get; set; }
+    public int BoatRating { get; set; }
+    public List<TourPreferenceTag>? Tags { get; set; }
 
     public TourPreference() { }
     public TourPreference(long touristId, DifficultyLevel difficulty, int walkRating, int bicycleRating, int carRating, int boatRating, List<TourPreferenceTag>? tags)

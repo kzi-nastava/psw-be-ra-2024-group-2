@@ -176,7 +176,6 @@ namespace Explorer.Tours.Tests.Integration.Tour
             result.StatusCode.ShouldBe(400);
 
         }
-
         private static ObjectController CreateController(IServiceScope scope)
         {
             return new ObjectController(scope.ServiceProvider.GetRequiredService<IObjectService>())

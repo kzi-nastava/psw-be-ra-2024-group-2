@@ -30,5 +30,12 @@ namespace Explorer.API.Controllers
             var updatedProfile = _profileService.Update(User.PersonId(), profile);
             return CreateResponse(updatedProfile);
         }
+
+        [HttpGet("all")]
+        public ActionResult<IEnumerable<ProfileDto>> GetAllProfiles()
+        {
+            var profiles = _profileService.GetAllUsers();
+            return Ok(profiles);
+        }
     }
 }

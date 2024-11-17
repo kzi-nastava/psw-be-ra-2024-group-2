@@ -1,7 +1,7 @@
-﻿using Explorer.API.Controllers.Administrator.Administration;
-using Explorer.API.Controllers.Tourist;
+﻿using Explorer.API.Controllers.Tourist;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,12 +12,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Stakeholders.Tests.Integration.User
+namespace Explorer.Tours.Tests.Integration.Tour
 {
     [Collection("Sequential")]
-    public class TouristEquipmentTests : BaseStakeholdersIntegrationTest
+    public class ShoppingCartTests : BaseToursIntegrationTest
     {
-        public TouristEquipmentTests(StakeholdersTestFactory factory) : base(factory) { }
+        public ShoppingCartTests(ToursTestFactory factory) : base(factory) { }
 
         [Fact]
         public void Deletes()
@@ -25,19 +25,22 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
             // Act
-            var result = (OkResult)controller.RemoveEquipmentFromTourist(-1);
+            var result = (OkResult)controller.RemoveItemFromCart(-1);
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.StatusCode.ShouldBe(200);
 
             // Assert - Database
-            var storedCourse = dbContext.TouristEquipments.FirstOrDefault(i => i.EquipmentId == -1);
+            var storedCourse = dbContext.OrderItems.FirstOrDefault(i => i.TourId == -1);
             storedCourse.ShouldBeNull();
+
         }
+
+
 
         [Fact]
         public void Adds()
@@ -45,17 +48,17 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
             // Act
-            var result = (OkResult)controller.AddEquipmentToTourist(-2);
+            var result = (OkResult)controller.AddItemToCart(-2);
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.StatusCode.ShouldBe(200);
 
             // Assert - Database
-            var storedCourse = dbContext.TouristEquipments.FirstOrDefault(i => i.EquipmentId == -2);
+            var storedCourse = dbContext.OrderItems.FirstOrDefault(i => i.TourId == -2);
             storedCourse.ShouldNotBeNull();
         }
 
@@ -66,19 +69,18 @@ namespace Explorer.Stakeholders.Tests.Integration.User
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
 
-            // Act
-            var result = (ObjectResult)controller.RemoveEquipmentFromTourist(-1000);
-
-            // Assert
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldBe(500);
+            
+            // Act & Assert
+            var exception = Should.Throw<NullReferenceException>(() => controller.RemoveItemFromCart(-1000));
+            exception.Message.ShouldContain("Object reference not set to an instance of an object.");
         }
 
-        private static TouristEquipmentController CreateController(IServiceScope scope)
+
+        private static ShoppingCartController CreateController(IServiceScope scope)
         {
-            return new TouristEquipmentController(scope.ServiceProvider.GetRequiredService<IEquipmentService>())
+            return new ShoppingCartController(scope.ServiceProvider.GetRequiredService<IShoppingCartService>())
             {
-                ControllerContext = BuildContext("-1")
+                ControllerContext = BuildContext("-21")
             };
         }
     }
