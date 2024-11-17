@@ -58,30 +58,6 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 return Result.Fail(FailureCode.NotFound).WithError("Tour or equipment doesn't exist !");
             }
         }
-        public Result<TourDto> UpdateTourCheckpoints(TourDto tourDto, long userId)
-        {
-            try
-            {
-                if (tourDto.UserId != userId)
-                    return Result.Fail(FailureCode.Forbidden).WithError("User is not authorized to add checkpoints");
-
-                Tour tour = _tourRepository.Get(tourDto.Id);
-
-
-                foreach (var elementId in tourDto.Checkpoints)
-                {
-                    var newCheckpoint = _checkpointRepository.Get(elementId);
-                    tour.Checkpoints.Add(newCheckpoint);
-                }
-
-                _tourRepository.Update(tour);
-                return MapToDto(tour);
-            }
-            catch (Exception e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError("Tour or checkpoint doesn't exist !");
-            }
-        }
 
         public Result<TourDto> CreateTour(TourDto tourDto, List<CheckpointDto> checkpointsDto ,int userId)
         {
@@ -120,7 +96,8 @@ namespace Explorer.Tours.Core.UseCases.Administration
                             checkpointDto.Description,
                             checkpointDto.Image != null
                             ? new Image(checkpointDto.Image.Data, checkpointDto.Image.UploadedAt, checkpointDto.Image.MimeType)
-                            : null))
+                            : null,
+                            checkpointDto.Secret))
                     .ToList();
 
                 tour.UpdateCheckpoints(checkpoints);
@@ -196,18 +173,6 @@ namespace Explorer.Tours.Core.UseCases.Administration
             return base.Delete(tourId);
         }
 
-        //public PagedResult<TourDto> GetToursNearby(int loggedInUserId, LocationDto locationDto)
-        //{
-        //    var tours = _tourRepository.GetPaged(1, int.MaxValue).Results;
-        //    var tourlongitude = tours.FirstOrDefault().Checkpoints.FirstOrDefault().Longitude;
-        //    var tourlattitude = tours.FirstOrDefault().Checkpoints.FirstOrDefault().Latitude;
-
-        //    var longitude = locationDto.Longitude;
-        //    var latitude = locationDto.Latitude;
-        //    var radius = locationDto.Radius;
-
-        //    throw new NotImplementedException();
-        //}
         public PagedResult<TourDto> GetToursNearby(int loggedInUserId, LocationDto locationDto)
         {
             var tours = _tourRepository.GetPaged(1, int.MaxValue).Results;

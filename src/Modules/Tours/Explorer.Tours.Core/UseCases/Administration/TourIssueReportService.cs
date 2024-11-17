@@ -1,18 +1,12 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.API.Internal;
+using Explorer.Stakeholders.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.UseCases.Administration
 {
@@ -23,43 +17,46 @@ namespace Explorer.Tours.Core.UseCases.Administration
         private readonly ICrudRepository<TourIssueComment> _tourIssueCommentRepository;
         private readonly ICrudRepository<TourIssueNotification> _tourIssueNotificationRepository;
         private readonly ITransactionRepository _transactionRepository;
-        private readonly ICrudRepository<User> _userRepository;
-        public TourIssueReportService(ICrudRepository<TourIssueReport> repository, ICrudRepository<Tour> tourRepository, 
-            ICrudRepository<TourIssueComment> tourIssueCommentRepository, ITransactionRepository transactionRepository, ICrudRepository<TourIssueNotification> tourIssueNotificationRepository, ICrudRepository<User> userRepository, IMapper mapper) : base(repository, mapper)
+
+        private readonly IProfileService_Internal _personService;
+        public TourIssueReportService(ICrudRepository<TourIssueReport> repository, ICrudRepository<Tour> tourRepository,
+            ICrudRepository<TourIssueComment> tourIssueCommentRepository, ITransactionRepository transactionRepository, ICrudRepository<TourIssueNotification> tourIssueNotificationRepository, IMapper mapper, IProfileService_Internal personService) : base(repository, mapper)
         {
             _tourIssueReportRepository = repository;
             _tourRepository = tourRepository;
             _tourIssueCommentRepository = tourIssueCommentRepository;
             _transactionRepository = transactionRepository;
             _tourIssueNotificationRepository = tourIssueNotificationRepository;
-            _userRepository = userRepository;
+            _personService = personService;
         }
+
 
         public Result<PagedResult<TourIssueReportDto>> GetPaged(long userId, int page, int pageSize)
         {
             List<TourIssueReportDto> tourIssueReportDtos = new List<TourIssueReportDto>();
-            User user = _userRepository.Get(userId);
             var allTourIssueReports = _tourIssueReportRepository.GetPaged(page, pageSize);
             List<TourIssueReport> reports = new List<TourIssueReport>();
 
-            if(user.Role == UserRole.Tourist)
+            var person = _personService.GetAccount(userId);
+
+            if (person.Value.Role == UserRole.Tourist)
             {
                 reports = allTourIssueReports.Results.Where(t => t.UserId == userId).ToList();
             }
-            else if(user.Role == UserRole.Author)
+            else if (person.Value.Role == UserRole.Author)
             {
-                foreach(TourIssueReport report in allTourIssueReports.Results)
+                foreach (TourIssueReport report in allTourIssueReports.Results)
                 {
                     Tour tour = _tourRepository.Get(report.TourId);
                     if (tour.UserId == userId)
                         reports.Add(report);
                 }
             }
-            else if(user.Role == UserRole.Administrator)
+            else if (person.Value.Role == UserRole.Administrator)
             {
                 reports = allTourIssueReports.Results;
             }
-            foreach(var rep in reports)
+            foreach (var rep in reports)
                 tourIssueReportDtos.Add(MapToDto(rep));
 
             return new PagedResult<TourIssueReportDto>(tourIssueReportDtos, tourIssueReportDtos.Count());

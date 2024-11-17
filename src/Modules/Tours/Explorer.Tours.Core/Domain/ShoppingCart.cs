@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Tours.Core.Domain;
+
+namespace Explorer.Tours.Core.Domain;
 
 public class ShoppingCart : Entity
 {
@@ -7,28 +8,22 @@ public class ShoppingCart : Entity
     public List<OrderItem> Items { get; private set; }
     public long TouristId { get; private set; }
 
-    public ShoppingCart(long touristId, long tourId)
+    public ShoppingCart(long touristId)
     {
         TouristId = touristId;
-        OrderItem item = new OrderItem(tourId);
-        Items.Add(item);
-    }
-
-    public ShoppingCart() {
-        if (Items == null)
-        {
-            Items = new List<OrderItem>();
-        }
+        Items =  new List<OrderItem>();
     }
 
     public void AddItem(OrderItem item)
     {
+       
         Items.Add(item);
         CalculateTotalPrice();
     }
 
     public void RemoveItem(OrderItem item)
     {
+        
         Items.Remove(item);
         CalculateTotalPrice();
     }
@@ -45,8 +40,11 @@ public class ShoppingCart : Entity
 
     public void Checkout()
     {
-        foreach (var item in Items) {
+        foreach (var item in Items)
+        {
             item.Token = true;
         }
     }
 }
+
+

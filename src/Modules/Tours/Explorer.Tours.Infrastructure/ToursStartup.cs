@@ -13,7 +13,6 @@ using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Explorer.Stakeholders.Core.Domain;
 
 
 namespace Explorer.Tours.Infrastructure;
@@ -71,8 +70,11 @@ public static class ToursStartup
 
         //services.AddScoped(typeof(ICrudRepository<TourExecutionCheckpoint>), typeof(CrudDatabaseRepository<TourExecutionCheckpoint, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<OrderItem>), typeof(CrudDatabaseRepository<OrderItem, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourPurchaseToken>), typeof(CrudDatabaseRepository<TourPurchaseToken, ToursContext>));
         services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
         services.AddScoped(typeof(ITourExecutionRepository), typeof(TourExecutionRepository<ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, ToursContext>));
+
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),
