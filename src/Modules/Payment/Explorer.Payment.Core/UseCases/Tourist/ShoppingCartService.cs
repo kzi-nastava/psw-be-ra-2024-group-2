@@ -1,37 +1,47 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Public.Tourist.DTOs;
-using Explorer.Tours.API.Public.Tourist;
-using Explorer.Tours.Core.Domain;
+using Explorer.Payment.API.Dtos;
+using Explorer.Payment.API.Public.Tourist;
+using Explorer.Payment.Core.Domain;
+using Explorer.Payment.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.API.Internal.Administration;
 using FluentResults;
-using Explorer.Tours.API.Dtos;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Explorer.Payment.Core.UseCases.Tourist;
 
 public class ShoppingCartService : IShoppingCartService
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
-    private readonly ICrudRepository<Tour> _tourRepository;
+    private readonly ITourService_Internal _tourService;
     private readonly ICrudRepository<OrderItem> _orderItemRepository;
     private readonly ICrudRepository<TourPurchaseToken> _tourPurchaseTokenRepository;
     private readonly IMapper _mapper;
 
     public ShoppingCartService(
         IShoppingCartRepository shoppingCartRepository,
-        ICrudRepository<Tour> tourRepository,
         ICrudRepository<OrderItem> orderItemRepository,
         ICrudRepository<TourPurchaseToken> tourPurchaseTokenRepository,
+        ITourService_Internal tourService,
         IMapper mapper)
     {
         _shoppingCartRepository = shoppingCartRepository;
-        _tourRepository = tourRepository;
         _orderItemRepository = orderItemRepository;
         _tourPurchaseTokenRepository = tourPurchaseTokenRepository;
+        _tourService = tourService;
         _mapper = mapper;
     }
 
     public Result AddItemToCart(long userId, OrderItemDto orderItemDto)
     {
-        var tour = _tourRepository.GetPaged(1, int.MaxValue).Results
+
+        var tour = _tourService.GetPaged(1, int.MaxValue).Value.Results
                       .FirstOrDefault(t => t.Id == orderItemDto.TourId);
+        
         if (tour == null)
         {
             return Result.Fail("Item not found.");
@@ -63,8 +73,7 @@ public class ShoppingCartService : IShoppingCartService
     {
         var cart = _shoppingCartRepository.GetByUserId(userId);
         var orderItem = _mapper.Map<OrderItem>(orderItemDto);
-        //cart.RemoveItem(orderItem);
-        //_shoppingCartRepository.Update(cart);#
+
         var allItems = _orderItemRepository.GetPaged(1, int.MaxValue);
         var order = allItems.Results.FirstOrDefault(o => o.TourId == orderItemDto.TourId && o.ShoppingCartId == cart.Id);
         _orderItemRepository.Delete(order.Id);
@@ -75,14 +84,14 @@ public class ShoppingCartService : IShoppingCartService
     {
         var cart = _shoppingCartRepository.GetByUserId(userId);
 
-        
+
         foreach (var item in cart.Items)
         {
             var purchaseToken = new TourPurchaseToken(userId, item.TourId);
             _tourPurchaseTokenRepository.Create(purchaseToken);
         }
 
-       
+
         cart.Items.Clear();
         _shoppingCartRepository.Update(cart);
 
@@ -113,7 +122,7 @@ public class ShoppingCartService : IShoppingCartService
         return orderItems;
     }
 
-    public IEnumerable<TourDto> GetPurchasedTours(long userId)
+    public IEnumerable<TourPaymentDto> GetPurchasedTours(long userId)
     {
         // Pronađi sve TourPurchaseTokene za zadati userId
         var tokens = _tourPurchaseTokenRepository.GetPaged(1, int.MaxValue).Results
@@ -122,15 +131,11 @@ public class ShoppingCartService : IShoppingCartService
 
         // Ekstraktuj sve tourId vrednosti iz tih tokena
         var tourIds = tokens.Select(token => token.TourId).Distinct();
-
-        // Pronađi sve ture koje odgovaraju tim tourId vrednostima
-        var tours = _tourRepository.GetPaged(1, int.MaxValue).Results
-            .Where(tour => tourIds.Contains(tour.Id))
-            .ToList();
+        var tours = _tourService.GetPaged(1, int.MaxValue).Value.Results
+                      .Where(tour => tourIds.Contains(tour.Id)).ToList();
 
         // Mapiraj ture na DTOs i vrati ih
-        var tourDtos = _mapper.Map<IEnumerable<TourDto>>(tours);
+        var tourDtos = _mapper.Map<IEnumerable<TourPaymentDto>>(tours);
         return tourDtos;
     }
-
 }
