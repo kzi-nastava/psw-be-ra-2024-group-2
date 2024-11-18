@@ -33,11 +33,12 @@ namespace Explorer.Blog.Core.UseCases
             _transactionRepository = transactionRepository;
         }
 
-        public Result<BlogDto> Create(BlogDto blogDto)
+        public Result<BlogDto> Create(BlogDto blogDto, int userId)
         {
             try
             {
                 var blog = _mapper.Map<Core.Domain.Blog>(blogDto);
+                blog.AuthorId = userId;
 
                 var createdBlog = _blogCrudRepository.Create(blog);
 

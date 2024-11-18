@@ -13,6 +13,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
+using Explorer.Stakeholders.Core.Domain;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Explorer.Blog.Tests.Integration
 {
@@ -130,11 +133,20 @@ namespace Explorer.Blog.Tests.Integration
             result.ShouldBeNull();
         }
 
-        private static BlogController CreateController(IServiceScope scope)
+        private static BlogController CreateController(IServiceScope scope, string userId)
         {
             return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>())
-            {
-                ControllerContext = BuildContext("-1")
+            {    
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext
+                    {
+                        User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                        {
+                            new Claim("userId", userId)
+                        }))
+                    }
+                }
             };
         }
     }

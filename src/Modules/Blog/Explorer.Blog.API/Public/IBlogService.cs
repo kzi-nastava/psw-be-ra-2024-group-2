@@ -12,7 +12,7 @@ namespace Explorer.Blog.API.Public
 {
     public interface IBlogService
     {
-        Result<BlogDto> Create(BlogDto blog);
+        Result<BlogDto> Create(BlogDto blog, int userId);
         Result<PagedResult<BlogDto>> GetPaged(int page, int pageSize);
         Result<BlogDto> Get(int id);
         Result<BlogDto> GetBlogWithRatings(int blogId);

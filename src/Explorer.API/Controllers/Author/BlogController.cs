@@ -51,7 +51,8 @@ namespace Explorer.API.Controllers.Author
         [HttpPost]
         public ActionResult<BlogDto> Create([FromBody] BlogDto dto)
         {
-            var newBlog = _blogService.Create(dto);
+            int userId = User.PersonId();
+            var newBlog = _blogService.Create(dto, userId);
             return CreateResponse(newBlog);
         }
 
