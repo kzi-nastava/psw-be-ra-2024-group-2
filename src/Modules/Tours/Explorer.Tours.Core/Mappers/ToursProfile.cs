@@ -97,5 +97,7 @@ public class ToursProfile : Profile
 
         CreateMap<TourPaymentDto, TourDto>().ReverseMap();
         CreateMap<TourDurationByTransportPaymentDto, TourDurationByTransportDto>().ReverseMap();
+        CreateMap<PersonalDairyDto, PersonalDairy>().ReverseMap();
+
     }
 }
