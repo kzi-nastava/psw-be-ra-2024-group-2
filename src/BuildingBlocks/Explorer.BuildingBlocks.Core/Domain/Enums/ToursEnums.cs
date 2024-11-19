@@ -71,3 +71,11 @@ public enum DairyStatus
     InProgress,
     Completed
 }
+public enum EventCategory
+{
+    Concert,
+    MusicFestival,
+    FilmFestival,
+    FootballMatch,
+    BasketballMatch
+}
