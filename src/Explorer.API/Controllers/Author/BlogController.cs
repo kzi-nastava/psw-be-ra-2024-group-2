@@ -31,7 +31,29 @@ namespace Explorer.API.Controllers.Author
                 return BadRequest(result.Errors);
             }
 
-            return Ok(result.Value);
+            var blogs = result.Value;
+
+            var authorIds = blogs.Results.Select(b => b.AuthorId).Distinct().ToList();
+            var usersResult = _blogService.GetManyUsers(authorIds);
+
+            if (usersResult.IsFailed)
+            {
+                return BadRequest(usersResult.Errors);
+            }
+
+            var users = usersResult.Value;
+
+            var blogWithAuthorDtos = blogs.Results.Select(blog =>
+            {
+                var user = users.FirstOrDefault(u => u.Id == blog.AuthorId);
+                return new BlogWithAuthorDto
+                {
+                    Blog = blog,
+                    Author = user
+                };
+            }).ToList();
+
+            return Ok(blogWithAuthorDtos);
         }
 
         [HttpGet("{id}")]

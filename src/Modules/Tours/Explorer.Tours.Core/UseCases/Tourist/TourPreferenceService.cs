@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.Core.Domain;

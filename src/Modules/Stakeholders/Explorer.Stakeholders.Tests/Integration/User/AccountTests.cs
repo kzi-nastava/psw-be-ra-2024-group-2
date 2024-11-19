@@ -1,5 +1,6 @@
 ﻿using Explorer.API.Controllers;
 using Explorer.API.Controllers.Administrator;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
@@ -53,7 +54,7 @@ namespace Explorer.Stakeholders.Tests.Integration.User
                 UserId = -11,
                 Username = "autor1@gmail.com",
                 Email = "autor1@gmail.com",
-                Role = 1,
+                Role = UserRole.Author,
                 IsBlocked = true
             };
 
@@ -87,12 +88,69 @@ namespace Explorer.Stakeholders.Tests.Integration.User
                 UserId = -5,
                 Username = "autor1@gmail.com",
                 Email = "autor1@gmail.com",
-                Role = 1,
+                Role = UserRole.Author,
                 IsBlocked = true
             };
 
             // Act
             var result = ((ObjectResult)controller.Block(nonExistentEntity).Result)?.Value as AccountDto;
+
+            // Assert
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Successfully_unblock_account()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope, "-1");
+            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+            var updatedEntity = new AccountDto
+            {
+                UserId = -11,
+                Username = "autor1@gmail.com",
+                Email = "autor1@gmail.com",
+                Role = UserRole.Author,
+                IsBlocked = false
+            };
+
+            // Act
+            var result = ((ObjectResult)controller.Unblock(updatedEntity).Result)?.Value as AccountDto;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.Username.ShouldBe(updatedEntity.Username);
+            result.Email.ShouldBe(updatedEntity.Email);
+            result.Role.ShouldBe(updatedEntity.Role);
+            result.IsBlocked.ShouldBe(updatedEntity.IsBlocked);
+
+            // Assert - Database
+            var storedEntity = dbContext.Users.FirstOrDefault(i => i.Id == updatedEntity.UserId
+                && i.IsBlocked == updatedEntity.IsBlocked);
+            storedEntity.ShouldNotBeNull();
+            var oldEntity = dbContext.Users.FirstOrDefault(i => i.Id == updatedEntity.UserId
+                && i.IsBlocked != updatedEntity.IsBlocked);
+            oldEntity.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Unsuccessfully_unblock_account() //non existent user
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope, "-1");
+            var nonExistentEntity = new AccountDto
+            {
+                UserId = -5,
+                Username = "autor1@gmail.com",
+                Email = "autor1@gmail.com",
+                Role = UserRole.Author,
+                IsBlocked = false
+            };
+
+            // Act
+            var result = ((ObjectResult)controller.Unblock(nonExistentEntity).Result)?.Value as AccountDto;
 
             // Assert
             result.ShouldBeNull();

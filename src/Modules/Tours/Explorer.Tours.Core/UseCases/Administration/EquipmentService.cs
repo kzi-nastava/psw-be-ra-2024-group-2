@@ -1,6 +1,5 @@
 using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
@@ -18,18 +17,23 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
         : base(repository, mapper)
     {
         _equipmentRepository = repository;
-        _touristEquipmentRepository = touristEquipmentRepository;
         _mapper = mapper;
+        _touristEquipmentRepository = touristEquipmentRepository;
     }
 
+    //public Result<EquipmentDto> RemoveEquipmentFromTourist(long userId, long equipmentId)
+    //{
+    //    // TODO: Popraviti ovo
+    //    throw new NotImplementedException();
+    //}
 
-    public Result AddEquipmentTourist(long userId, long equipmentId)
+
+    public Result<EquipmentDto> AddEquipmentTourist(long userId, long equipmentId)
     {
+        var touristEquipmentPagedResult = _touristEquipmentRepository.GetPaged(1, int.MaxValue);
 
-        var userEquipmentPagedResult = _touristEquipmentRepository.GetPaged(1, int.MaxValue);
-
-        var exists = userEquipmentPagedResult.Results
-            .Any(ue => ue.UserId == userId && ue.EquipmentId == equipmentId);
+        var exists = touristEquipmentPagedResult.Results
+            .Any(te => te.EquipmentId == equipmentId && te.UserId == userId);
 
         if (exists)
         {
@@ -42,12 +46,12 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
         return Result.Ok();
     }
 
-    public Result RemoveEquipmentFromTourist(long userId, long equipmentId)
+    public Result<EquipmentDto> RemoveEquipmentFromTourist(long userId, long equipmentId)
     {
         var userEquipmentPagedResult = _touristEquipmentRepository.GetPaged(1, int.MaxValue);
 
         var userEquipment = userEquipmentPagedResult.Results
-            .FirstOrDefault(ue => ue.UserId == userId && ue.EquipmentId == equipmentId);
+            .FirstOrDefault(ue => ue.EquipmentId == equipmentId && ue.UserId == userId);
 
         if (userEquipment == null)
         {
@@ -57,6 +61,7 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
         _touristEquipmentRepository.Delete(userEquipment.Id);
         return Result.Ok();
     }
+
     public IList<EquipmentDto> GetEquipmentForTourist(long touristId)
     {
 
@@ -69,14 +74,10 @@ public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipment
 
         var equipmentList = _equipmentRepository.GetPaged(1, int.MaxValue)
             .Results
-            .Where(e => equipmentIds.Contains(e.Id))
+            .Where(e => equipmentIds.Contains((int)e.Id))
             .ToList();
 
         var equipmentDtoList = _mapper.Map<IList<EquipmentDto>>(equipmentList);
         return equipmentDtoList;
     }
-
-
-
-
 }

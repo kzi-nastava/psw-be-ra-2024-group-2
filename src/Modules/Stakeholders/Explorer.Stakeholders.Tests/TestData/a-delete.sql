@@ -2,4 +2,4 @@
 DELETE FROM stakeholders."Users";
 DELETE FROM stakeholders."Images";
 DELETE FROM stakeholders."RatingsApplication";
-DELETE FROM stakeholders."TouristEquipments";
+DELETE FROM stakeholders."FAQs";

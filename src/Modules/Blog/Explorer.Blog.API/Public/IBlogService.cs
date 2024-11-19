@@ -17,5 +17,7 @@ namespace Explorer.Blog.API.Public
         Result<BlogDto> Get(int id);
         Result<BlogDto> GetBlogWithRatings(int blogId);
         Result<BlogDto> UpdateRating(int blogId, string username, RatingType ratingType);
+        Result<UserDto> GetUser(int id);
+        Result<List<UserDto>> GetManyUsers(List<int> userIds);
     }
 }
