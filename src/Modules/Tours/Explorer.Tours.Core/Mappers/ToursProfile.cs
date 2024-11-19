@@ -97,5 +97,21 @@ public class ToursProfile : Profile
 
         CreateMap<TourPaymentDto, TourDto>().ReverseMap();
         CreateMap<TourDurationByTransportPaymentDto, TourDurationByTransportDto>().ReverseMap();
+
+        CreateMap<EventDto, Event>()
+                .ForMember(dest => dest.Image, opt => opt.Ignore())
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude))
+                .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString())).ReverseMap();
+
+
+        CreateMap<Image, EventImageDto>()
+         .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data))
+         .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
+         .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
     }
 }

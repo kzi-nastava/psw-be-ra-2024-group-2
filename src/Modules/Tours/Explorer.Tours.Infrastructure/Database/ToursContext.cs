@@ -19,9 +19,9 @@ public class ToursContext : DbContext
     public DbSet<Checkpoint> Checkpoints { get; set; }
     public DbSet<TourPreference> TourPreferences { get; set; }
     public DbSet<TourPreferenceTag> PreferenceTags { get; set; }
-
     public DbSet<TourExecution> TourExecutions { get; set; }
     public DbSet<TouristEquipment> TouristEquipments { get; set; }
+    public DbSet<Event> Events { get; set; }
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,6 +43,12 @@ public class ToursContext : DbContext
             .HasOne(p => p.Image)
             .WithOne()
             .HasForeignKey<TourReview>(s => s.ImageId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Event>()
+            .HasOne(p => p.Image)
+            .WithOne()
+            .HasForeignKey<Event>(s => s.ImageId)
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<TourExecution>()
