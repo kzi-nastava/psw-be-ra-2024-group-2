@@ -22,7 +22,7 @@ public class ToursContext : DbContext
 
     public DbSet<TourExecution> TourExecutions { get; set; }
     public DbSet<TouristEquipment> TouristEquipments { get; set; }
-    public DbSet<PersonalDairy> PersonalDairys { get; set; }
+    public DbSet<PersonalDairy> PersonalDairies { get; set; }
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -14,6 +14,8 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         public PersonalDairy Update(PersonalDairy aggregateRoot);
         public PagedResult<PersonalDairy> GetPaged(int page, int pageSize);
         public PersonalDairy GetByUserId(int userId);
+        IEnumerable<PersonalDairy> GetAllCompletedByUserId(long userId);
+
 
     }
 }

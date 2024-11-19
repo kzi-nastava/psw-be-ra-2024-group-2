@@ -27,12 +27,11 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public PersonalDairy Get(int id)
         {
-            return _dbContext.PersonalDairys.Where(d => d.Id == id)
-                .FirstOrDefault();
+            return _dbContext.PersonalDairies.Where(d => d.Id == id).FirstOrDefault();
         }
         public PersonalDairy Create(PersonalDairy execution)
         {
-            _dbContext.PersonalDairys.Add(execution);
+            _dbContext.PersonalDairies.Add(execution);
             _dbContext.SaveChanges();
             return execution;
         }
@@ -52,7 +51,12 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public PersonalDairy GetByUserId(int userId)
         {
-            return _dbContext.PersonalDairys.Where(t => t.UserId == userId ).FirstOrDefault();
+            return _dbContext.PersonalDairies.Where(t => t.UserId == userId ).FirstOrDefault();
         }
+        public IEnumerable<PersonalDairy> GetAllCompletedByUserId(long userId)
+        {
+            return _dbContext.PersonalDairies.Where(d => d.UserId == userId && d.Status == DairyStatus.Completed).ToList();
+        }
+
     }
 }
