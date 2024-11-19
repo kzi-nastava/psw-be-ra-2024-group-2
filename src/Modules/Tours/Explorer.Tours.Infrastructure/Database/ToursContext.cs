@@ -21,10 +21,6 @@ public class ToursContext : DbContext
     public DbSet<TourPreferenceTag> PreferenceTags { get; set; }
 
     public DbSet<TourExecution> TourExecutions { get; set; }
-
-    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-    public DbSet<OrderItem> OrderItems { get; set; }
-    public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
     public DbSet<TouristEquipment> TouristEquipments { get; set; }
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
@@ -70,11 +66,6 @@ public class ToursContext : DbContext
             .WithOne(t => t.TourIssueReport)
             .HasForeignKey(t => t.TourIssueReportId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<ShoppingCart>()
-        .HasMany(s => s.Items)
-        .WithOne(i => i.ShoppingCart)
-        .HasForeignKey(i => i.ShoppingCartId);
 
         modelBuilder.Entity<TouristEquipment>()
             .Property(ue => ue.UserId)
