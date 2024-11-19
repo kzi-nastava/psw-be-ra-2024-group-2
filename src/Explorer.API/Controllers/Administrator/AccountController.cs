@@ -34,5 +34,11 @@ namespace Explorer.API.Controllers.Administrator
             var updatedProfile = _accountService.Block(account.UserId);
             return CreateResponse(updatedProfile);
         }
+        [HttpPut("unblock")]
+        public ActionResult<AccountDto> Unblock([FromBody] AccountDto account)
+        {
+            var updatedProfile = _accountService.Unblock(account.UserId);
+            return CreateResponse(updatedProfile);
+        }
     }
 }

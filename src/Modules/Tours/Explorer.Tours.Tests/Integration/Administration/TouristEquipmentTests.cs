@@ -1,7 +1,6 @@
 ﻿using Explorer.API.Controllers.Tourist;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Tours.API.Public.Administration;
-using Explorer.Tours.API.Public.Tourist;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,12 +11,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Tours.Tests.Integration.Tour
+namespace Explorer.Tours.Tests.Integration.Administration
 {
     [Collection("Sequential")]
-    public class ShoppingCartTests : BaseToursIntegrationTest
+    public class TouristEquipmentTests : BaseToursIntegrationTest
     {
-        public ShoppingCartTests(ToursTestFactory factory) : base(factory) { }
+        public TouristEquipmentTests(ToursTestFactory factory) : base(factory) { }
 
         [Fact]
         public void Deletes()
@@ -28,19 +27,16 @@ namespace Explorer.Tours.Tests.Integration.Tour
             var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
             // Act
-            var result = (OkResult)controller.RemoveItemFromCart(-1);
+            var result = (ObjectResult)controller.RemoveEquipmentFromTourist(-1);
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.StatusCode.ShouldBe(200);
 
             // Assert - Database
-            var storedCourse = dbContext.OrderItems.FirstOrDefault(i => i.TourId == -1);
+            var storedCourse = dbContext.TouristEquipments.FirstOrDefault(i => i.EquipmentId == -1);
             storedCourse.ShouldBeNull();
-
         }
-
-
 
         [Fact]
         public void Adds()
@@ -51,14 +47,14 @@ namespace Explorer.Tours.Tests.Integration.Tour
             var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
             // Act
-            var result = (OkResult)controller.AddItemToCart(-2);
+            var result = (ObjectResult)controller.AddEquipmentToTourist(-2);
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.StatusCode.ShouldBe(200);
 
             // Assert - Database
-            var storedCourse = dbContext.OrderItems.FirstOrDefault(i => i.TourId == -2);
+            var storedCourse = dbContext.TouristEquipments.FirstOrDefault(i => i.EquipmentId == -2);
             storedCourse.ShouldNotBeNull();
         }
 
@@ -69,18 +65,19 @@ namespace Explorer.Tours.Tests.Integration.Tour
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
 
-            
-            // Act & Assert
-            var exception = Should.Throw<NullReferenceException>(() => controller.RemoveItemFromCart(-1000));
-            exception.Message.ShouldContain("Object reference not set to an instance of an object.");
+            // Act
+            var result = (ObjectResult)controller.RemoveEquipmentFromTourist(-1000);
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(500);
         }
 
-
-        private static ShoppingCartController CreateController(IServiceScope scope)
+        private static TouristEquipmentController CreateController(IServiceScope scope)
         {
-            return new ShoppingCartController(scope.ServiceProvider.GetRequiredService<IShoppingCartService>())
+            return new TouristEquipmentController(scope.ServiceProvider.GetRequiredService<IEquipmentService>())
             {
-                ControllerContext = BuildContext("-21")
+                ControllerContext = BuildContext("-1")
             };
         }
     }

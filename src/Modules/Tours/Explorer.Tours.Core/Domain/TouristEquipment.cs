@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain
 {
-    public class TourPurchaseToken : Entity
+    public class TouristEquipment : Entity
     {
-        public long UserId { get; private set; }
-        public long TourId { get; private set; }
-
-        public TourPurchaseToken(long userId, long tourId)
+        public long UserId;
+        public long EquipmentId;
+        public TouristEquipment() { }
+        public TouristEquipment(long userId, long equipmentId)
         {
             UserId = userId;
-            TourId = tourId;
+            EquipmentId = equipmentId;
         }
     }
-
 }

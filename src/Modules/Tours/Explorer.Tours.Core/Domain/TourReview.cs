@@ -1,13 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Stakeholders.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain
 {

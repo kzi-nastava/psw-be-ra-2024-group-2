@@ -3,13 +3,14 @@ using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Internal.Administration;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 namespace Explorer.Tours.Core.UseCases.Administration
 {
-    public class TourService : CrudService<TourDto, Tour>, ITourService
+    public class TourService : CrudService<TourDto, Tour>, ITourService, ITourService_Internal
     {
         private readonly ICrudRepository<Tour> _tourRepository;
         private readonly ICrudRepository<Equipment> _equipmentRepository;

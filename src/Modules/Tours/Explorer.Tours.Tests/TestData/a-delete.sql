@@ -1,4 +1,5 @@
 ﻿DELETE FROM tours."ClubInvites";
+DELETE FROM tours."TouristEquipments";
 DELETE FROM tours."EquipmentTour";
 DELETE FROM tours."TourReview";
 DELETE FROM tours."Objects";
@@ -12,5 +13,3 @@ DELETE FROM tours."Checkpoints";
 DELETE FROM tours."Images";
 DELETE FROM tours."PreferenceTags";
 DELETE FROM tours."TourPreferences";
-DELETE FROM tours."OrderItems";
-DELETE FROM tours."ShoppingCarts";
