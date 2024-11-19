@@ -66,3 +66,11 @@ public enum TourIssueNotificationStatus
     Read,
     Unread
 }
+public enum EventCategory
+{
+    Concert,
+    MusicFestival,
+    FilmFestival,
+    FootballMatch,
+    BasketballMatch
+}
