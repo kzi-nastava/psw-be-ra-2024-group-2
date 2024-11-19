@@ -100,7 +100,7 @@ public class ModulesTests : BaseArchitecturalTests
         new object[]
         {
             "Payment"
-        }
+        },
         new object[]
         {
             "Encounters"
