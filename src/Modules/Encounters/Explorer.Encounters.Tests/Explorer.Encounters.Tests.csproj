@@ -23,13 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BuildingBlocks\Explorer.BuildingBlocks.Tests\Explorer.BuildingBlocks.Tests.csproj" />
-    <ProjectReference Include="..\Explorer.API\Explorer.API.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Explorer.BuildingBlocks.Tests\Explorer.BuildingBlocks.Tests.csproj" />
+    <ProjectReference Include="..\..\..\Explorer.API\Explorer.API.csproj" />
+    <ProjectReference Include="..\Explorer.Encounters.Infrastructure\Explorer.Encounters.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Integration\" />
-    <Folder Include="TestData\" />
+    <Folder Include="Integration\Encounters\" />
   </ItemGroup>
 
 </Project>
