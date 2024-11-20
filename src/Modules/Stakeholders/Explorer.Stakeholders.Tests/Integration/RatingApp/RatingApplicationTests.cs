@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Shouldly;
 using Explorer.API.Controllers.Tourist;
 using Explorer.API.Controllers.Author;
+using Explorer.Stakeholders.Core.UseCases;
 
 namespace Explorer.Stakeholders.Tests.Integration.RatingApp
 {
@@ -27,23 +28,29 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
 
         private static RatingApplicationAdministratorController CreateControllerReview(IServiceScope scope, string userId)
         {
-            return new RatingApplicationAdministratorController(scope.ServiceProvider.GetRequiredService<IRatingApplicationService>())
+            var ratingApplicationService = scope.ServiceProvider.GetRequiredService<IRatingApplicationService>();
+            var personService = scope.ServiceProvider.GetRequiredService<IPersonService>();
+
+            return new RatingApplicationAdministratorController(ratingApplicationService, personService)
             {
                 ControllerContext = new ControllerContext
                 {
                     HttpContext = new DefaultHttpContext
                     {
-                        User = new ClaimsPrincipal(new ClaimsIdentity(new[] 
+                        User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                         {
-                            new Claim("userId", userId)
-                        }))
+                    new Claim("userId", userId)
+                }))
                     }
                 }
             };
         }
         private static RatingApplicationTouristController CreateControllerTourist(IServiceScope scope, string userId)
         {
-            return new RatingApplicationTouristController(scope.ServiceProvider.GetRequiredService<IRatingApplicationService>())
+            var ratingApplicationService = scope.ServiceProvider.GetRequiredService<IRatingApplicationService>();
+            var personService = scope.ServiceProvider.GetRequiredService<IPersonService>();
+
+            return new RatingApplicationTouristController(ratingApplicationService, personService)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -51,15 +58,19 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
                     {
                         User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                         {
-                            new Claim("userId", userId)
-                        }))
+                    new Claim("userId", userId)
+                }))
                     }
                 }
             };
         }
+
         private static RatingApplicationAuthorController CreateControllerAuthor(IServiceScope scope, string userId)
         {
-            return new RatingApplicationAuthorController(scope.ServiceProvider.GetRequiredService<IRatingApplicationService>())
+            var ratingApplicationService = scope.ServiceProvider.GetRequiredService<IRatingApplicationService>();
+            var personService = scope.ServiceProvider.GetRequiredService<IPersonService>();
+
+            return new RatingApplicationAuthorController(ratingApplicationService, personService)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -67,8 +78,8 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
                     {
                         User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                         {
-                            new Claim("userId", userId)
-                        }))
+                    new Claim("userId", userId)
+                }))
                     }
                 }
             };

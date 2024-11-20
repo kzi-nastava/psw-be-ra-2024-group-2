@@ -22,9 +22,6 @@ namespace Explorer.Stakeholders.Core.UseCases
             _ratingApplicationRepository = repository;
 
         }
-
-
-
         public Result<RatingApplicationDto> Get(long userId)
         {
             var rating = _ratingApplicationRepository.Get(userId);
@@ -34,7 +31,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
             return MapToDto(rating);
         }
-
+        
 
 
         public Result<RatingApplicationDto> Update(long userId, RatingApplicationDto newRating)

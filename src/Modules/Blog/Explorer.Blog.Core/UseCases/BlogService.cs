@@ -28,7 +28,7 @@ namespace Explorer.Blog.Core.UseCases
             _transactionRepository = transactionRepository;
         }
 
-        public Result<UserDto> GetUser(int id)
+        public Result<UserDto> GetUser(long id)
         {
             var accountImageResult = _profileService.GetAccountImage(id);
 
@@ -49,7 +49,7 @@ namespace Explorer.Blog.Core.UseCases
             return Result.Ok(userDto);
         }
 
-        public Result<List<UserDto>> GetManyUsers(List<int> ids)
+        public Result<List<UserDto>> GetManyUsers(List<long> ids)
         {
             List<UserDto> users = new List<UserDto>();
             List<string> errors = new List<string>();
@@ -80,7 +80,6 @@ namespace Explorer.Blog.Core.UseCases
 
             return Result.Ok(users);
         }
-
         public Result<BlogDto> Create(BlogDto blogDto, int userId)
         {
             try

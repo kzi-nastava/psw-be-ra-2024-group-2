@@ -55,7 +55,7 @@ public class PersonService : CrudService<PersonDto, Person>, IPersonService, IPr
         return Result.Ok(accountImage);
     }
 
-    public Result<List<AccountImageDto>> GetManyAccountImage(List<int> userIds)
+    public Result<List<AccountImageDto>> GetManyAccountImage(List<long> userIds)
     {
         List<AccountImageDto> accountImages = new List<AccountImageDto>();
 

@@ -14,10 +14,8 @@ namespace Explorer.Blog.API.Dtos
         public string Title {  get; set; }
         public string Description { get; set; }
         public Status Status { get; set; }
-        public int AuthorId { get; set; }
-        public User user { get; set; }
+        public long AuthorId { get; set; }
         public DateTime Date { get; set;  }
-
         public List<Image?> Images { get; set; } = new List<Image>();
         public List<RatingDto?> Ratings { get; set; } = new List<RatingDto>();
         public List<CommentDTO> Comments { get; set; } = new List<CommentDTO>();

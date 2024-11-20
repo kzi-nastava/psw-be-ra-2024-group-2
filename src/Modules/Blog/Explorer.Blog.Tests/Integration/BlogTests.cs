@@ -107,7 +107,7 @@ namespace Explorer.Blog.Tests.Integration
         {
             // Arrange
             using var scope = Factory.Services.CreateScope();
-            var controller = CreateController(scope);
+            var controller = CreateController(scope, "2");
 
             var invalidBlog = new BlogDto
             {

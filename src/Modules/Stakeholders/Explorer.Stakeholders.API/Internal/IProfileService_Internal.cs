@@ -10,5 +10,5 @@ public interface IProfileService_Internal
     public Result<PersonDto> GetPerson(long userId);
     public Result<AccountDto> GetAccount(long userId);
     public Result<AccountImageDto> GetAccountImage(long userId);
-    public Result<List<AccountImageDto>> GetManyAccountImage(List<int> userIds);
+    public Result<List<AccountImageDto>> GetManyAccountImage(List<long> userIds);
 }
