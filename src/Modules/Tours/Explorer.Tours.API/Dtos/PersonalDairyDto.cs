@@ -20,7 +20,7 @@ namespace Explorer.Tours.API.Dtos
         public DairyStatus Status { get; set; }
 
 
-        // public List<ChapterDto> chapters { get; set; } = new List<ChapterDto> { };
+        public List<ChapterDto> chapters { get; set; } = new List<ChapterDto> { };
 
     }
 }

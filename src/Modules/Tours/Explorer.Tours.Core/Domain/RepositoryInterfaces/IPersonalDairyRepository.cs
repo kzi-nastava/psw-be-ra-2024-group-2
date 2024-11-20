@@ -15,7 +15,6 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         public PagedResult<PersonalDairy> GetPaged(int page, int pageSize);
         public PersonalDairy GetByUserId(int userId);
         IEnumerable<PersonalDairy> GetAllCompletedByUserId(long userId);
-
-
+        PersonalDairy GetById(long personalDairyId);
     }
 }

@@ -18,5 +18,11 @@ namespace Explorer.Tours.API.Public.Tourist
         Result<PersonalDairyDto> Update(long id, PersonalDairyDto dairy);
         Result Delete(long id);
         Result<IEnumerable<PersonalDairyDto>> GetAllForUser(long userId);
+        Result<IEnumerable<ChapterDto>> GetAllChapters(long dairyId);
+        Result AddChapterToDairy(long personalDairyId, ChapterDto chapterDto);
+        Result RemoveChapterFromDairy(long personalDairyId, long chapterId);
+        Result<ChapterDto> UpdateChapterInDairy(long personalDairyId, long chapterId, ChapterDto chapterDto);
+
+
     }
 }

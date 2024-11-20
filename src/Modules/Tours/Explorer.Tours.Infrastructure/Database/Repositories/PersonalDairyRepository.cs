@@ -57,6 +57,10 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         {
             return _dbContext.PersonalDairies.Where(d => d.UserId == userId && d.Status == DairyStatus.Completed).ToList();
         }
+        public PersonalDairy GetById(long id)
+        {
+            return _dbContext.PersonalDairies.Include(d => d.Chapters).FirstOrDefault(d => d.Id == id);
+        }
 
     }
 }

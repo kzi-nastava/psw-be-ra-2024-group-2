@@ -107,6 +107,83 @@ namespace Explorer.Tours.Core.UseCases.Tourist
                 return Result.Fail<IEnumerable<PersonalDairyDto>>($"An error occurred while retrieving personal dairies: {ex.Message}");
             }
         }
+        public Result<IEnumerable<ChapterDto>> GetAllChapters(long dairyId)
+        {
+            var chapters = _personalDairyRepository.GetById(dairyId)?.Chapters;
+
+            if (chapters == null)
+                return Result.Fail<IEnumerable<ChapterDto>>($"Diary with ID {dairyId} not found.");
+
+            var chapterDtos = chapters.Select(chapter => _mapper.Map<ChapterDto>(chapter));
+
+            return Result.Ok(chapterDtos);
+        }
+
+        public Result AddChapterToDairy(long personalDairyId, ChapterDto chapterDto)
+        {
+            try
+            {
+                var dairy = _personalDairyRepository.GetById(personalDairyId);
+                if (dairy == null)
+                    return Result.Fail($"Personal dairy with ID {personalDairyId} not found.");
+
+                dairy.AddChapter(chapterDto.Title, chapterDto.Text);
+                _personalDairyCrudRepository.Update(dairy);
+
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail($"An error occurred while adding chapter: {ex.Message}");
+            }
+        }
+
+
+
+        public Result RemoveChapterFromDairy(long personalDairyId, long chapterId)
+        {
+            try
+            {
+                var dairy = _personalDairyRepository.GetById(personalDairyId);
+                if (dairy == null)
+                    return Result.Fail($"Personal dairy with ID {personalDairyId} not found.");
+
+                dairy.RemoveChapter(chapterId);
+                _personalDairyCrudRepository.Update(dairy);
+
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail($"An error occurred while removing chapter: {ex.Message}");
+            }
+        }
+
+        public Result<ChapterDto> UpdateChapterInDairy(long personalDairyId, long chapterId, ChapterDto chapterDto)
+        {
+            try
+            {
+                var dairy = _personalDairyRepository.GetById(personalDairyId);
+                if (dairy == null)
+                    return Result.Fail<ChapterDto>($"Personal dairy with ID {personalDairyId} not found.");
+
+                var existingChapter = dairy.Chapters.FirstOrDefault(c => c.ChapterId == chapterId);
+                if (existingChapter == null)
+                    return Result.Fail<ChapterDto>($"Chapter with ID {chapterId} not found in dairy ID {personalDairyId}.");
+
+                existingChapter.UpdateText(chapterDto.Text);
+
+                _personalDairyCrudRepository.Update(dairy);
+
+                var updatedChapterDto = _mapper.Map<ChapterDto>(existingChapter);
+                return Result.Ok(updatedChapterDto);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<ChapterDto>($"An error occurred while updating chapter: {ex.Message}");
+            }
+        }
+
 
     }
 }
