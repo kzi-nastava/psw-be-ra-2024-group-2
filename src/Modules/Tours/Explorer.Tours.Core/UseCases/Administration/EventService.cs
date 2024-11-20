@@ -7,6 +7,7 @@ using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
 using FluentResults;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,6 +70,34 @@ namespace Explorer.Tours.Core.UseCases.Administration
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
 
+        }
+
+        public PagedResult<EventDto> GetAllEventsWithinRange(int v, double longitude, double latitude)
+        {
+            var allEvents = _eventRepository.GetPaged(1, int.MaxValue);
+
+
+            var events = allEvents.Results
+                               .Select(obj => MapToDto(obj))
+                               .ToList();
+           
+
+            var eventsInRange = events.Where(e => e.CheckRadius(longitude, latitude)).ToList();
+
+
+            return new PagedResult<EventDto>(eventsInRange, eventsInRange.Count());
+        }
+
+        public Result SubscribeToEvent(EventDto eventDto, int userId)
+        {
+
+            Event e = _eventRepository.Get(eventDto.Id);
+
+
+            e.EventAcceptances.Add(new EventAcception(userId, DateTime.UtcNow));
+            _eventRepository.Update(e);
+            return Result.Ok();
+            
         }
     }
 }

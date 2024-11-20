@@ -19,6 +19,8 @@ namespace Explorer.Tours.Core.Domain
         public double Latitude { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public List<EventAcception> EventAcceptances { get; set; } = new List<EventAcception>();
+
 
         public Event() { }
         public Event(string name, string description, EventCategory category, double longitude, double latitude, DateTime start, DateTime end)
