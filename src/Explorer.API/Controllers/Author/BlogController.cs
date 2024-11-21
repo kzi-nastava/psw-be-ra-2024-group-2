@@ -21,6 +21,7 @@ namespace Explorer.API.Controllers.Author
             _blogService = blogService;
         }
 
+        [HttpGet]
         public ActionResult<PagedResult<BlogWithAuthorDto>> GetAll()
         {
             var result = _blogService.GetPaged(0, 0);

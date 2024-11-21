@@ -68,8 +68,5 @@ namespace Explorer.API.Controllers.Administrator.Administration
             var result = _ratingApplicationService.Create(applicationRatingDto.UserId, applicationRatingDto);
             return CreateResponse(result);
         }
-
-
-
     }
 }

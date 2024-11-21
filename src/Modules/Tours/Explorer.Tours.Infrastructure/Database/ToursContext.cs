@@ -22,6 +22,9 @@ public class ToursContext : DbContext
     public DbSet<TourExecution> TourExecutions { get; set; }
     public DbSet<TouristEquipment> TouristEquipments { get; set; }
     public DbSet<Event> Events { get; set; }
+    public DbSet<PersonalDairy> PersonalDairies { get; set; }
+    public DbSet<Chapter> Chapters { get; set; }
+
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -84,6 +87,12 @@ public class ToursContext : DbContext
         modelBuilder.Entity<TouristEquipment>()
             .Property(ue => ue.EquipmentId)
             .IsRequired();
+
+        modelBuilder.Entity<PersonalDairy>()
+            .HasMany(d => d.Chapters)
+            .WithOne()
+            .HasForeignKey("PersonalDairyId")
+            .OnDelete(DeleteBehavior.Cascade);
 
     }
 }

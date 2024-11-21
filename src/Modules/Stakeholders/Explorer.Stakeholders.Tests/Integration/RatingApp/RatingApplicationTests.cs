@@ -94,7 +94,7 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
             var controller = CreateControllerReview(scope, "-1");
 
             // Act
-            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<RatingApplicationDto>;
+            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<RatingWithUserDto>;
 
             // Assert
             result.ShouldNotBeNull();
@@ -108,14 +108,14 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-            var controller = CreateControllerTourist(scope, "-2");
+            var controller = CreateControllerTourist(scope, "-1");
 
             var newRating = new RatingApplicationDto
             {
                 Grade = 3,
                 Comment = "Tourists comment.",
                 RatingTime = DateTime.UtcNow,
-                UserId = -2
+                UserId = -11
             };
 
             // Act
@@ -125,13 +125,13 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
             result.ShouldNotBeNull();
             result.Grade.ShouldBe(newRating.Grade);
             result.Comment.ShouldBe(newRating.Comment);
-            result.UserId.ShouldBe(-2);
+            result.UserId.ShouldBe(-11);
 
             // Assert - Database
             var storedRating = dbContext.RatingsApplication.FirstOrDefault(r => r.UserId == result.UserId);
             storedRating.ShouldNotBeNull();
             storedRating.Grade.ShouldBe(newRating.Grade);
-            storedRating.UserId.ShouldBe(-2);
+            storedRating.UserId.ShouldBe(-11);
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
                 Grade = 5,
                 Comment = "Neki kom3",
                 RatingTime = DateTime.UtcNow,
-                UserId = 3
+                UserId = -3
             };
 
             // Proveravamo da li već postoji ocena za korisnika sa UserId = 3
@@ -195,7 +195,7 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
                 Grade = 1,
                 Comment = "Trying to create a new rating for the same user.",
                 RatingTime = DateTime.UtcNow,
-                UserId = 3
+                UserId = -3
             };
 
             // Act
