@@ -19,9 +19,12 @@ public class ToursContext : DbContext
     public DbSet<Checkpoint> Checkpoints { get; set; }
     public DbSet<TourPreference> TourPreferences { get; set; }
     public DbSet<TourPreferenceTag> PreferenceTags { get; set; }
-
     public DbSet<TourExecution> TourExecutions { get; set; }
     public DbSet<TouristEquipment> TouristEquipments { get; set; }
+    public DbSet<Event> Events { get; set; }
+    public DbSet<PersonalDairy> PersonalDairies { get; set; }
+    public DbSet<Chapter> Chapters { get; set; }
+
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,10 +48,20 @@ public class ToursContext : DbContext
             .HasForeignKey<TourReview>(s => s.ImageId)
             .OnDelete(DeleteBehavior.SetNull);
 
+        modelBuilder.Entity<Event>()
+            .HasOne(p => p.Image)
+            .WithOne()
+            .HasForeignKey<Event>(s => s.ImageId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<TourExecution>()
             .Property(te => te.TourExecutionCheckpoints)
             .HasColumnType("jsonb");
-
+       
+        modelBuilder.Entity<Event>()
+            .Property(e => e.EventAcceptances)
+            .HasColumnType("jsonb");
+        
         modelBuilder.Entity<Tour>()
             .Property(t => t.TourDurationByTransports)
             .HasColumnType("jsonb");
@@ -74,6 +87,12 @@ public class ToursContext : DbContext
         modelBuilder.Entity<TouristEquipment>()
             .Property(ue => ue.EquipmentId)
             .IsRequired();
+
+        modelBuilder.Entity<PersonalDairy>()
+            .HasMany(d => d.Chapters)
+            .WithOne()
+            .HasForeignKey("PersonalDairyId")
+            .OnDelete(DeleteBehavior.Cascade);
 
     }
 }
