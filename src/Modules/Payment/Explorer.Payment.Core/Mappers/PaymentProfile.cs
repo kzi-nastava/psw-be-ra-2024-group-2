@@ -13,5 +13,6 @@ public class PaymentProfile : Profile
 
         CreateMap<TourWithPrice, BundleItemDto>().ReverseMap();
         CreateMap<BundleDto, TourBundle>().ReverseMap();
+        CreateMap<CouponDto, Coupon>().ReverseMap();
     }
 }
