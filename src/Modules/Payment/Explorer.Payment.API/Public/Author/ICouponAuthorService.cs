@@ -12,4 +12,5 @@ namespace Explorer.Payment.API.Public.Author;
 public interface ICouponAuthorService
 {
     public Result<CouponDto> CreateCoupon(long authorId, long tourId, int discountPercentage, bool allToursDisount);
+    public PagedResult<CouponDto> GetAuthorCoupons(long authorId);
 }

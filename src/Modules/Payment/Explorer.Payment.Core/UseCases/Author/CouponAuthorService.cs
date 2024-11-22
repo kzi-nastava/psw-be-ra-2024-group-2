@@ -38,4 +38,12 @@ public class CouponAuthorService : CrudService<CouponDto, Coupon> , ICouponAutho
 
         return MapToDto(coupon);
     }
+
+    public PagedResult<CouponDto> GetAuthorCoupons(long authorId)
+    {
+        //get coupios by authorId
+        var coupons = _couponRepository.GetPaged(1, int.MaxValue).Results.Where(c => c.AuthorId == authorId).Select(c => MapToDto(c)).ToList();
+        //return coupons
+        return new PagedResult<CouponDto>(coupons, coupons.Count());
+    }
 }

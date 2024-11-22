@@ -1,6 +1,8 @@
-﻿using Explorer.Payment.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payment.API.Dtos;
 using Explorer.Payment.API.Public.Author;
 using Explorer.Stakeholders.Infrastructure.Authentication;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,5 +24,12 @@ public class CouponAuthorController :BaseApiController
     {
         var newCoupon = _couponService.CreateCoupon(User.UserId(), coupon.TourId, coupon.DiscountPercentage, coupon.AllToursDiscount);
         return CreateResponse(newCoupon);
+    }
+
+    [HttpGet]
+    public ActionResult<PagedResult<CouponDto>> GetAuthorCoupons()
+    {
+        var result = _couponService.GetAuthorCoupons(User.UserId());
+        return CreateResponse(result.ToResult());
     }
 }
