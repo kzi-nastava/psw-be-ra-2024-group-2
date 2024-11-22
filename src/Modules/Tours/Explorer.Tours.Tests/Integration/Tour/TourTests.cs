@@ -132,7 +132,7 @@ public class TourTests : BaseToursIntegrationTest
     //    result.Name.ShouldBe(newEntity.Name);
     //    result.Description.ShouldBe(newEntity.Description);
     //    result.Difficulty.ShouldBe(newEntity.Difficulty);
-    //    result.Status.ShouldBe(TourStatus.Draft);
+    //    result.Status.ShouldBe(Status.Draft);
     //    result.Price.ShouldBe(0);
 
     //    var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Name == newEntity.Name);

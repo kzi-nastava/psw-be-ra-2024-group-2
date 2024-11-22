@@ -8,6 +8,7 @@ public class PaymentContext : DbContext
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
+    public DbSet<TourBundle> TourBundles { get; set; }
     public PaymentContext(DbContextOptions<PaymentContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -15,8 +16,12 @@ public class PaymentContext : DbContext
         modelBuilder.HasDefaultSchema("payment");
 
         modelBuilder.Entity<ShoppingCart>()
-        .HasMany(s => s.Items)
-        .WithOne(i => i.ShoppingCart)
-        .HasForeignKey(i => i.ShoppingCartId);
+            .HasMany(s => s.Items)
+            .WithOne(i => i.ShoppingCart)
+            .HasForeignKey(i => i.ShoppingCartId);
+
+        modelBuilder.Entity<TourBundle>()
+            .Property(te => te.Tours)
+            .HasColumnType("jsonb");
     }
 }
