@@ -7,6 +7,7 @@ using FluentResults;
 using System.Collections.Generic;
 using System.Linq;
 using Explorer.Blog.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.API.Internal;
 
 namespace Explorer.Blog.Core.UseCases
 {
@@ -14,12 +15,14 @@ namespace Explorer.Blog.Core.UseCases
     {
         private readonly ICrudRepository<Comment> repository;
         private readonly ICrudRepository<Explorer.Blog.Core.Domain.Blog> blogRepository;
+        private readonly IProfileService_Internal _profileService;
         private readonly IMapper mapper;
 
-        public CommentService(ICrudRepository<Comment> repository, ICrudRepository<Explorer.Blog.Core.Domain.Blog> blogRepository, IMapper mapper)
+        public CommentService(ICrudRepository<Comment> repository, ICrudRepository<Explorer.Blog.Core.Domain.Blog> blogRepository,IProfileService_Internal profileService, IMapper mapper)
         {
             this.repository = repository;
             this.blogRepository = blogRepository;
+            _profileService = profileService;
             this.mapper = mapper;
         }
 
@@ -47,6 +50,38 @@ namespace Explorer.Blog.Core.UseCases
             blogRepository.Update(blog);
 
             return Result.Ok(mapper.Map<CommentDTO>(comment));
+        }
+
+        public Result<List<UserDto>> GetManyUsers(List<long> ids)
+        {
+            List<UserDto> users = new List<UserDto>();
+            List<string> errors = new List<string>();
+
+            var accountImageResult = _profileService.GetManyAccountImage(ids);
+
+            if (accountImageResult.IsFailed)
+            {
+                errors.AddRange(accountImageResult.Errors.Select(e => e.Message));
+                return Result.Fail<List<UserDto>>(errors);
+            }
+
+            var accountImageDtos = accountImageResult.Value;
+
+            foreach (var accountImageDto in accountImageDtos)
+            {
+                var userDto = new UserDto
+                {
+                    Id = accountImageDto.Id,
+                    Name = accountImageDto.Name,
+                    LastName = accountImageDto.LastName,
+                    Username = accountImageDto.Username,
+                    ProfileImage = accountImageDto.ProfileImage
+                };
+
+                users.Add(userDto);
+            }
+
+            return Result.Ok(users);
         }
 
         public Result<CommentDTO> Update(long id, long blogId, long userId, CommentDTO commentDto)
