@@ -26,21 +26,21 @@ public sealed class BundleController : BaseApiController
     }
 
     [HttpPost("add/tour")]
-    public ActionResult<BundleDto> AddTourToBundle(int bundleId, [FromBody] BundleItemDto tour)
+    public ActionResult<BundleDto> AddTourToBundle(long bundleId, [FromBody] BundleItemDto tour)
     {
         var result = _bundleService.AddTourToBundle(User.UserId(), bundleId, tour);
         return CreateResponse(result);
     }
 
     [HttpDelete]
-    public ActionResult<BundleDto> DeleteBundle(int id)
+    public ActionResult<BundleDto> DeleteBundle(long id)
     {
         var result = _bundleService.DeleteBundle(User.UserId(), id);
         return CreateResponse(result);
     }
 
     [HttpPost("publish")]
-    public ActionResult<BundleDto> PublishBundle(int id)
+    public ActionResult<BundleDto> PublishBundle(long id)
     {
         var result = _bundleService.PublishBundle(User.UserId(), id);
         return CreateResponse(result);

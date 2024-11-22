@@ -136,14 +136,15 @@ namespace Explorer.Blog.Tests.Integration
         private static BlogController CreateController(IServiceScope scope, string userId)
         {
             return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>())
-            {    
+            {
                 ControllerContext = new ControllerContext
                 {
                     HttpContext = new DefaultHttpContext
                     {
                         User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                         {
-                            new Claim("userId", userId)
+                            new Claim("id", userId),
+                            new Claim("personId", userId)
                         }))
                     }
                 }

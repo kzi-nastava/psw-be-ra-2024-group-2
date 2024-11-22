@@ -52,6 +52,11 @@ public sealed class BundleService : CrudService<BundleDto, TourBundle>, IBundleS
                 return Result.Fail(FailureCode.InvalidArgument).WithError("The status of the tour does not match the status in the bundle.");
             }
 
+            if(bundle.Tours.Any(t => t.TourId == tourDto.TourId))
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError("This tour is already in the bundle.");
+            }
+
             TourWithPrice tourWithPrice = new(tourDto.TourId, tourDto.Price, tourDto.TourStatus);
             bundle.Tours.Add(tourWithPrice);
         }
@@ -151,6 +156,11 @@ public sealed class BundleService : CrudService<BundleDto, TourBundle>, IBundleS
             if (tourDto.Value.Status != tour.TourStatus)
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError("The status of the tour does not match the status in the bundle.");
+            }
+
+            if(bundle.Tours.Any(t => t.TourId == tour.TourId))
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError("This tour is already in the bundle.");
             }
 
             TourWithPrice tourWithPrice = new(tour.TourId, tour.Price, tour.TourStatus);

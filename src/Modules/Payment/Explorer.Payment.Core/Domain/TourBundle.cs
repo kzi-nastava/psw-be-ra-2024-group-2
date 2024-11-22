@@ -5,11 +5,11 @@ namespace Explorer.Payment.Core.Domain;
 
 public sealed class TourBundle : Entity
 {
-    public long AuthorId { get; private set; }
-    public string Name { get; private set; } = string.Empty;
-    public double Price { get; private set; }
-    public BundleStatus Status { get; private set; }
-    public List<TourWithPrice> Tours { get; private set; } = new();
+    public long AuthorId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public double Price { get; set; }
+    public BundleStatus Status { get; set; }
+    public List<TourWithPrice> Tours { get; set; } = new();
 
     public TourBundle() { }
     public TourBundle(long authorId, string name, double price, BundleStatus status)
