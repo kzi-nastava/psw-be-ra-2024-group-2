@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers.Tourist;
 
 
-[Authorize(Policy = "touristPolicy")]
-[Route("api/tourist/bundles")]
+[Authorize(Policy = "allLoggedPolicy")]
+[Route("api/bundles")]
 public class BundleController : BaseApiController
 {
     private IBundleService _bundleService;

@@ -11,4 +11,6 @@ public interface IBundleService
     Result<BundleDto> PublishBundle(long authorId, long bundleId);
     Result<PagedResult<BundleDto>> GetAll();
     Result<BundleDto> AddTourToBundle(long authorId, long bundleId, BundleItemDto tour);
+    Result<PagedResult<FullBundleDto>> GetMyBundles(int authorId);
+    Result<BundleDto> UpdateBundle(long authorId, long bundleId, BundleDto bundle);
 }

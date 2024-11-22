@@ -25,6 +25,14 @@ public sealed class BundleController : BaseApiController
         return CreateResponse(newBundle);
     }
 
+    [HttpGet]
+    public ActionResult<PagedResult<FullBundleDto>> GetMyBundles()
+    {
+        var userId = User.UserId();
+        var result = _bundleService.GetMyBundles(userId);
+        return CreateResponse(result);
+    }
+
     [HttpPost("add/tour")]
     public ActionResult<BundleDto> AddTourToBundle(long bundleId, [FromBody] BundleItemDto tour)
     {
@@ -50,6 +58,14 @@ public sealed class BundleController : BaseApiController
     public ActionResult<PagedResult<BundleDto>> GetAll()
     {
         var result = _bundleService.GetAll();
+        return CreateResponse(result);
+    }
+
+    // Path param
+    [HttpPut]
+    public ActionResult<BundleDto> UpdateBundle(long id, [FromBody] BundleDto bundle)
+    {
+        var result = _bundleService.UpdateBundle(User.UserId(), id, bundle);
         return CreateResponse(result);
     }
 }

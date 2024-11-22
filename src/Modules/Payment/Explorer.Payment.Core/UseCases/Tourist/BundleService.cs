@@ -175,4 +175,58 @@ public sealed class BundleService : CrudService<BundleDto, TourBundle>, IBundleS
             return Result.Fail(FailureCode.NotFound).WithError("Bundle not found.");
         }
     }
+
+    public Result<PagedResult<FullBundleDto>> GetMyBundles(int authorId)
+    {
+        var fullBundleDtos = new List<FullBundleDto>();
+
+        var bundles = _tourBundleRepository.GetPaged(1, int.MaxValue).Results.Where(b => b.AuthorId == authorId).ToList();
+
+        foreach (var bundle in bundles)
+        {
+            var id = bundle.Id;
+            fullBundleDtos.Add(new FullBundleDto
+            {
+                Id = id,
+                Name = bundle.Name,
+                Price = bundle.Price,
+                Status = bundle.Status,
+                Tours = bundle.Tours.Select(t => new BundleItemDto
+                {
+                    TourId = t.TourId,
+                    Price = t.Price,
+                    TourStatus = t.TourStatus
+                }).ToList()
+            });
+        }
+
+        var pagedResult = new PagedResult<FullBundleDto>(fullBundleDtos, fullBundleDtos.Count);
+        return pagedResult;
+    }
+
+    public Result<BundleDto> UpdateBundle(long authorId, long bundleId, BundleDto bundle)
+    {
+        try
+        {
+            TourBundle tourBundle = _tourBundleRepository.Get(bundleId);
+
+            if (tourBundle.AuthorId != authorId)
+            {
+                return Result.Fail(FailureCode.Forbidden).WithError("You are not authorized to update this bundle.");
+            }
+
+            tourBundle.Name = bundle.Name;
+            tourBundle.Price = bundle.Price;
+            tourBundle.Status = bundle.Status ?? BundleStatus.Draft;
+            tourBundle.Tours = bundle.Tours.Select(t => new TourWithPrice(t.TourId, t.Price, t.TourStatus)).ToList();
+
+            _tourBundleRepository.Update(tourBundle);
+
+            return MapToDto(tourBundle);
+        }
+        catch (KeyNotFoundException)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError("Bundle not found.");
+        }
+    }
 }

@@ -2,14 +2,12 @@
 
 namespace Explorer.Payment.API.Dtos;
 
-public sealed class BundleDto
+public sealed class FullBundleDto
 {
+    public long Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public double Price { get; set; }
     public List<BundleItemDto> Tours { get; set; } = new();
-
-    // These are used for returning the BundleDto object.
-    // They are not filled.
     public long? AuthorId { get; set; }
     public BundleStatus? Status { get; set; }
 }
