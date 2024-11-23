@@ -75,7 +75,7 @@ public class PersonalDairyController : BaseApiController
     }
 
     [HttpPost("{dairyId}/chapters")]
-    public IActionResult AddChapter(long dairyId, ChapterDto chapterDto)
+    public ActionResult AddChapter(long dairyId, ChapterDto chapterDto)
     {
         var result = _personalDairyService.AddChapterToDairy(dairyId, chapterDto);
 
@@ -84,7 +84,7 @@ public class PersonalDairyController : BaseApiController
             return BadRequest(result.Errors);
         }
 
-        return Ok("Chapter added successfully.");
+        return CreateResponse(result);
     }
 
     [HttpPut("{diaryId}/chapters/{chapterId}")]
