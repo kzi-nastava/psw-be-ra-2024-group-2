@@ -9,10 +9,14 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.API.Public
 {
-    public interface IFAQService
+    public interface IFAQService 
     {
         Result<PagedResult<FAQDto>> GetPaged(int page, int pageSize);
 
         Result<FAQDto> Create(long userId, FAQDto faq);
+
+        Result<FAQDto> Update(int faqId, long userId, FAQDto faq);
+
+        Result<FAQDto> Get(int faqId);
     }
 }
