@@ -29,11 +29,12 @@ public class RegistrationTests : BaseStakeholdersIntegrationTest
             Email = "turistaA@gmail.com",
             Password = "turistaA",
             Name = "Žika",
-            Surname = "Žikić"
+            Surname = "Žikić",
+            UserRole = UserRole.Tourist
         };
 
         // Act
-        var authenticationResponse = ((ObjectResult)controller.RegisterTourist(account).Result).Value as AuthenticationTokensDto;
+        var authenticationResponse = ((ObjectResult)controller.RegisterUser(account).Result).Value as AuthenticationTokensDto;
 
         // Assert - Response
         authenticationResponse.ShouldNotBeNull();
@@ -47,7 +48,46 @@ public class RegistrationTests : BaseStakeholdersIntegrationTest
         dbContext.ChangeTracker.Clear();
         var storedAccount = dbContext.Users.FirstOrDefault(u => u.Username == account.Email);
         storedAccount.ShouldNotBeNull();
-        storedAccount.Role.ShouldBe(UserRole.Tourist);
+        storedAccount.Role.ShouldBe(account.UserRole);
+        var storedPerson = dbContext.People.FirstOrDefault(i => i.Email == account.Email);
+        storedPerson.ShouldNotBeNull();
+        storedPerson.UserId.ShouldBe(storedAccount.Id);
+        storedPerson.Name.ShouldBe(account.Name);
+    }
+
+    [Fact]
+    public void Successfully_registers_author()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+        var controller = CreateController(scope);
+        var account = new AccountRegistrationDto
+        {
+            Username = "autorR@gmail.com",
+            Email = "autorR@gmail.com",
+            Password = "autorR",
+            Name = "Mika",
+            Surname = "Mikic",
+            UserRole = UserRole.Author
+        };
+
+        // Act
+        var authenticationResponse = ((ObjectResult)controller.RegisterUser(account).Result).Value as AuthenticationTokensDto;
+
+        // Assert - Response
+        authenticationResponse.ShouldNotBeNull();
+        authenticationResponse.Id.ShouldNotBe(0);
+        var decodedAccessToken = new JwtSecurityTokenHandler().ReadJwtToken(authenticationResponse.AccessToken);
+        var personId = decodedAccessToken.Claims.FirstOrDefault(c => c.Type == "personId");
+        personId.ShouldNotBeNull();
+        personId.Value.ShouldNotBe("0");
+
+        // Assert - Database
+        dbContext.ChangeTracker.Clear();
+        var storedAccount = dbContext.Users.FirstOrDefault(u => u.Username == account.Email);
+        storedAccount.ShouldNotBeNull();
+        storedAccount.Role.ShouldBe(account.UserRole);
         var storedPerson = dbContext.People.FirstOrDefault(i => i.Email == account.Email);
         storedPerson.ShouldNotBeNull();
         storedPerson.UserId.ShouldBe(storedAccount.Id);
