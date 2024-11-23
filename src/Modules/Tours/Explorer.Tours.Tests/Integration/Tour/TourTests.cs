@@ -105,8 +105,8 @@ public class TourTests : BaseToursIntegrationTest
 
 
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(4);  
-        result.TotalCount.ShouldBe(4);
+        result.Results.Count.ShouldBe(6);  
+        result.TotalCount.ShouldBe(6);
     }
 
     //[Fact]

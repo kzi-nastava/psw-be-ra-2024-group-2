@@ -44,7 +44,7 @@ public class ShoppingCartTests : BasePaymentIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<PaymentContext>();
 
         // Act
-        var result = (ObjectResult)controller.AddItemToCart(-2).Result;
+        var result = (ObjectResult)controller.AddItemToCart(-6).Result;
 
         // Assert - Response
         result.ShouldNotBeNull();

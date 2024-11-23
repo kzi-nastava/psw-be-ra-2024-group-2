@@ -60,14 +60,14 @@ public class TourBundlesTests : BasePaymentIntegrationTest
         {
             Tours = new List<int>
             {
-                1, 2
+                -6, -7
             }
         };
         dbContext.TourBundles.Add(bundle);
         dbContext.SaveChanges();
 
         // Act
-        var result = ((OkObjectResult)controller.PublishBundle(bundle.Id).Result).Value as BundleDto;
+        var result = (ObjectResult)controller.PublishBundle(bundle.Id).Result;
 
         // Assert - Response
         result.ShouldNotBeNull();
