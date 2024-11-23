@@ -176,6 +176,7 @@ public sealed class BundleService : BaseService<BundleDto, TourBundle>, IBundleS
                         TourId = tour.Id,
                         Price = tour.Price,
                         TourStatus = tour.Status,
+                        TourName = tour.Name
                     };
                 }).ToList()
             });
