@@ -62,6 +62,16 @@ public class ShoppingCartService : IShoppingCartService
         }
         else
         {
+            if (cart.Items.Any(i => i is TourOrderItem t && t.TourId == tourId))
+                return Result.Fail(FailureCode.Conflict).WithError("Tour already in cart.");
+
+            // Check if any of the tours in the bundle are already in the cart
+            foreach (var item in cart.Items)
+            {
+                if (item is BundleOrderItem bundleOrderItem && bundleOrderItem.TourIds.Contains((int)tourId))
+                    return Result.Fail(FailureCode.Conflict).WithError("Tour already in cart.");
+            }
+
             cart.AddTourItem(orderItem);
             _shoppingCartRepository.Update(cart);
         }
@@ -114,6 +124,23 @@ public class ShoppingCartService : IShoppingCartService
         }
         else
         {
+            if (cart.Items.Any(i => i is BundleOrderItem b && b.BundleId == bundleId))
+                return Result.Fail(FailureCode.Conflict).WithError("Bundle already in cart.");
+
+            // Check if any of the tours in the bundle are already in the cart
+            foreach (var tourId in tourIds)
+            {
+                if (cart.Items.Any(i => i is TourOrderItem t && t.TourId == tourId))
+                    return Result.Fail(FailureCode.Conflict).WithError("Tour already in cart.");
+            }
+
+            // Check if any of the tours exists in another bundle in the cart
+            foreach (var item in cart.Items)
+            {
+                if (item is BundleOrderItem bundleOrderItem && bundleOrderItem.TourIds.Intersect(tourIds).Any())
+                    return Result.Fail(FailureCode.Conflict).WithError("Tour already in cart.");
+            }
+
             cart.AddBundleItem(orderItem);
             _shoppingCartRepository.Update(cart);
         }
@@ -162,18 +189,6 @@ public class ShoppingCartService : IShoppingCartService
             return Result.Fail(FailureCode.NotFound).WithError("Bundle item not found.");
 
         _orderItemRepository.Delete(order.Id);
-
-        var allToursToRemove = order!.TourIds;
-
-        foreach (var tourId in allToursToRemove)
-        {
-            var tourOrderItem = _orderItemRepository.GetAllTours().FirstOrDefault(o => o.TourId == tourId && o.ShoppingCartId == cart.Id);
-
-            if (tourOrderItem is null)
-                return Result.Fail(FailureCode.NotFound).WithError("Bundle item not found.");
-
-            _orderItemRepository.Delete(tourOrderItem.Id);
-        }
 
         return new BundleOrderItemDto
         {
@@ -246,6 +261,7 @@ public class ShoppingCartService : IShoppingCartService
         orderItems.AddRange(tourItems.Select(item => { 
             return new TourOrderItemBasicDto
             {
+                TourId = item.TourId,
                 Price = item.Price,
                 TimeOfPurchase = item.TimeOfPurchase,
                 Token = item.Token,
@@ -258,6 +274,7 @@ public class ShoppingCartService : IShoppingCartService
         {
             return new TourOrderItemBasicDto
             {
+                BundleId = item.BundleId,
                 Price = item.Price,
                 TimeOfPurchase = item.TimeOfPurchase,
                 Token = item.Token,
