@@ -22,5 +22,12 @@ namespace Explorer.API.Controllers.Administrator.Administration
             var results = _fAQService.Create(userId, faq);
             return CreateResponse(results);
         }
+
+        [HttpPut("editFAQ/{faqId}/{userId}")]
+        public ActionResult<FAQDto> Update(int faqId, long userId, [FromBody] FAQDto faq)
+        {
+            var results = _fAQService.Update(faqId, userId, faq);
+            return CreateResponse(results);
+        }
     }
 }

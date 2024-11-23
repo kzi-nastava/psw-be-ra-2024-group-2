@@ -102,6 +102,51 @@ namespace Explorer.Stakeholders.Tests.Integration.FAQ
             result.StatusCode.ShouldBe(409);
         }
 
+        public void Admin_can_update_faq()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope, "-1");
+            var newFaq = new FAQDto
+            {
+                Question = "What is the cancellation policy?",
+                Answer = "You can cancel up to 24 hours before the tour for a full refund.",
+                CreatedDate = DateTime.UtcNow,
+                LastUpdatedDate = DateTime.UtcNow
+            };
+
+            // Act
+            var result = ((ObjectResult)controller.Update(-10, -1, newFaq).Result)?.Value as FAQDto;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Question.ShouldBe(newFaq.Question);
+            result.Answer.ShouldBe(newFaq.Answer);
+            result.CreatedDate.ShouldNotBe(default);
+        }
+
+        [Fact]
+        public void Non_admin_cannot_update_faq()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope, "-2");
+            var newFaq = new FAQDto
+            {
+                Question = "What are the payment options?",
+                Answer = "We accept credit cards and PayPal.",
+                CreatedDate = DateTime.UtcNow,
+                LastUpdatedDate = DateTime.UtcNow
+            };
+
+            // Act
+            var result = ((ObjectResult)controller.Update(-10, -2, newFaq).Result);
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(409);
+        }
+
         [Fact]
         public void Anyone_can_view_all_faqs()
         {
