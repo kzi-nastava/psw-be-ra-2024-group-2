@@ -5,7 +5,9 @@ $BaseDir = $PSScriptRoot
 $Projects = @(
     (Join-Path -Path $BaseDir -ChildPath "src\Modules\Stakeholders\Explorer.Stakeholders.Infrastructure"),
     (Join-Path -Path $BaseDir -ChildPath "src\Modules\Tours\Explorer.Tours.Infrastructure"),
-    (Join-Path -Path $BaseDir -ChildPath "src\Modules\Blog\Explorer.Blog.Infrastructure")
+    (Join-Path -Path $BaseDir -ChildPath "src\Modules\Blog\Explorer.Blog.Infrastructure"),
+    (Join-Path -Path $BaseDir -ChildPath "src\Modules\Encounters\Explorer.Encounters.Infrastructure"),
+    (Join-Path -Path $BaseDir -ChildPath "src\Modules\Payment\Explorer.Payment.Infrastructure")
 )
 
 # Define the relative path to the startup project
@@ -25,7 +27,9 @@ foreach ($project in $Projects) {
 $Contexts = @(
     @{ Name = "StakeholdersContext"; Project = (Join-Path -Path $BaseDir -ChildPath "src\Modules\Stakeholders\Explorer.Stakeholders.Infrastructure") },
     @{ Name = "ToursContext"; Project = (Join-Path -Path $BaseDir -ChildPath "src\Modules\Tours\Explorer.Tours.Infrastructure") },
-    @{ Name = "BlogContext"; Project = (Join-Path -Path $BaseDir -ChildPath "src\Modules\Blog\Explorer.Blog.Infrastructure") }
+    @{ Name = "BlogContext"; Project = (Join-Path -Path $BaseDir -ChildPath "src\Modules\Blog\Explorer.Blog.Infrastructure") },
+    @{ Name = "EncountersContext"; Project = (Join-Path -Path $BaseDir -ChildPath "src\Modules\Encounters\Explorer.Encounters.Infrastructure") },
+    @{ Name = "PaymentContext"; Project = (Join-Path -Path $BaseDir -ChildPath "src\Modules\Payment\Explorer.Payment.Infrastructure") }
 )
 
 foreach ($context in $Contexts) {

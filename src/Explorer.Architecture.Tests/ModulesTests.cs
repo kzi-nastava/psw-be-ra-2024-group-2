@@ -101,5 +101,9 @@ public class ModulesTests : BaseArchitecturalTests
         {
             "Payment"
         },
+        new object[]
+        {
+            "Encounters"
+        }
     };
 }

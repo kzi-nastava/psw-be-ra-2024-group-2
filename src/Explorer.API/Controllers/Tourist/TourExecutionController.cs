@@ -19,14 +19,18 @@ public class TourExecutionController : BaseApiController
     private readonly ITourReviewService _tourReviewService;
     private readonly ITourService _tourService;
     private readonly ICheckpointService _checkpointService;
+    private readonly IEventService _eventService;
 
-    public TourExecutionController(ITourReviewService tourReviewService, ITourService tourService, ITourExecutionService tourExecutionService, ICheckpointService checkpointService)
+
+    public TourExecutionController(ITourReviewService tourReviewService, ITourService tourService, ITourExecutionService tourExecutionService, ICheckpointService checkpointService, IEventService eventService)
     {
         _tourExecutionService = tourExecutionService;
         _tourReviewService = tourReviewService;
         _tourService = tourService;
         _checkpointService = checkpointService;
+        _eventService = eventService;
     }
+
 
     [HttpPost("{tourId}")]
     public ActionResult<TourExecutionDto> StartTour(int tourId)
@@ -48,6 +52,22 @@ public class TourExecutionController : BaseApiController
 
         return CreateResponse(result);
     }
+    [HttpPost("eventsWithinRange")]
+    public ActionResult<PagedResult<EventDto>> CheckEventPoistion([FromBody] TouristPosition tourPosition)
+    {
+        var eventResult = _eventService.GetAllEventsWithinRange(User.UserId(),tourPosition.Longitude, tourPosition.Latitude);
+
+        return eventResult;
+    }
+
+    [HttpPost("acceptEvent")]
+    public ActionResult<EventDto> AcceptEvent([FromBody] EventDto eventDto)
+    {
+        var result = _eventService.SubscribeToEvent(eventDto, User.UserId());
+        return CreateResponse(result);
+    }
+
+
     [HttpGet("load")]
     public ActionResult<TourExecutionDto> LoadTourExecution()
     {

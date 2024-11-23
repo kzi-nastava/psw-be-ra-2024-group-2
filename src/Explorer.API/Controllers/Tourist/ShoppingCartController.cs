@@ -1,10 +1,9 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.Payment.API.Public.Tourist;
 using Explorer.Stakeholders.Infrastructure.Authentication;
 using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public.Tourist;
-using Explorer.Tours.API.Public.Tourist.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Explorer.Payment.API.Dtos;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -22,7 +21,7 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPost("add/{tourId:long}")]
         public ActionResult AddItemToCart(long tourId)
         {
-            var orderItemDto = new OrderItemDto { TourId = tourId }; 
+            var orderItemDto = new OrderItemDto { TourId = tourId };
             var result = _shoppingCartService.AddItemToCart(User.PersonId(), orderItemDto);
             return CreateResponse(result);
         }
@@ -30,7 +29,7 @@ namespace Explorer.API.Controllers.Tourist
         [HttpDelete("remove/{tourId:long}")]
         public ActionResult RemoveItemFromCart(long tourId)
         {
-            var orderItemDto = new OrderItemDto { TourId = tourId }; 
+            var orderItemDto = new OrderItemDto { TourId = tourId };
             var result = _shoppingCartService.RemoveItemFromCart(User.PersonId(), orderItemDto);
             return CreateResponse(result);
         }
@@ -58,7 +57,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("purchasedTours")]
-        public ActionResult<IEnumerable<TourDto>> GetPurchasedTours()
+        public ActionResult<IEnumerable<TourPaymentDto>> GetPurchasedTours()
         {
             var userId = User.PersonId();
             var result = _shoppingCartService.GetPurchasedTours(userId);

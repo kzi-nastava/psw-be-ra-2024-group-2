@@ -13,5 +13,3 @@ DELETE FROM tours."Checkpoints";
 DELETE FROM tours."Images";
 DELETE FROM tours."PreferenceTags";
 DELETE FROM tours."TourPreferences";
-DELETE FROM tours."OrderItems";
-DELETE FROM tours."ShoppingCarts";

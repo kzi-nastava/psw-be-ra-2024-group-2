@@ -40,6 +40,40 @@ public class PersonService : CrudService<PersonDto, Person>, IPersonService, IPr
         }
     }
 
+    public Result<AccountImageDto> GetAccountImage(long userId)
+    {
+        var account = _personRepository.Get(userId);
+
+        AccountImageDto accountImage = new AccountImageDto();
+
+
+        accountImage.Id = account.UserId;
+        accountImage.Name = account.Name;
+        accountImage.LastName = account.Surname;
+        accountImage.Username = account.User.Username;
+        accountImage.ProfileImage = account.Image;
+        return Result.Ok(accountImage);
+    }
+
+    public Result<List<AccountImageDto>> GetManyAccountImage(List<long> userIds)
+    {
+        List<AccountImageDto> accountImages = new List<AccountImageDto>();
+
+        foreach (var id in userIds)
+        {
+            var accountResult = GetAccountImage(id);
+
+            if (accountResult.IsSuccess)
+            {
+                accountImages.Add(accountResult.Value);
+            }
+            else
+            {
+                Console.WriteLine($"Failed to get account image for userId: {id}. Error: {string.Join(", ", accountResult.Errors)}");
+            }
+        }
+        return Result.Ok(accountImages);
+    }
     public Result<PersonDto> GetPerson(long userId)
     {
         try

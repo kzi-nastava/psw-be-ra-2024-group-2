@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Shouldly;
 using Explorer.API.Controllers.Tourist;
 using Explorer.API.Controllers.Author;
+using Explorer.Stakeholders.Core.UseCases;
 
 namespace Explorer.Stakeholders.Tests.Integration.RatingApp
 {
@@ -27,23 +28,29 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
 
         private static RatingApplicationAdministratorController CreateControllerReview(IServiceScope scope, string userId)
         {
-            return new RatingApplicationAdministratorController(scope.ServiceProvider.GetRequiredService<IRatingApplicationService>())
+            var ratingApplicationService = scope.ServiceProvider.GetRequiredService<IRatingApplicationService>();
+            var personService = scope.ServiceProvider.GetRequiredService<IPersonService>();
+
+            return new RatingApplicationAdministratorController(ratingApplicationService, personService)
             {
                 ControllerContext = new ControllerContext
                 {
                     HttpContext = new DefaultHttpContext
                     {
-                        User = new ClaimsPrincipal(new ClaimsIdentity(new[] 
+                        User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                         {
-                            new Claim("userId", userId)
-                        }))
+                    new Claim("userId", userId)
+                }))
                     }
                 }
             };
         }
         private static RatingApplicationTouristController CreateControllerTourist(IServiceScope scope, string userId)
         {
-            return new RatingApplicationTouristController(scope.ServiceProvider.GetRequiredService<IRatingApplicationService>())
+            var ratingApplicationService = scope.ServiceProvider.GetRequiredService<IRatingApplicationService>();
+            var personService = scope.ServiceProvider.GetRequiredService<IPersonService>();
+
+            return new RatingApplicationTouristController(ratingApplicationService, personService)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -51,15 +58,19 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
                     {
                         User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                         {
-                            new Claim("userId", userId)
-                        }))
+                    new Claim("userId", userId)
+                }))
                     }
                 }
             };
         }
+
         private static RatingApplicationAuthorController CreateControllerAuthor(IServiceScope scope, string userId)
         {
-            return new RatingApplicationAuthorController(scope.ServiceProvider.GetRequiredService<IRatingApplicationService>())
+            var ratingApplicationService = scope.ServiceProvider.GetRequiredService<IRatingApplicationService>();
+            var personService = scope.ServiceProvider.GetRequiredService<IPersonService>();
+
+            return new RatingApplicationAuthorController(ratingApplicationService, personService)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -67,8 +78,8 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
                     {
                         User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                         {
-                            new Claim("userId", userId)
-                        }))
+                    new Claim("userId", userId)
+                }))
                     }
                 }
             };
@@ -83,7 +94,7 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
             var controller = CreateControllerReview(scope, "-1");
 
             // Act
-            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<RatingApplicationDto>;
+            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<RatingWithUserDto>;
 
             // Assert
             result.ShouldNotBeNull();
@@ -97,14 +108,14 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-            var controller = CreateControllerTourist(scope, "-2");
+            var controller = CreateControllerTourist(scope, "-1");
 
             var newRating = new RatingApplicationDto
             {
                 Grade = 3,
                 Comment = "Tourists comment.",
                 RatingTime = DateTime.UtcNow,
-                UserId = -2
+                UserId = -11
             };
 
             // Act
@@ -114,13 +125,13 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
             result.ShouldNotBeNull();
             result.Grade.ShouldBe(newRating.Grade);
             result.Comment.ShouldBe(newRating.Comment);
-            result.UserId.ShouldBe(-2);
+            result.UserId.ShouldBe(-11);
 
             // Assert - Database
             var storedRating = dbContext.RatingsApplication.FirstOrDefault(r => r.UserId == result.UserId);
             storedRating.ShouldNotBeNull();
             storedRating.Grade.ShouldBe(newRating.Grade);
-            storedRating.UserId.ShouldBe(-2);
+            storedRating.UserId.ShouldBe(-11);
         }
 
         [Fact]
@@ -172,7 +183,7 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
                 Grade = 5,
                 Comment = "Neki kom3",
                 RatingTime = DateTime.UtcNow,
-                UserId = 3
+                UserId = -3
             };
 
             // Proveravamo da li već postoji ocena za korisnika sa UserId = 3
@@ -184,7 +195,7 @@ namespace Explorer.Stakeholders.Tests.Integration.RatingApp
                 Grade = 1,
                 Comment = "Trying to create a new rating for the same user.",
                 RatingTime = DateTime.UtcNow,
-                UserId = 3
+                UserId = -3
             };
 
             // Act

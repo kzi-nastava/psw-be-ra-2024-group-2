@@ -13,5 +13,6 @@ namespace Explorer.Blog.API.Public
         Result<CommentDTO> GetById(long commentId);
         Result<IEnumerable<CommentDTO>> GetByBlogId(long blogId);
         Result<PagedResult<CommentDTO>> GetPaged(int page, int pageSize);
+        Result<List<UserDto>> GetManyUsers(List<long> ids);
     }
 }

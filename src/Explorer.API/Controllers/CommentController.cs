@@ -26,11 +26,37 @@ namespace Explorer.API.Controllers
         }*/
 
         [HttpGet]
-        public ActionResult<IEnumerable<CommentDTO>> GetByBlogId(long blogId)
+        public ActionResult<IEnumerable<CommentWithAuthorDto>> GetByBlogId(long blogId)
         {
             var result = _commentService.GetByBlogId(blogId);
-            return CreateResponse(result);
+
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            var authorIds = result.Value.Select(c => c.UserId).Distinct().ToList();
+
+            var accountWithImage = _commentService.GetManyUsers(authorIds);
+
+            if (accountWithImage.IsFailed)
+            {
+                return BadRequest(accountWithImage.Errors);
+            }
+
+            var commentWithAuthors = result.Value.Select(comment =>
+            {
+                var author = accountWithImage.Value.FirstOrDefault(u => u.Id == comment.UserId);
+                return new CommentWithAuthorDto
+                {
+                    Comment = comment,
+                    Author = author
+                };
+            }).ToList();
+
+            return Ok(commentWithAuthors);
         }
+
 
         /* [HttpGet]
          public ActionResult<PagedResult<CommentDTO>> GetAll([FromQuery] int page, [FromQuery] int pageSize)

@@ -2,10 +2,8 @@
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain;
-using System.Xml.Serialization;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
-using Explorer.Tours.API.Public.Tourist.DTOs;
+using Explorer.Payment.API.Dtos;
 
 namespace Explorer.Tours.Core.Mappers;
 
@@ -97,12 +95,29 @@ public class ToursProfile : Profile
             .ForMember(dest => dest.CheckpointId, opt => opt.MapFrom(src => src.CheckpointId))
             .ForMember(dest => dest.ArrivalAt, opt => opt.MapFrom(src => src.ArrivalAt));
 
-        CreateMap<OrderItemDto, OrderItem>().ReverseMap();
-      
+        CreateMap<TourPaymentDto, TourDto>().ReverseMap();
+        CreateMap<TourDurationByTransportPaymentDto, TourDurationByTransportDto>().ReverseMap();
+
+        CreateMap<EventDto, Event>()
+                .ForMember(dest => dest.Image, opt => opt.Ignore())
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude))
+                .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString())).ReverseMap();
 
 
+        CreateMap<Image, EventImageDto>()
+         .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data))
+         .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
+         .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
+
+        CreateMap<PersonalDairy, PersonalDairyDto>()
+        .ForMember(dest => dest.chapters, opt => opt.MapFrom(src => src.Chapters))
+        .ReverseMap();
+        CreateMap<Chapter, ChapterDto>().ReverseMap();
 
     }
-
-
 }
