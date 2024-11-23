@@ -69,7 +69,7 @@ namespace Explorer.Tours.Core.Domain
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("Name cannot be null or empty.");
+                throw new ArgumentException("TourName cannot be null or empty.");
             }
 
             if (description == null)

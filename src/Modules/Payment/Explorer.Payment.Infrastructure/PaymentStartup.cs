@@ -33,8 +33,8 @@ public static class PaymentStartup
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
-        services.AddScoped(typeof(ICrudRepository<OrderItem>), typeof(CrudDatabaseRepository<OrderItem, PaymentContext>));
-        services.AddScoped(typeof(ICrudRepository<TourPurchaseToken>), typeof(CrudDatabaseRepository<TourPurchaseToken, PaymentContext>));
+
+        services.AddScoped(typeof(IOrderItemRepository), typeof(OrderItemRepository));
         services.AddScoped(typeof(ICrudRepository<TourPurchaseToken>), typeof(CrudDatabaseRepository<TourPurchaseToken, PaymentContext>));
         services.AddScoped(typeof(ICrudRepository<TourBundle>), typeof(CrudDatabaseRepository<TourBundle, PaymentContext>));
 

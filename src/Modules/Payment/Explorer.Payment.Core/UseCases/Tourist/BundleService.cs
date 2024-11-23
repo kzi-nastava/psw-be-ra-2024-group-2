@@ -5,18 +5,19 @@ using Explorer.Payment.API.Dtos;
 using Explorer.Payment.API.Public.Tourist;
 using Explorer.Payment.Core.Domain;
 using Explorer.Stakeholders.API.Internal;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Internal.Administration;
 using FluentResults;
 
 namespace Explorer.Payment.Core.UseCases.Tourist;
 
-public sealed class BundleService : CrudService<BundleDto, TourBundle>, IBundleService
+public sealed class BundleService : BaseService<BundleDto, TourBundle>, IBundleService
 {
     private readonly ICrudRepository<TourBundle> _tourBundleRepository;
     private readonly IProfileService_Internal _profileService;
     private readonly ITourService_Internal _tourService;
 
-    public BundleService(ICrudRepository<TourBundle> tourBundleRepository, IMapper mapper, IProfileService_Internal profileService, ITourService_Internal tourService) : base(tourBundleRepository, mapper)
+    public BundleService(ICrudRepository<TourBundle> tourBundleRepository, IMapper mapper, IProfileService_Internal profileService, ITourService_Internal tourService) : base(mapper)
     {
         _tourBundleRepository = tourBundleRepository;
         _profileService = profileService;
@@ -28,37 +29,21 @@ public sealed class BundleService : CrudService<BundleDto, TourBundle>, IBundleS
     {
         TourBundle bundle = new(authorId, bundleDto.Name, bundleDto.Price, BundleStatus.Draft);
 
-        foreach (var tourDto in bundleDto.Tours)
+        List<TourDto> tours = bundleDto.Tours.Select(t => _tourService.GetById(t.TourId).Value).ToList();
+
+        foreach (var tour in tours)
         {
-            var tour = _tourService.GetById(tourDto.TourId);
-
-            if (tour.IsFailed)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError("One or more tours could not be found.");
-            }
-
-            if (tour.Value.UserId != authorId)
+            if (tour.UserId != authorId)
             {
                 return Result.Fail(FailureCode.Forbidden).WithError("You are not authorized to create a bundle with tours that do not belong to you.");
             }
 
-            if (tour.Value.Price != tourDto.Price)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError("The price of the tour does not match the price in the bundle.");
-            }
-
-            if (tour.Value.Status != tourDto.TourStatus)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError("The status of the tour does not match the status in the bundle.");
-            }
-
-            if(bundle.Tours.Any(t => t.TourId == tourDto.TourId))
+            if (bundle.Tours.Any(t => t == tour.Id))
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError("This tour is already in the bundle.");
             }
 
-            TourWithPrice tourWithPrice = new(tourDto.TourId, tourDto.Price, tourDto.TourStatus);
-            bundle.Tours.Add(tourWithPrice);
+            bundle.Tours.Add(tour.Id);
         }
 
         bundle = _tourBundleRepository.Create(bundle);
@@ -111,7 +96,14 @@ public sealed class BundleService : CrudService<BundleDto, TourBundle>, IBundleS
                 return Result.Fail(FailureCode.InvalidArgument).WithError("This bundle is already published.");
             }
 
+            // If two or more tours are published, the bundle can be published.
+            if (bundle.Tours.Count(t => _tourService.GetById(t).Value.Status == TourStatus.Published) < 2)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError("At least two tours need to be published in order to publish the bundle.");
+            }
+
             bundle.PublishBundle();
+
             _tourBundleRepository.Update(bundle);
 
             return MapToDto(bundle);
@@ -125,55 +117,38 @@ public sealed class BundleService : CrudService<BundleDto, TourBundle>, IBundleS
             return Result.Fail(FailureCode.Internal).WithError("At least two tours need to be published in order to publish the bundle.");
         }
     }
-    public Result<BundleDto> AddTourToBundle(long authorId, long bundleId, BundleItemDto tour)
+
+    public Result<PagedResult<FullBundleDto>> GetAll()
     {
-        try
+        var fullBundleDtos = new List<FullBundleDto>();
+
+        var bundles = _tourBundleRepository.GetPaged(1, int.MaxValue).Results.ToList();
+
+        foreach (var bundle in bundles)
         {
-            TourBundle bundle = _tourBundleRepository.Get(bundleId);
+            var id = bundle.Id;
 
-            if (bundle.AuthorId != authorId)
+            fullBundleDtos.Add(new FullBundleDto
             {
-                return Result.Fail(FailureCode.Forbidden).WithError("You are not authorized to add tours to this bundle.");
-            }
-
-            var tourDto = _tourService.GetById(tour.TourId);
-
-            if (tourDto.IsFailed)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError("Tour not found.");
-            }
-
-            if (tourDto.Value.UserId != authorId)
-            {
-                return Result.Fail(FailureCode.Forbidden).WithError("You are not authorized to add tours that do not belong to you.");
-            }
-
-            if (tourDto.Value.Price != tour.Price)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError("The price of the tour does not match the price in the bundle.");
-            }
-
-            if (tourDto.Value.Status != tour.TourStatus)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError("The status of the tour does not match the status in the bundle.");
-            }
-
-            if(bundle.Tours.Any(t => t.TourId == tour.TourId))
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError("This tour is already in the bundle.");
-            }
-
-            TourWithPrice tourWithPrice = new(tour.TourId, tour.Price, tour.TourStatus);
-            bundle.Tours.Add(tourWithPrice);
-
-            _tourBundleRepository.Update(bundle);
-
-            return MapToDto(bundle);
+                Id = id,
+                Name = bundle.Name,
+                Price = bundle.Price,
+                Status = bundle.Status,
+                Tours = bundle.Tours.Select(t =>
+                {
+                    var tour = _tourService.GetById(t).Value;
+                    return new BundleItemDto
+                    {
+                        TourId = tour.Id,
+                        Price = tour.Price,
+                        TourStatus = tour.Status,
+                    };
+                }).ToList()
+            });
         }
-        catch (KeyNotFoundException)
-        {
-            return Result.Fail(FailureCode.NotFound).WithError("Bundle not found.");
-        }
+
+        var pagedResult = new PagedResult<FullBundleDto>(fullBundleDtos, fullBundleDtos.Count);
+        return pagedResult;
     }
 
     public Result<PagedResult<FullBundleDto>> GetMyBundles(int authorId)
@@ -185,17 +160,22 @@ public sealed class BundleService : CrudService<BundleDto, TourBundle>, IBundleS
         foreach (var bundle in bundles)
         {
             var id = bundle.Id;
+
             fullBundleDtos.Add(new FullBundleDto
             {
                 Id = id,
                 Name = bundle.Name,
                 Price = bundle.Price,
                 Status = bundle.Status,
-                Tours = bundle.Tours.Select(t => new BundleItemDto
+                Tours = bundle.Tours.Select(t =>
                 {
-                    TourId = t.TourId,
-                    Price = t.Price,
-                    TourStatus = t.TourStatus
+                    var tour = _tourService.GetById(t).Value;
+                    return new BundleItemDto
+                    {
+                        TourId = tour.Id,
+                        Price = tour.Price,
+                        TourStatus = tour.Status,
+                    };
                 }).ToList()
             });
         }
@@ -218,7 +198,7 @@ public sealed class BundleService : CrudService<BundleDto, TourBundle>, IBundleS
             tourBundle.Name = bundle.Name;
             tourBundle.Price = bundle.Price;
             tourBundle.Status = bundle.Status ?? BundleStatus.Draft;
-            tourBundle.Tours = bundle.Tours.Select(t => new TourWithPrice(t.TourId, t.Price, t.TourStatus)).ToList();
+            tourBundle.Tours = bundle.Tours.Select(t => (int)t.TourId).ToList();
 
             _tourBundleRepository.Update(tourBundle);
 
