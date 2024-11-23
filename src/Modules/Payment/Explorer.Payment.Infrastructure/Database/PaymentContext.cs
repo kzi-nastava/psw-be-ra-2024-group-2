@@ -9,6 +9,7 @@ public class PaymentContext : DbContext
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
     public DbSet<TourBundle> TourBundles { get; set; }
+    public DbSet<Coupon> Coupons { get; set; }
     public PaymentContext(DbContextOptions<PaymentContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,5 +41,7 @@ public class PaymentContext : DbContext
         modelBuilder.Entity<TourBundle>()
             .Property(te => te.Tours)
             .HasColumnType("jsonb");
+
+
     }
 }
