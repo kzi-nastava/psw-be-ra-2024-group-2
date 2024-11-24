@@ -12,6 +12,8 @@ public class PaymentProfile : Profile
         CreateMap<TourOrderItemDto, TourOrderItem>().ReverseMap();
         CreateMap<TourPurchaseTokenDto,  TourPurchaseToken>().ReverseMap();
 
+        CreateMap<WalletDto, Wallet>().ReverseMap();
+
         // Map from TourBundle to BundleDto
         CreateMap<TourBundle, BundleDto>()
             .ForMember(dest => dest.Tours, opt => opt.MapFrom(src =>
