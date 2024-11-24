@@ -87,7 +87,7 @@ public class ShoppingCartService : IShoppingCartService
 
         foreach (var item in cart.Items)
         {
-            var purchaseToken = new TourPurchaseToken(userId, item.TourId);
+            var purchaseToken = new TourPurchaseToken(userId, item.TourId, cart.TotalPrice, DateTime.Now );
             _tourPurchaseTokenRepository.Create(purchaseToken);
         }
 
