@@ -34,7 +34,7 @@ public class Tour  : Entity
     private void Validate()
     {
         if (UserId == 0) throw new ArgumentException("Invalid UserId");
-        if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name");
+        if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid TourName");
         if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description");
         if (Difficulty != TourDifficulty.Easy && Difficulty !=TourDifficulty.Moderate && Difficulty != TourDifficulty.Hard) throw new ArgumentException("Invalid Difficulty");
         if(Status != TourStatus.Draft && Status != TourStatus.Archived && Status != TourStatus.Published) throw new ArgumentException("Invalid Status");

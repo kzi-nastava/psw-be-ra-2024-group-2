@@ -1,24 +1,25 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Payment.Core.Domain;
 
 public class OrderItem : Entity
 {
-    public string TourName { get; set; }
-    public double Price { get; set; }
-    public long TourId { get; set; }
     public long UserId { get; set; }
-    public Boolean Token { get; set; }
+    public double Price { get; set; }
+    public DateTime TimeOfPurchase { get; set; }
+    public bool Token { get; set; }
+
     public long ShoppingCartId { get; set; }
-    public ShoppingCart ShoppingCart { get; set; }
+    public ShoppingCart ShoppingCart { get; set; } = default!;
+
     public OrderItem() { }
-    public OrderItem(long tourId)
+
+    public OrderItem(long userId, double price, DateTime timeOfPurchase, bool token, long shoppingCartId)
     {
-        TourId = tourId;
+        UserId = userId;
+        Price = price;
+        TimeOfPurchase = timeOfPurchase;
+        Token = token;
+        ShoppingCartId = shoppingCartId;
     }
 }
