@@ -17,6 +17,8 @@ public class ShoppingCartService : IShoppingCartService
     private readonly IMapper _mapper;
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly ICrudRepository<TourBundle> _tourBundleRepository;
+    private readonly ICrudRepository<Wallet> _walletRepository;
+
 
     public ShoppingCartService(
         IShoppingCartRepository shoppingCartRepository,
@@ -24,7 +26,8 @@ public class ShoppingCartService : IShoppingCartService
         ITourService_Internal tourService,
         IMapper mapper,
         IOrderItemRepository orderItemRepository,
-        ICrudRepository<TourBundle> tourBundleRepository)
+        ICrudRepository<TourBundle> tourBundleRepository,
+        ICrudRepository<Wallet> walletRepository)
     {
         _shoppingCartRepository = shoppingCartRepository;
         _tourPurchaseTokenRepository = tourPurchaseTokenRepository;
@@ -32,6 +35,7 @@ public class ShoppingCartService : IShoppingCartService
         _mapper = mapper;
         _orderItemRepository = orderItemRepository;
         _tourBundleRepository = tourBundleRepository;
+        _walletRepository = walletRepository;
     }
 
     public Result<TourOrderItemDto> AddTourToCart(long userId, long tourId)
@@ -202,6 +206,13 @@ public class ShoppingCartService : IShoppingCartService
     public Result Checkout(long userId)
     {
         var cart = _shoppingCartRepository.GetByUserId(userId);
+        var wallet = _walletRepository.GetPaged(1, int.MaxValue).Results
+                      .FirstOrDefault(w => w.UserId == userId);
+
+        if (wallet.AdventureCoinsBalance < cart.TotalPrice)
+        {
+            return Result.Fail("Not enough Adventure Coins to complete the purchase.");
+        }
 
         foreach (var item in cart.Items)
         {
@@ -220,6 +231,9 @@ public class ShoppingCartService : IShoppingCartService
                 }
             }
         }
+
+        wallet.SubtractFunds(cart.TotalPrice);
+        _walletRepository.Update(wallet);
 
         cart.Items.Clear();
         _shoppingCartRepository.Update(cart);

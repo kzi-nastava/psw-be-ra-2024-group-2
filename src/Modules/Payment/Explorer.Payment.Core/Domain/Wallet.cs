@@ -10,7 +10,7 @@ namespace Explorer.Payment.Core.Domain;
 public class Wallet : Entity
 {
     public long UserId { get; set; }
-    public long AdventureCoinsBalance { get; private set; }
+    public double AdventureCoinsBalance { get; set; }
 
     public Wallet(long userId)
     {
@@ -18,10 +18,20 @@ public class Wallet : Entity
         AdventureCoinsBalance = 0;
     }
 
-    public void AddFunds(long amount)
+    public void AddFunds(double amount)
     {
         if (amount <= 0) throw new ArgumentException("Amount must be positive");
         AdventureCoinsBalance += amount;
+    }
+
+    public void SubtractFunds(double amount)
+    {
+        if (amount <= 0) throw new ArgumentException("Amount must be positive");
+        if (AdventureCoinsBalance < amount)
+        {
+            throw new InvalidOperationException("Insufficient Adventure Coins balance");
+        }
+        AdventureCoinsBalance -= amount;
     }
 
 }
