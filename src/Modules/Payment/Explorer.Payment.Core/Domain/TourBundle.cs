@@ -9,7 +9,7 @@ public sealed class TourBundle : Entity
     public string Name { get; set; } = string.Empty;
     public double Price { get; set; }
     public BundleStatus Status { get; set; }
-    public List<TourWithPrice> Tours { get; set; } = new();
+    public List<int> Tours { get; set; } = new();
 
     public TourBundle() { }
     public TourBundle(long authorId, string name, double price, BundleStatus status)
@@ -27,8 +27,6 @@ public sealed class TourBundle : Entity
 
     public void PublishBundle()
     {
-        if(Tours.Count(Tours => Tours.TourStatus == TourStatus.Published) >= 2)
-            Status = BundleStatus.Published;
-        else throw new InvalidOperationException("A bundle must contain at least 2 published tours to be published.");
+        Status = BundleStatus.Published;
     }
 }

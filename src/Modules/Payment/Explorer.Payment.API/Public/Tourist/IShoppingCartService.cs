@@ -1,19 +1,16 @@
 ﻿using Explorer.Payment.API.Dtos;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Payment.API.Public.Tourist;
 
 public interface IShoppingCartService
 {
-    Result AddItemToCart(long userId, OrderItemDto orderItem);
-    Result RemoveItemFromCart(long userId, OrderItemDto orderItem);
+    Result<TourOrderItemDto> AddTourToCart(long userId, long tourId);
+    Result<BundleOrderItemDto> AddBundleToCart(long userId, long bundleId);
+    Result<TourOrderItemDto> RemoveTourItemFromCart(long userId, long tourId);
+    Result<BundleOrderItemDto> RemoveBundleItemFromCart(long userId, long bundleId);
     Result Checkout(long userId);
     double GetTotalPrice(long userId);
-    IEnumerable<OrderItemDto> GetOrderItems(long userId);
+    List<TourOrderItemBasicDto> GetOrderItems(long userId);
     IEnumerable<TourPaymentDto> GetPurchasedTours(long userId);
 }

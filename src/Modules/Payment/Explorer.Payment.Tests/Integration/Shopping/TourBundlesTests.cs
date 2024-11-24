@@ -58,17 +58,16 @@ public class TourBundlesTests : BasePaymentIntegrationTest
 
         var bundle = new TourBundle(-21, "Bundle to Publish", 200.0, BundleStatus.Draft)
         {
-            Tours = new List<TourWithPrice>
+            Tours = new List<int>
             {
-                new TourWithPrice(1, 50.0, TourStatus.Published),
-                new TourWithPrice(2, 75.0, TourStatus.Published)
+                -6, -7
             }
         };
         dbContext.TourBundles.Add(bundle);
         dbContext.SaveChanges();
 
         // Act
-        var result = ((OkObjectResult)controller.PublishBundle(bundle.Id).Result).Value as BundleDto;
+        var result = (ObjectResult)controller.PublishBundle(bundle.Id).Result;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -89,9 +88,9 @@ public class TourBundlesTests : BasePaymentIntegrationTest
 
         var bundle = new TourBundle(-21, "Incomplete Bundle", 150.0, BundleStatus.Draft)
         {
-            Tours = new List<TourWithPrice>
+            Tours = new List<int>
             {
-                new TourWithPrice(1, 50.0, TourStatus.Published)
+                1
             }
         };
         dbContext.TourBundles.Add(bundle);

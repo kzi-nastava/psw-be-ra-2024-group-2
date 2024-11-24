@@ -19,7 +19,7 @@ public class BundleController : BaseApiController
     }
 
     [HttpGet("all")]
-    public ActionResult<PagedResult<BundleDto>> GetAll()
+    public ActionResult<PagedResult<FullBundleDto>> GetAll()
     {
         var result = _bundleService.GetAll();
         return CreateResponse(result);
