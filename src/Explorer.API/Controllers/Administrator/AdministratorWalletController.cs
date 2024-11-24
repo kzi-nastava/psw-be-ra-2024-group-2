@@ -1,4 +1,5 @@
-﻿using Explorer.Payment.API.Public.Tourist;
+﻿using Explorer.Payment.API.Internal;
+using Explorer.Payment.API.Public.Tourist;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers.Administrator;
 
 [Authorize(Roles = "Administrator")]
-[Route("api/wallet")]
+[Route("api/admin/wallet")]
 
 public class AdministratorWalletController : BaseApiController
 {
 
-    private readonly IWalletService _walletService;
+    private readonly IWalletService_Internal _walletService;
 
-    public AdministratorWalletController(IWalletService walletService)
+    public AdministratorWalletController(IWalletService_Internal walletService)
     {
         _walletService = walletService;
     }

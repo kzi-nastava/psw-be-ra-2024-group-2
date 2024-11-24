@@ -33,7 +33,7 @@ public static class PaymentStartup
         services.AddScoped<IBundleService, BundleService>();
         services.AddScoped<ICouponAuthorService, CouponAuthorService>();
         services.AddScoped<ICouponTouristService, CouponTouristService>();
-        services.AddScoped<IWalletService, WalletService>();
+        services.AddScoped<IWalletService_Internal, WalletService>();
     }
     private static void SetupInfrastructure(IServiceCollection services)
     {
