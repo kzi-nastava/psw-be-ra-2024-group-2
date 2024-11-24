@@ -12,9 +12,9 @@ namespace Explorer.API.Controllers.Administrator;
 public class AdministratorWalletController : BaseApiController
 {
 
-    private readonly IWalletService_Internal _walletService;
+    private readonly IWalletService _walletService;
 
-    public AdministratorWalletController(IWalletService_Internal walletService)
+    public AdministratorWalletController(IWalletService walletService)
     {
         _walletService = walletService;
     }

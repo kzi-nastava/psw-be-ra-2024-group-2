@@ -16,11 +16,12 @@ public class AuthenticationService : IAuthenticationService
     private readonly ICrudRepository<Person> _personRepository;
     private readonly IWalletService_Internal _walletService;
 
-    public AuthenticationService(IUserRepository userRepository, ICrudRepository<Person> personRepository, ITokenGenerator tokenGenerator)
+    public AuthenticationService(IUserRepository userRepository, ICrudRepository<Person> personRepository, IWalletService_Internal walletService, ITokenGenerator tokenGenerator)
     {
         _tokenGenerator = tokenGenerator;
         _userRepository = userRepository;
         _personRepository = personRepository;
+        _walletService = walletService;
     }
 
     public Result<AuthenticationTokensDto> Login(CredentialsDto credentials)
