@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Payment.Core.UseCases.Tourist;
 
-public class WalletService : CrudService<WalletDto, Wallet>, IWalletService_Internal
+public class WalletService : CrudService<WalletDto, Wallet>, IWalletService_Internal, IWalletService
 {
     private readonly ICrudRepository<Wallet> _walletRepository;
 
@@ -22,6 +22,18 @@ public class WalletService : CrudService<WalletDto, Wallet>, IWalletService_Inte
         _walletRepository = walletRepository;
     }
 
+    public Result<WalletDto>Create(long userId)
+    {
+        var wallet = _walletRepository.Create(new Wallet(userId));
+        var walletDto = new WalletDto
+        {
+            UserId = wallet.UserId,
+            AdventureCoinsBalance = wallet.AdventureCoinsBalance
+        };
+
+        return Result.Ok(walletDto);
+
+    }
     public Result<WalletDto> GetWallet(long userId)
     {
         var wallet = _walletRepository.GetPaged(1, int.MaxValue).Results

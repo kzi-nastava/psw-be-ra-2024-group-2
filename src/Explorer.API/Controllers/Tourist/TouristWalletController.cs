@@ -1,4 +1,5 @@
-﻿using Explorer.Payment.API.Public.Tourist;
+﻿using Explorer.Payment.API.Internal;
+using Explorer.Payment.API.Public.Tourist;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

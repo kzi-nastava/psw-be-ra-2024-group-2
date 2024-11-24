@@ -12,5 +12,6 @@ namespace Explorer.Payment.API.Internal
     {
         public Result<WalletDto> GetWallet(long userId);
         public Result AddFunds(long userId, long amount);
+        public Result<WalletDto> Create(long userId);
     }
 }
