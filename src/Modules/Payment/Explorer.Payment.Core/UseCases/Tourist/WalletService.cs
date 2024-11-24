@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payment.API.Dtos;
+using Explorer.Payment.API.Internal;
 using Explorer.Payment.API.Public.Tourist;
 using Explorer.Payment.Core.Domain;
 using FluentResults;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Payment.Core.UseCases.Tourist;
 
-public class WalletService : CrudService<WalletDto, Wallet>, IWalletService
+public class WalletService : CrudService<WalletDto, Wallet>, IWalletService, IWalletService_Internal
 {
     private readonly ICrudRepository<Wallet> _walletRepository;
 
