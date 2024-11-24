@@ -12,6 +12,6 @@ public class TourPurchaseTokenDto : Entity
     public long UserId { get; set; }
     public long TourId { get; set; }
     public double Price { get; set; }
-    public DateTime PurchaseDate { get; set; }
+    public DateTime PurchaseTime { get; set; }
 
 }
