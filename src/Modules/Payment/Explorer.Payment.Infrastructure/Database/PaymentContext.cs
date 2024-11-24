@@ -10,6 +10,7 @@ public class PaymentContext : DbContext
     public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
     public DbSet<TourBundle> TourBundles { get; set; }
     public DbSet<Coupon> Coupons { get; set; }
+    public DbSet<Wallet> Wallets { get; set; }
     public PaymentContext(DbContextOptions<PaymentContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
