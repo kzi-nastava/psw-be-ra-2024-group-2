@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Payment.Core.UseCases.Tourist;
 
-public class WalletService : CrudService<WalletDto, Wallet>, IWalletService, IWalletService_Internal
+public class WalletService : CrudService<WalletDto, Wallet>, IWalletService_Internal
 {
     private readonly ICrudRepository<Wallet> _walletRepository;
 
