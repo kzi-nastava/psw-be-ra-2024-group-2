@@ -12,9 +12,9 @@ namespace Explorer.API.Controllers.Tourist;
 public class TouristWalletController : BaseApiController
 {
 
-    private readonly IWalletService_Internal _walletService;
+    private readonly IWalletService _walletService;
 
-    public TouristWalletController(IWalletService_Internal walletService)
+    public TouristWalletController(IWalletService walletService)
     {
         _walletService = walletService;
     }
