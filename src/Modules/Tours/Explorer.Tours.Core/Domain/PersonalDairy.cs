@@ -30,9 +30,15 @@ namespace Explorer.Tours.Core.Domain
             Status = DairyStatus.InProgress;
         }
 
-        public void AddChapter(string title, string text)
+        public void AddChapter(string title, string text, Image? image = null)
         {
             var chapter = new Chapter(title, text);
+
+            if (image != null)
+            {
+                chapter.AddImage(image);
+            }
+
             Chapters.Add(chapter);
         }
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Tours.API.Dtos
 {
@@ -13,5 +9,6 @@ namespace Explorer.Tours.API.Dtos
         public string Text { get; set; }
         public DateTime CreatedAt { get; set; }
         public long PersonalDairyId { get; set; }
+        public Image? Image { get; set; } 
     }
 }

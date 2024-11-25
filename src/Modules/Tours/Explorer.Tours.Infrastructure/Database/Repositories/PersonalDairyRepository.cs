@@ -55,7 +55,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         }
         public IEnumerable<PersonalDairy> GetAllCompletedByUserId(long userId)
         {
-            return _dbContext.PersonalDairies.Where(d => d.UserId == userId && d.Status == DairyStatus.Completed).ToList();
+            return _dbContext.PersonalDairies.Where(d => d.UserId == userId /* && d.Status == DairyStatus.Completed*/).ToList();
         }
         public PersonalDairy GetById(long id)
         {
