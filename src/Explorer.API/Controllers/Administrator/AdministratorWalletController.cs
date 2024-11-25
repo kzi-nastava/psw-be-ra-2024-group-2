@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Administrator;
 
-[Authorize(Roles = "Administrator")]
+[Authorize(Policy = "administratorPolicy")]
 [Route("api/admin/wallet")]
 
 public class AdministratorWalletController : BaseApiController

@@ -1,5 +1,6 @@
 ﻿using Explorer.Payment.API.Internal;
 using Explorer.Payment.API.Public.Tourist;
+using Explorer.Stakeholders.Infrastructure.Authentication;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,9 @@ public class TouristWalletController : BaseApiController
     }
 
     [HttpGet]
-    public ActionResult GetWalletBalance(long touristId)
+    public ActionResult GetWalletBalance()
     {
-        var result = _walletService.GetWallet(touristId);
+        var result = _walletService.GetWallet(User.PersonId());
         return CreateResponse(result);
     }
 
