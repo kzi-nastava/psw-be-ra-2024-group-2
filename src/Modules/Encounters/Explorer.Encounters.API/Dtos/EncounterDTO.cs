@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Explorer.Encounters.API.Dtos
 {
-    public class EncounterDTO
+    public class EncounterDto
     {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public long Id { get; set; } 
+        public string Name { get; set; } = string.Empty; 
+        public string Description { get; set; } = string.Empty;  
     }
 }

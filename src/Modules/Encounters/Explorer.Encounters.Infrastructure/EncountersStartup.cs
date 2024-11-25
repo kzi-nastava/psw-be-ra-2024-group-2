@@ -2,9 +2,11 @@
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
+using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
 using Explorer.Encounters.Core.Mappers;
 using Explorer.Encounters.Core.UseCases;
 using Explorer.Encounters.Infrastructure.Database;
+using Explorer.Encounters.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -33,7 +35,7 @@ namespace Explorer.Encounters.Infrastructure
 
         private static void SetupCore(IServiceCollection services)
         {
-            services.AddScoped(typeof(ICrudRepository<Encounter>), typeof(CrudDatabaseRepository<Encounter, EncountersContext>));
+            services.AddScoped<IEncounterRepository, EncounterRepository>();
 
 
             services.AddDbContext<EncountersContext>(opt =>

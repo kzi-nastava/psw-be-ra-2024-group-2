@@ -11,10 +11,24 @@ namespace Explorer.Encounters.API.Public
 {
     public interface IEncounterService
     {
-        Result<EncounterDTO> Get(long id);
-        Result<PagedResult<EncounterDTO>> GetPaged(int page,int size);
-        Result<EncounterDTO> Create(EncounterDTO encounter);
-        Result<EncounterDTO> Update(EncounterDTO encounter);
+        //Add encounter methods
+        Result<SocialEncounterDto> CreateSocialEncounter(SocialEncounterDto encounter);
+        Result<HiddenLocationEncounterDto> CreateHiddenLocationEncounter(HiddenLocationEncounterDto encounter);
+        Result<MiscEncounterDto> CreateMiscEncounter(MiscEncounterDto encounter);
+
+        // Update Encounter methods
+        Result<SocialEncounterDto> UpdateSocialEncounter(SocialEncounterDto encounter);
+        Result<HiddenLocationEncounterDto> UpdateHiddenLocationEncounter(HiddenLocationEncounterDto encounter);
+        Result<MiscEncounterDto> UpdateMiscEncounter(MiscEncounterDto encounter);
+
+        // Retrieve Encounters
+        Result<EncounterDto> GetByName(string name);
+
+        Result<EncounterDto> GetById(long id);
+
+        Result<List<EncounterDto>> GetAll();
+
+        // Delete Encounter
         Result Delete(long id);
     }
 }

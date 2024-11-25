@@ -15,13 +15,19 @@ namespace Explorer.Encounters.Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("encounters");
-
+           
 
             ConfigureEncounters(modelBuilder);
         }
         private static void ConfigureEncounters(ModelBuilder modelBuilder)
         {
-
+            //implementing IS-a hierarchy in er
+            modelBuilder.Entity<Encounter>()
+                .ToTable("Encounters")  
+                .HasDiscriminator<string>("EncounterType")  
+                .HasValue<SocialEncounter>("Social")  
+                .HasValue<HiddenLocationEncounter>("HiddenLocation") 
+                .HasValue<MiscEncounter>("Misc");  
         }
     }
 }
