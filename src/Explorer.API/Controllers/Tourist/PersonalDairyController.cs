@@ -1,6 +1,7 @@
 ﻿using Explorer.API.Controllers;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Infrastructure.Authentication;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
@@ -30,6 +31,19 @@ public class PersonalDairyController : BaseApiController
         }
 
         return Ok(result.Value);
+    }
+    
+    [HttpGet("TourExecutionId/{tourExecutionId}")]
+    public ActionResult<PersonalDairyDto> GetByTourExecutionId(int tourExecutionId)
+    {
+        var diary = _personalDairyService.GetByTourExecutionId(tourExecutionId);
+
+        if (diary.IsFailed || diary.Value == null)
+        {
+            return BadRequest(diary.Errors);
+        }
+        return Ok(diary.Value);
+
     }
 
     [HttpPost]

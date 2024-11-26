@@ -29,11 +29,11 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         {
             return _dbContext.PersonalDairies.Where(d => d.Id == id).FirstOrDefault();
         }
-        public PersonalDairy Create(PersonalDairy execution)
+        public PersonalDairy Create(PersonalDairy diary)
         {
-            _dbContext.PersonalDairies.Add(execution);
+            _dbContext.PersonalDairies.Add(diary);
             _dbContext.SaveChanges();
-            return execution;
+            return diary;
         }
         public PersonalDairy Update(PersonalDairy aggregateRoot)
         {
@@ -48,14 +48,17 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             task.Wait();
             return task.Result;
         }
-
+        public PersonalDairy GetByTourExecutionId(int tourExecutionId)
+        {
+            return _dbContext.PersonalDairies.Where(t => t.TourExecutionId == tourExecutionId).FirstOrDefault();
+        }
         public PersonalDairy GetByUserId(int userId)
         {
             return _dbContext.PersonalDairies.Where(t => t.UserId == userId ).FirstOrDefault();
         }
-        public IEnumerable<PersonalDairy> GetAllCompletedByUserId(long userId)
+        public IEnumerable<PersonalDairy> GetAllByUserId(long userId)
         {
-            return _dbContext.PersonalDairies.Where(d => d.UserId == userId /* && d.Status == DairyStatus.Completed*/).ToList();
+            return _dbContext.PersonalDairies.Where(d => d.UserId == userId).ToList();
         }
         public PersonalDairy GetById(long id)
         {

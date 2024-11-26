@@ -15,6 +15,7 @@ namespace Explorer.Tours.API.Public.Tourist
         Result<PersonalDairyDto> Create(PersonalDairyDto dairy);
         Result<PagedResult<PersonalDairyDto>> GetPaged(int page, int pageSize);
         Result<PersonalDairyDto> Get(int id);
+        Result<PersonalDairyDto> GetByTourExecutionId(int tourExecutionId);
         Result<PersonalDairyDto> Update(long id, PersonalDairyDto dairy);
         Result Delete(long id);
         Result<IEnumerable<PersonalDairyDto>> GetAllForUser(long userId);

@@ -10,24 +10,26 @@ namespace Explorer.Tours.Core.Domain
 {
     public class PersonalDairy : Entity
     {
+
+        public long TourExecutionId { get; private set; }
         public long UserId { get; private set; }
         public long TourId { get; private set; }
         public string Title { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public DairyStatus Status { get; private set; }
+        public DateTime ClosedAt { get; private set; }
 
         public List<Chapter> Chapters = new List<Chapter>();
         //public IReadOnlyCollection<Chapter> Chapters => _chapters.AsReadOnly();
 
         public PersonalDairy() { }
 
-        public PersonalDairy(long userId, long tourId, string title)
+        public PersonalDairy(long tourExecutionId,long userId, long tourId, string title)
         {
+            TourExecutionId = tourExecutionId;
             UserId = userId;
             TourId = tourId;
             Title = title;
             CreatedAt = DateTime.UtcNow;
-            Status = DairyStatus.InProgress;
         }
 
         public void AddChapter(string title, string text, Image? image = null)

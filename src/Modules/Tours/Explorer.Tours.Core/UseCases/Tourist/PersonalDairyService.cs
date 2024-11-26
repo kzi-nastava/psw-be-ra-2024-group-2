@@ -100,7 +100,7 @@ namespace Explorer.Tours.Core.UseCases.Tourist
         {
             try
             {
-                var dairies = _personalDairyRepository.GetAllCompletedByUserId(userId);
+                var dairies = _personalDairyRepository.GetAllByUserId(userId);
 
                 var result = dairies.Select(d => _mapper.Map<PersonalDairyDto>(d));
                 return Result.Ok(result);
@@ -110,6 +110,18 @@ namespace Explorer.Tours.Core.UseCases.Tourist
                 return Result.Fail<IEnumerable<PersonalDairyDto>>($"An error occurred while retrieving personal dairies: {ex.Message}");
             }
         }
+
+        public Result<PersonalDairyDto> GetByTourExecutionId(int tourExecutionId)
+        {
+            var diary = _personalDairyRepository.GetByTourExecutionId(tourExecutionId);
+            if (diary == null)
+            {
+                return Result.Fail(new Error("Diary not found"));
+            }
+            return MapToDto(diary);
+        }
+
+
         public Result<IEnumerable<ChapterDto>> GetAllChapters(long dairyId)
         {
             var chapters = _personalDairyRepository.GetById(dairyId)?.Chapters;
