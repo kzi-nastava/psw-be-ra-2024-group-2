@@ -10,7 +10,7 @@ namespace Explorer.Tours.Core.Domain
         public DateTime CreatedAt { get; private set; }
         public string Text { get; private set; }
         public long PersonalDairyId { get; set; }
-        public Image? Image { get; set; } // Opciono svojstvo za sliku
+        public Image? Image { get; set; } // Opciono svojstvo za sliku i
 
         private Chapter() { }
 
