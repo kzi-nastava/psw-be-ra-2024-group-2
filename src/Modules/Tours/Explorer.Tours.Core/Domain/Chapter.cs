@@ -21,9 +21,10 @@ namespace Explorer.Tours.Core.Domain
             CreatedAt = DateTime.UtcNow;
         }
 
-        public void UpdateText(string newText)
+        public void UpdateTextAndTitle(string newText, string title)
         {
             Text = newText;
+            Title = title;
         }
 
         public Image AddImage(Image image)

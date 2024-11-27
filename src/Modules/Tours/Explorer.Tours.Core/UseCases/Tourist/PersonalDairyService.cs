@@ -204,7 +204,7 @@ namespace Explorer.Tours.Core.UseCases.Tourist
                 if (existingChapter == null)
                     return Result.Fail<ChapterDto>($"Chapter with ID {chapterId} not found in dairy ID {personalDairyId}.");
 
-                existingChapter.UpdateText(chapterDto.Text);
+                existingChapter.UpdateTextAndTitle(chapterDto.Text, chapterDto.Title);
 
                 _personalDairyCrudRepository.Update(dairy);
 

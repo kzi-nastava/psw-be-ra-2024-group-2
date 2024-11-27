@@ -52,12 +52,12 @@ namespace Explorer.Tours.Core.Domain
                 Chapters.Remove(chapter);
             }
         }
-        public void UpdateChapter(long chapterId, string newText)
+        public void UpdateChapter(long chapterId, string newText, string newTitle)
         {
             var chapter = Chapters.FirstOrDefault(c => c.ChapterId == chapterId);
             if (chapter != null)
             {
-                chapter.UpdateText(newText);
+                 chapter.UpdateTextAndTitle(newText, newTitle);      
             }
         }
     }
