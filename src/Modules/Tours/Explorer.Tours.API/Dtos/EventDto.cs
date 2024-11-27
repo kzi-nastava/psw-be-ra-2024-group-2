@@ -18,7 +18,7 @@ namespace Explorer.Tours.API.Dtos
         public double Latitude { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public List <EventAcceptionDto> EventAcceptions { get; set; } = new List<EventAcceptionDto> { };
+        public List <EventAcceptionDto> EventAcceptances { get; set; } = new List<EventAcceptionDto> { };
 
         public bool CheckRadius(double otherLongitude, double otherLatitude)
         {

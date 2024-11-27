@@ -106,7 +106,12 @@ public class ToursProfile : Profile
                 .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
+                .ForMember(dest => dest.EventAcceptances, opt => opt.MapFrom(src => src.EventAcceptances))
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString())).ReverseMap();
+
+        CreateMap<EventAcception, EventAcceptionDto>()
+            .ForMember(dest => dest.TouristId, opt => opt.MapFrom(src => src.TouristId))
+            .ForMember(dest => dest.AcceptedAt, opt => opt.MapFrom(src => src.AcceptedAt));
 
 
         CreateMap<Image, EventImageDto>()
@@ -118,6 +123,7 @@ public class ToursProfile : Profile
         .ForMember(dest => dest.chapters, opt => opt.MapFrom(src => src.Chapters))
         .ReverseMap();
         CreateMap<Chapter, ChapterDto>().ReverseMap();
+        CreateMap<EventSubscription, EventSubscriptionDto>().ReverseMap();
 
     }
 }

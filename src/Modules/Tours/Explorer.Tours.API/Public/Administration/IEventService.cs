@@ -1,4 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.BuildingBlocks.Core.Domain.Enums;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using FluentResults;
 using System;
@@ -14,9 +15,10 @@ namespace Explorer.Tours.API.Public.Administration
         PagedResult<EventDto> GetAllEventsWithinRange(int v, double longitude, double latitude);
         Result<EventDto> Create(EventDto tourEvent);
         PagedResult<EventDto> GetAll();
-        Result SubscribeToEvent(EventDto eventDto, int userId);
+        Result <EventDto> SubscribeToEvent(EventDto eventDto, int userId);
         public PagedResult<EventDto> GetSortedByAcceptance();
         public PagedResult<EventDto> GetTopThree();
         public PagedResult<TourDto> GetNearTours(long eventId);
+        PagedResult<EventDto> FindAllByCategories(List<EventCategory> categories);
     }
 }
