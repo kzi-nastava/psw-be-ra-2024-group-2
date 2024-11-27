@@ -94,5 +94,10 @@ public class ToursContext : DbContext
             .HasForeignKey("PersonalDairyId")
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<Chapter>()
+        .HasOne(c => c.Image)
+        .WithMany() 
+        .HasForeignKey("ImageId") 
+        .IsRequired(false);
     }
 }
