@@ -24,6 +24,7 @@ namespace Explorer.Tours.API.Public.Tourist
         Result RemoveChapterFromDairy(long personalDairyId, long chapterId);
         Result<ChapterDto> UpdateChapterInDairy(long personalDairyId, long chapterId, ChapterDto chapterDto);
 
+        public bool IsEnableToChange(PersonalDairyDto diary);
 
     }
 }

@@ -45,8 +45,7 @@ namespace Explorer.Tours.Core.UseCases.Tourist
                 var dairy = _mapper.Map<PersonalDairy>(personalDairyDto);
 
                 var createdDairy = _personalDairyCrudRepository.Create(dairy);
-
-           
+                createdDairy.ClosedAt = null;
                 return Result.Ok(_mapper.Map<PersonalDairyDto>(createdDairy));
             }
             catch (Exception ex)
@@ -217,6 +216,26 @@ namespace Explorer.Tours.Core.UseCases.Tourist
             }
         }
 
+        public bool IsEnableToChange(PersonalDairyDto personalDairyDto)
+        {
+            var diary = _mapper.Map<PersonalDairy>(personalDairyDto);
+            if (diary.ClosedAt.HasValue)
+            {
+                if (diary.ClosedAt.Value.AddDays(3) < DateTime.Now)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return true;
+            }
+
+        }
 
     }
 }

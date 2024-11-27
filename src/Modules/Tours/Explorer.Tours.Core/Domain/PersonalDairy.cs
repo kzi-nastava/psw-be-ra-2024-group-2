@@ -16,7 +16,7 @@ namespace Explorer.Tours.Core.Domain
         public long TourId { get; private set; }
         public string Title { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public DateTime ClosedAt { get; private set; }
+        public DateTime? ClosedAt { get;  set; }
 
         public List<Chapter> Chapters = new List<Chapter>();
         //public IReadOnlyCollection<Chapter> Chapters => _chapters.AsReadOnly();

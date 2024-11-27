@@ -62,7 +62,10 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         }
         public PersonalDairy GetById(long id)
         {
-            return _dbContext.PersonalDairies.Include(d => d.Chapters).FirstOrDefault(d => d.Id == id);
+            return _dbContext.PersonalDairies
+                .Include(d => d.Chapters)
+                .ThenInclude(c => c.Image)
+                .FirstOrDefault(d => d.Id == id);
         }
 
     }
