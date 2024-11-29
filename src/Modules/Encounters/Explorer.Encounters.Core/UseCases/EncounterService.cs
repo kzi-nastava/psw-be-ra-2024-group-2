@@ -39,6 +39,8 @@ namespace Explorer.Encounters.Core.UseCases
                     Description = encounterDto.Description,
                     RangeInMeters = encounterDto.RangeInMeters,
                     RequiredPeople = encounterDto.RequiredPeople,
+                    Lattitude = encounterDto.Lattitude,
+                    Longitude = encounterDto.Longitude,
 
                 };
 
@@ -50,7 +52,10 @@ namespace Explorer.Encounters.Core.UseCases
                     Id = encounter.Id,
                     Name = encounter.Name,
                     Description = encounter.Description,
+                    RangeInMeters = encounter.RangeInMeters,
                     RequiredPeople = encounter.RequiredPeople,
+                    Lattitude = encounterDto.Lattitude,
+                    Longitude = encounterDto.Longitude,
                 });
             }
             catch (Exception ex)
@@ -86,6 +91,8 @@ namespace Explorer.Encounters.Core.UseCases
                     Description = encounter.Description,
                     TargetLongitude = encounter.TargetLongitude,
                     TargetLatitude = encounter.TargetLatitude,
+                    Lattitude = encounter.Lattitude,
+                    Longitude = encounter.Longitude,
                     // Map other properties
                 });
             }
@@ -104,6 +111,8 @@ namespace Explorer.Encounters.Core.UseCases
                     Name = encounterDto.Name,
                     Description = encounterDto.Description,
                     ActionDescription = encounterDto.ActionDescription,
+                    Lattitude = encounterDto.Lattitude,
+                    Longitude = encounterDto.Longitude,
                 };
 
                 _encounterRepository.AddEncounter(encounter);
@@ -114,6 +123,8 @@ namespace Explorer.Encounters.Core.UseCases
                     Name = encounter.Name,
                     Description = encounter.Description,
                     ActionDescription = encounter.ActionDescription,
+                    Lattitude = encounterDto.Lattitude,
+                    Longitude = encounterDto.Longitude,
                 });
             }
             catch (Exception ex)
@@ -154,10 +165,6 @@ namespace Explorer.Encounters.Core.UseCases
         {
             try
             {
-                if (encounterDto.IsActive == false)
-                {
-                    return Result.Fail($"Encounter is not active!");
-                }
                 var encounter = (SocialEncounter)_encounterRepository.GetById(encounterDto.Id);
                 if(encounter == null)
                 {
@@ -188,7 +195,7 @@ namespace Explorer.Encounters.Core.UseCases
                     RangeInMeters = encounter.RangeInMeters,
                     RequiredPeople = encounter.RequiredPeople,
                     Longitude = encounter.Longitude,
-                    Latitude = encounter.Latitude,
+                    Lattitude = encounter.Lattitude,
                     TouristIds = encounter.TouristIds,
                 });
             }

@@ -19,7 +19,7 @@ namespace Explorer.Encounters.Core.Domain
             RequiredPeople = requiredPeople;
             RangeInMeters = rangeInMeters;
             Longitude = longitude;
-            Latitude = latitude;
+            Lattitude = lattitude;
         }
 
         public SocialEncounter() { }
@@ -32,11 +32,11 @@ namespace Explorer.Encounters.Core.Domain
         public bool CheckPoisition(double touristLongitude, double touristLatitude)
         {
             const double earthRadius = 6371000; // Earth's radius in meters
-            double dLat = DegreesToRadians(touristLatitude - Latitude);
+            double dLat = DegreesToRadians(touristLatitude - Lattitude);
             double dLon = DegreesToRadians(touristLongitude - Longitude);
 
             double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                       Math.Cos(DegreesToRadians(Latitude)) * Math.Cos(DegreesToRadians(touristLatitude)) *
+                       Math.Cos(DegreesToRadians(Lattitude)) * Math.Cos(DegreesToRadians(touristLatitude)) *
                        Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             double distance = earthRadius * c;
