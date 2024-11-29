@@ -12,6 +12,7 @@ namespace Explorer.Encounters.API.Dtos
     {
         public int RequiredPeople { get; set; }
         public double RangeInMeters { get; set; } // Radius in meters
+        public List<int> TouristIds { get; set; } = new List<int>();
     }
 
     // Hidden Location Encounter DTO

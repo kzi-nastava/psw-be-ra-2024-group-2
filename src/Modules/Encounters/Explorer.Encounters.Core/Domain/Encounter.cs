@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Explorer.Encounters.Core.Domain
     {
         public string Name { get; set; }
         public string Description { get; set; }
-
+        public bool isActive {  get; set; }
         public Encounter(string name, string description)
         {
             Name = name;

@@ -14,6 +14,7 @@ namespace Explorer.Stakeholders.API.Dtos
         public string Surname { get; set; }
         public string Email { get; set; }
         public TouristPositionDto TouristPosition { get; set; }
+        public List<int> EncounterIds { get; set; } = new List<int>();
 
     }
 }

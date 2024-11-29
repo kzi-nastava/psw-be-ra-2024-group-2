@@ -48,6 +48,13 @@ namespace Explorer.API.Controllers.User
             return CreateResponse(result);
         }
 
+        [HttpPut("checkTouristPosition")]
+        public ActionResult<SocialEncounterDto> CheckTourists([FromBody] SocialEncounterDto encounterDto, double longitude, double latitude, int touristId)
+        {
+            var result = _encounterService.CheckTouristPosition(encounterDto, longitude, latitude, touristId);
+            return CreateResponse(result);
+        }
+
         // Create Hidden Location Encounter
         [HttpPost("hidden-location")]
         public ActionResult<HiddenLocationEncounterDto> CreateHiddenLocationEncounter([FromBody] HiddenLocationEncounterDto encounterDto)

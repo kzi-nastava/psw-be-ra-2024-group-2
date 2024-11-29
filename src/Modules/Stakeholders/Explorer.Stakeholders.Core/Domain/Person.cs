@@ -16,6 +16,7 @@ public class Person : Entity
     public User User { get; set; }
     public Image? Image { get; set; }
     public TouristPosition? TouristPosition { get; set; }
+    public List<int> EncounterIds { get; set; } = new List<int>();
     public Person(long userId, string name, string surname, string email)
     {
         UserId = userId;
@@ -37,6 +38,11 @@ public class Person : Entity
         Validate();
     }
 
+    public void UpdateEncounterIds(List<int> ids)
+    {
+        EncounterIds.Clear();
+        EncounterIds.AddRange(ids);
+    }
     public void UpdateTouristPosition(TouristPosition touristPosition)
     {
         TouristPosition = touristPosition;
