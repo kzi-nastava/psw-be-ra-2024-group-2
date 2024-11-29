@@ -12,8 +12,8 @@ namespace Explorer.Encounters.Core.Domain
         public int RequiredPeople { get; set; } // Number of people required to solve the challenge
         public double RangeInMeters { get; set; } // The radius (in meters) within which the tourists need to be
 
-        public SocialEncounter(string name, string description, int requiredPeople, double rangeInMeters)
-            : base(name, description)
+        public SocialEncounter(string name, string description, int requiredPeople, double rangeInMeters, double lattitude, double longitude)
+            : base(name, description, lattitude, longitude)
         {
             RequiredPeople = requiredPeople;
             RangeInMeters = rangeInMeters;

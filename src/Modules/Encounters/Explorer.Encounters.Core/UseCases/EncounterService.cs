@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Encounters.API.Dtos;
 using Explorer.Encounters.API.Public;
@@ -18,9 +19,12 @@ namespace Explorer.Encounters.Core.UseCases
     {
         private readonly IEncounterRepository _encounterRepository;
 
-        public EncounterService(IEncounterRepository encounterRepository)
+        private readonly IImageRepository _imageRepository;
+
+        public EncounterService(IEncounterRepository encounterRepository, IImageRepository imageRepository)
         {
             _encounterRepository = encounterRepository;
+            _imageRepository = imageRepository;
         }
 
         // Add encounter methods
@@ -58,13 +62,19 @@ namespace Explorer.Encounters.Core.UseCases
         {
             try
             {
-                var encounter = new HiddenLocationEncounter
-                {
-                    Name = encounterDto.Name,
-                    Description = encounterDto.Description,
-                    TargetLongitude = encounterDto.TargetLongitude,
-                    TargetLatitude = encounterDto.TargetLatitude,
-                };
+                Image image = new Image(encounterDto.Image.Data, encounterDto.Image.UploadedAt, encounterDto.Image.MimeType);
+                var newImage = _imageRepository.Create(image);
+
+
+                var encounter = new HiddenLocationEncounter(
+                    encounterDto.Name,
+                    encounterDto.Description,
+                    newImage,
+                    encounterDto.Lattitude,
+                    encounterDto.Longitude,
+                    encounterDto.Lattitude,     //encounterDto.TargetLatitude,
+                    encounterDto.Longitude,     //encounterDto.TargetLongitude,
+                    encounterDto.RangeInMeters);
 
                 _encounterRepository.AddEncounter(encounter);
 

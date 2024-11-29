@@ -11,5 +11,7 @@ namespace Explorer.Encounters.API.Dtos
         public long Id { get; set; } 
         public string Name { get; set; } = string.Empty; 
         public string Description { get; set; } = string.Empty;  
+        public double Lattitude { get; set; }
+        public double Longitude { get; set; } 
     }
 }
