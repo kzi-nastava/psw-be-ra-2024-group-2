@@ -12,13 +12,12 @@ namespace Explorer.Tours.API.Dtos
     {
 
         public int Id { get; set; }
-
+        public long TourExecutionId { get;  set; }
         public long UserId { get; set; }
         public long TourId { get; set; }
         public string? Title { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DairyStatus Status { get; set; }
-
+        public DateTime ClosedAt { get;  set; }
 
         public List<ChapterDto> chapters { get; set; } = new List<ChapterDto> { };
 

@@ -15,5 +15,8 @@ namespace Explorer.Tours.API.Public.Administration
         Result<EventDto> Create(EventDto tourEvent);
         PagedResult<EventDto> GetAll();
         Result SubscribeToEvent(EventDto eventDto, int userId);
+        public PagedResult<EventDto> GetSortedByAcceptance();
+        public PagedResult<EventDto> GetTopThree();
+        public PagedResult<TourDto> GetNearTours(long eventId);
     }
 }

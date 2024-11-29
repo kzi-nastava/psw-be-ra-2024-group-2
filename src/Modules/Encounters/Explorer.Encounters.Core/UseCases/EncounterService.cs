@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Encounters.API.Dtos;
 using Explorer.Encounters.API.Public;
@@ -18,9 +19,13 @@ namespace Explorer.Encounters.Core.UseCases
     public class EncounterService : IEncounterService
     {
         private readonly IEncounterRepository _encounterRepository;
-        public EncounterService(IEncounterRepository encounterRepository)
+
+        private readonly IImageRepository _imageRepository;
+
+        public EncounterService(IEncounterRepository encounterRepository, IImageRepository imageRepository)
         {
             _encounterRepository = encounterRepository;
+            _imageRepository = imageRepository;
         }
 
         // Add encounter methods
@@ -34,8 +39,7 @@ namespace Explorer.Encounters.Core.UseCases
                     Description = encounterDto.Description,
                     RangeInMeters = encounterDto.RangeInMeters,
                     RequiredPeople = encounterDto.RequiredPeople,
-                    Latitude = encounterDto.Latitude,
-                    Longitude = encounterDto.Longitude,
+
                 };
 
                 _encounterRepository.AddEncounter(encounter);
@@ -47,9 +51,6 @@ namespace Explorer.Encounters.Core.UseCases
                     Name = encounter.Name,
                     Description = encounter.Description,
                     RequiredPeople = encounter.RequiredPeople,
-                    RangeInMeters = encounter.RangeInMeters,
-                    Latitude = encounter.Latitude,
-                    Longitude = encounter.Longitude,
                 });
             }
             catch (Exception ex)
@@ -62,13 +63,19 @@ namespace Explorer.Encounters.Core.UseCases
         {
             try
             {
-                var encounter = new HiddenLocationEncounter
-                {
-                    Name = encounterDto.Name,
-                    Description = encounterDto.Description,
-                    TargetLongitude = encounterDto.TargetLongitude,
-                    TargetLatitude = encounterDto.TargetLatitude,
-                };
+                Image image = new Image(encounterDto.Image.Data, encounterDto.Image.UploadedAt, encounterDto.Image.MimeType);
+                var newImage = _imageRepository.Create(image);
+
+
+                var encounter = new HiddenLocationEncounter(
+                    encounterDto.Name,
+                    encounterDto.Description,
+                    newImage,
+                    encounterDto.Lattitude,
+                    encounterDto.Longitude,
+                    encounterDto.Lattitude,     //encounterDto.TargetLatitude,
+                    encounterDto.Longitude,     //encounterDto.TargetLongitude,
+                    encounterDto.RangeInMeters);
 
                 _encounterRepository.AddEncounter(encounter);
 
@@ -129,8 +136,6 @@ namespace Explorer.Encounters.Core.UseCases
             existingEncounter.Description = encounterDto.Description;
             existingEncounter.RangeInMeters = encounterDto.RangeInMeters;
             existingEncounter.RequiredPeople = encounterDto.RequiredPeople;
-            existingEncounter.Latitude = encounterDto.Latitude;
-            existingEncounter.Longitude = encounterDto.Longitude;
 
             _encounterRepository.UpdateEncounter(existingEncounter);
 
@@ -141,8 +146,6 @@ namespace Explorer.Encounters.Core.UseCases
                 Description = existingEncounter.Description,
                 RangeInMeters = existingEncounter.RangeInMeters,
                 RequiredPeople = existingEncounter.RequiredPeople,
-                Longitude = existingEncounter.Longitude,
-                Latitude = existingEncounter.Latitude,
             });
 
         }

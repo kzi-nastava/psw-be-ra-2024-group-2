@@ -9,13 +9,13 @@ namespace Explorer.Encounters.Core.Domain
 {
     public class HiddenLocationEncounter : Encounter
     {
-        public Image Image { get; set; } 
+        public Image Image { get; set; }
         public double TargetLatitude { get; set; } // Latitude of the location from which the image was taken
         public double TargetLongitude { get; set; } // Longitude of the location
         public double RangeInMeters { get; set; } // Radius (in meters) within which the challenge can be activated
 
-        public HiddenLocationEncounter(string name, string description, Image image, double targetLatitude, double targetLongitude, double rangeInMeters)
-            : base(name, description)
+        public HiddenLocationEncounter(string name, string description, Image image, double lattitude, double longitude, double targetLatitude, double targetLongitude, double rangeInMeters)
+            : base(name, description, lattitude, longitude)
         {
             Image = image;
             TargetLatitude = targetLatitude;

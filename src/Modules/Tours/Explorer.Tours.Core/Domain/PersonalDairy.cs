@@ -10,29 +10,37 @@ namespace Explorer.Tours.Core.Domain
 {
     public class PersonalDairy : Entity
     {
+
+        public long TourExecutionId { get; private set; }
         public long UserId { get; private set; }
         public long TourId { get; private set; }
         public string Title { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public DairyStatus Status { get; private set; }
+        public DateTime? ClosedAt { get;  set; }
 
         public List<Chapter> Chapters = new List<Chapter>();
         //public IReadOnlyCollection<Chapter> Chapters => _chapters.AsReadOnly();
 
         public PersonalDairy() { }
 
-        public PersonalDairy(long userId, long tourId, string title)
+        public PersonalDairy(long tourExecutionId,long userId, long tourId, string title)
         {
+            TourExecutionId = tourExecutionId;
             UserId = userId;
             TourId = tourId;
             Title = title;
             CreatedAt = DateTime.UtcNow;
-            Status = DairyStatus.InProgress;
         }
 
-        public void AddChapter(string title, string text)
+        public void AddChapter(string title, string text, Image? image = null)
         {
             var chapter = new Chapter(title, text);
+
+            if (image != null)
+            {
+                chapter.AddImage(image);
+            }
+
             Chapters.Add(chapter);
         }
 
@@ -44,12 +52,12 @@ namespace Explorer.Tours.Core.Domain
                 Chapters.Remove(chapter);
             }
         }
-        public void UpdateChapter(long chapterId, string newText)
+        public void UpdateChapter(long chapterId, string newText, string newTitle)
         {
             var chapter = Chapters.FirstOrDefault(c => c.ChapterId == chapterId);
             if (chapter != null)
             {
-                chapter.UpdateText(newText);
+                 chapter.UpdateTextAndTitle(newText, newTitle);      
             }
         }
     }

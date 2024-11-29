@@ -12,11 +12,14 @@ namespace Explorer.Encounters.Core.Domain
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public bool isActive {  get; set; }
-        public Encounter(string name, string description)
+        public double Lattitude { get; set; }
+        public double Longitude { get; set; }
+        public Encounter(string name, string description, double lattitude, double longitude)
         {
             Name = name;
             Description = description;
+            Lattitude = lattitude;
+            Longitude = longitude;
         }
         public Encounter()
         {

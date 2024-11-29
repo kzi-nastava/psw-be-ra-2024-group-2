@@ -11,11 +11,10 @@ namespace Explorer.Encounters.Core.Domain
     {
         public int RequiredPeople { get; set; } // Number of people required to solve the challenge
         public double RangeInMeters { get; set; } // The radius (in meters) within which the tourists need to be
-        public double Longitude {  get; set; }
-        public double Latitude { get; set; }
         public List<int> TouristIds { get; set; } = new List<int>();
-        public SocialEncounter(string name, string description, int requiredPeople, double rangeInMeters, double latitude, double longitude)
-            : base(name, description)
+
+        public SocialEncounter(string name, string description, int requiredPeople, double rangeInMeters, double lattitude, double longitude)
+            : base(name, description, lattitude, longitude)
         {
             RequiredPeople = requiredPeople;
             RangeInMeters = rangeInMeters;

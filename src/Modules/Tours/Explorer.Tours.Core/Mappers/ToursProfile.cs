@@ -117,7 +117,12 @@ public class ToursProfile : Profile
         CreateMap<PersonalDairy, PersonalDairyDto>()
         .ForMember(dest => dest.chapters, opt => opt.MapFrom(src => src.Chapters))
         .ReverseMap();
-        CreateMap<Chapter, ChapterDto>().ReverseMap();
+
+        CreateMap<Chapter, ChapterDto>()
+        .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
+        .ReverseMap()
+        .ForMember(dest => dest.Image, opt => opt.MapFrom(src => new Image(src.Image.Data, src.Image.UploadedAt, src.Image.MimeType)));
+
 
     }
 }
