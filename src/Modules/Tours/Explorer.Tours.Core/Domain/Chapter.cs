@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Tours.Core.Domain
 {
@@ -13,6 +10,7 @@ namespace Explorer.Tours.Core.Domain
         public DateTime CreatedAt { get; private set; }
         public string Text { get; private set; }
         public long PersonalDairyId { get; set; }
+        public Image? Image { get; set; } // Opciono svojstvo za sliku i
 
         private Chapter() { }
 
@@ -22,11 +20,42 @@ namespace Explorer.Tours.Core.Domain
             Text = text;
             CreatedAt = DateTime.UtcNow;
         }
-        
-        public void UpdateText(string newText)
+
+        public void UpdateTextAndTitle(string newText, string title)
         {
             Text = newText;
+            Title = title;
+        }
+
+        public Image AddImage(Image image)
+        {
+            EnsureImageNotSet();
+            Image = image;
+            return image;
+        }
+
+        public void UpdateImage(Image image)
+        {
+            EnsureImageExists();
+            Image = image;
+        }
+
+        public void RemoveImage()
+        {
+            EnsureImageExists();
+            Image = null;
+        }
+
+        private void EnsureImageNotSet()
+        {
+            if (Image != null)
+                throw new InvalidOperationException("Chapter already has an image.");
+        }
+
+        private void EnsureImageExists()
+        {
+            if (Image == null)
+                throw new InvalidOperationException("Chapter does not have an image to modify or remove.");
         }
     }
 }
-

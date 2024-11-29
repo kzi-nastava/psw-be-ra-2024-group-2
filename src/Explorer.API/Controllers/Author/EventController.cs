@@ -29,5 +29,23 @@ namespace Explorer.API.Controllers.Author
                 var result = _eventService.Create(tourEvent);
                 return CreateResponse(result);
             }
+        [HttpGet("sorted")]
+        public ActionResult<PagedResult<EventDto>> GetSorted()
+        {
+            var allEvents = _eventService.GetSortedByAcceptance();
+            return allEvents;
         }
+        [HttpGet("top")]
+        public ActionResult<PagedResult<EventDto>> GetTopThree()
+        {
+            var allEvents = _eventService.GetTopThree();
+            return allEvents;
+        }
+        [HttpGet("details/{eventId:int}")]
+        public ActionResult<PagedResult<TourDto>> GetNearTours(long eventId)
+        {
+            var nearTours = _eventService.GetNearTours(eventId);
+            return nearTours;
+        }
+    }
     }
