@@ -16,11 +16,13 @@ namespace Explorer.Tours.Core.UseCases.Tourist
         private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly ICrudRepository<Tour> _tourRepository;
         private readonly ITourPurchaseTokenService_Internal _tourPurchaseTokenService;
-        public TourExecutionService(ITourExecutionRepository tourExecutionRepository, IMapper mapper, ICrudRepository<Tour> tourRepository, ITourPurchaseTokenService_Internal tourPurchaseTokenService) : base(mapper)
+        private readonly IPersonalDairyRepository _personalDairyRepository;
+        public TourExecutionService(ITourExecutionRepository tourExecutionRepository, IMapper mapper, ICrudRepository<Tour> tourRepository, ITourPurchaseTokenService_Internal tourPurchaseTokenService, IPersonalDairyRepository personalDairyRepository) : base(mapper)
         {
             _tourExecutionRepository = tourExecutionRepository;
             _tourRepository = tourRepository;
             _tourPurchaseTokenService = tourPurchaseTokenService;
+            _personalDairyRepository = personalDairyRepository;
         }
 
         public Result<TourExecutionDto> GetByUserId(int userId)
@@ -107,12 +109,14 @@ namespace Explorer.Tours.Core.UseCases.Tourist
                 TourExecution tourExecution = _tourExecutionRepository.Get(dto.Id);
                 List<TourExecutionCheckpoint> checkpoints = tourExecution.TourExecutionCheckpoints.Select(x => new TourExecutionCheckpoint(x.CheckpointId, x.ArrivalAt)).ToList();
                 bool tourStatus = tourExecution.CheckCheckpoints(checkpoints);
-                tourExecution.ChangeEndStatusAndEndingTime(tourStatus);
+                tourExecution.ChangeEndStatusAndEndingTime(tourStatus); 
                 var result =  _tourExecutionRepository.Update(tourExecution);
-                
+
+
+                var personalDiary = _personalDairyRepository.GetByTourExecutionId((int)result.Id);
+                personalDiary.ClosedAt = result.SessionEndingTime;
+                _personalDairyRepository.Update(personalDiary);
                 return MapToDto(result);
-
-
             }
             catch (Exception)
             {

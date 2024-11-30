@@ -125,5 +125,10 @@ public class ToursProfile : Profile
         CreateMap<Chapter, ChapterDto>().ReverseMap();
         CreateMap<EventSubscription, EventSubscriptionDto>().ReverseMap();
 
+        CreateMap<Chapter, ChapterDto>()
+        .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
+        .ReverseMap()
+        .ForMember(dest => dest.Image, opt => opt.MapFrom(src => new Image(src.Image.Data, src.Image.UploadedAt, src.Image.MimeType)));
+
     }
 }
