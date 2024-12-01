@@ -28,7 +28,7 @@ namespace Explorer.Encounters.API.Public
 
         Result<EncounterDto> GetById(long id);
 
-        Result<List<EncounterDto>> GetAll();
+        Result<List<UnifiedEncounterDto>> GetAll();
 
         // Delete Encounter
         Result Delete(long id);

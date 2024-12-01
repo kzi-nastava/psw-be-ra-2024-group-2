@@ -283,7 +283,8 @@ namespace Explorer.Encounters.Core.UseCases
                     Id = encounter.Id,
                     Name = encounter.Name,
                     Description = encounter.Description,
-                    // Map other properties
+                    Lattitude = encounter.Lattitude,
+                    Longitude = encounter.Longitude,
                 };
 
                 return Result.Ok(encounterDto);
@@ -294,22 +295,64 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
-        public Result<List<EncounterDto>> GetAll()
+        public Result<List<UnifiedEncounterDto>> GetAll()
         {
             try
             {
                 var encounters = _encounterRepository.GetAll();
-                var encounterDtos = new List<EncounterDto>();
+                var encounterDtos = new List<UnifiedEncounterDto>();
 
                 foreach (var encounter in encounters)
                 {
-                    encounterDtos.Add(new EncounterDto
+                    // Debugging: Log the type of the encounter to ensure it's being recognized correctly
+                    string encounterType = encounter.GetType().Name; // This will return the type name as a string (e.g., "SocialEncounter", "HiddenLocationEncounter")
+
+                    UnifiedEncounterDto encounterDto = encounter switch
                     {
-                        Id = encounter.Id,
-                        Name = encounter.Name,
-                        Description = encounter.Description,
-                        // Map other properties
-                    });
+                        SocialEncounter socialEncounter => new UnifiedEncounterDto
+                        {
+                            Id = socialEncounter.Id,
+                            Name = socialEncounter.Name,
+                            Description = socialEncounter.Description,
+                            Latitude = socialEncounter.Lattitude,
+                            Longitude = socialEncounter.Longitude,
+                            EncounterType = "Social",
+                            RequiredPeople = socialEncounter.RequiredPeople,
+                            SocialRangeInMeters = socialEncounter.RangeInMeters,
+                            TouristIds = socialEncounter.TouristIds
+                        },
+                        HiddenLocationEncounter hiddenLocationEncounter => new UnifiedEncounterDto
+                        {
+                            Id = hiddenLocationEncounter.Id,
+                            Name = hiddenLocationEncounter.Name,
+                            Description = hiddenLocationEncounter.Description,
+                            Latitude = hiddenLocationEncounter.Lattitude,
+                            Longitude = hiddenLocationEncounter.Longitude,
+                            EncounterType = "HiddenLocation",
+                            TargetLatitude = hiddenLocationEncounter.TargetLatitude,
+                            TargetLongitude = hiddenLocationEncounter.TargetLongitude,
+                            HiddenLocationRangeInMeters = hiddenLocationEncounter.RangeInMeters,
+                            Image = new EncounterImageDto
+                            {
+                                Data = hiddenLocationEncounter.Image?.Data ?? string.Empty,
+                                UploadedAt = hiddenLocationEncounter.Image?.UploadedAt ?? DateTime.MinValue,
+                                MimeType = hiddenLocationEncounter.Image?.MimeType.ToString() ?? "default-mime-type"
+                            }
+                        },
+                        MiscEncounter miscEncounter => new UnifiedEncounterDto
+                        {
+                            Id = miscEncounter.Id,
+                            Name = miscEncounter.Name,
+                            Description = miscEncounter.Description,
+                            Latitude = miscEncounter.Lattitude,
+                            Longitude = miscEncounter.Longitude,
+                            EncounterType = "Misc",
+                            ActionDescription = miscEncounter.ActionDescription
+                        },
+                        _ => throw new InvalidOperationException($"Unknown encounter type: {encounter.GetType().Name}")
+                    };
+
+                    encounterDtos.Add(encounterDto); // Add the derived DTO to the list
                 }
 
                 return Result.Ok(encounterDtos);
@@ -319,6 +362,9 @@ namespace Explorer.Encounters.Core.UseCases
                 return Result.Fail($"Failed to retrieve all encounters: {ex.Message}");
             }
         }
+
+
+
 
         // Delete encounter method
         public Result Delete(long id)
@@ -350,7 +396,8 @@ namespace Explorer.Encounters.Core.UseCases
                     Id = encounter.Id,
                     Name = encounter.Name,
                     Description = encounter.Description,
-                    // Map other properties
+                    Lattitude = encounter.Lattitude,
+                    Longitude = encounter.Longitude,
                 };
 
                 return Result.Ok(encounterDto);
