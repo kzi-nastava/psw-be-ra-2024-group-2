@@ -40,5 +40,7 @@ public class PaymentProfile : Profile
         CreateMap<TourSale, TourSaleDto>()
             .ForMember(dest => dest.Tours, opt => opt.MapFrom(src => src.Tours))
             .ReverseMap();
+
+        CreateMap<Coupon, CouponDto>().ReverseMap();
     }
 }
