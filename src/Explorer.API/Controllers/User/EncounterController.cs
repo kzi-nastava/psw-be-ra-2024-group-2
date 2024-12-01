@@ -48,12 +48,6 @@ namespace Explorer.API.Controllers.User
             return CreateResponse(result);
         }
 
-        [HttpPut("checkTouristPosition")]
-        public ActionResult<SocialEncounterDto> CheckTourists([FromBody] SocialEncounterDto encounterDto, double longitude, double latitude, int touristId)
-        {
-            var result = _encounterService.CheckTouristPosition(encounterDto, longitude, latitude, touristId);
-            return CreateResponse(result);
-        }
 
         // Create Hidden Location Encounter
         [HttpPost("hidden-location")]
@@ -89,7 +83,7 @@ namespace Explorer.API.Controllers.User
 
         // Update Misc Encounter
         [HttpPut("misc")]
-        public ActionResult<MiscEncounterDto> UpdateMiscEncounter([FromBody] MiscEncounterDto encounterDto)
+        public ActionResult<MiscEncounterDto> UpdateMiscEncounter([FromBody] UnifiedEncounterDto encounterDto)
         {
             var result = _encounterService.UpdateMiscEncounter(encounterDto);
             return CreateResponse(result);

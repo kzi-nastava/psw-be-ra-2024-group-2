@@ -14,6 +14,8 @@ namespace Explorer.Encounters.Core.Domain
         public string Description { get; set; }
         public double Lattitude { get; set; }
         public double Longitude { get; set; }
+
+        public List<int> TouristIds { get; set; } = new List<int>();
         public Encounter(string name, string description, double lattitude, double longitude)
         {
             Name = name;

@@ -19,9 +19,7 @@ namespace Explorer.Encounters.API.Public
         // Update Encounter methods
         Result<SocialEncounterDto> UpdateSocialEncounter(SocialEncounterDto encounter);
         Result<HiddenLocationEncounterDto> UpdateHiddenLocationEncounter(HiddenLocationEncounterDto encounter);
-        Result<MiscEncounterDto> UpdateMiscEncounter(MiscEncounterDto encounter);
-        Result<SocialEncounterDto> CheckTouristPosition(SocialEncounterDto encounterDto, double lon, double lat, int touristId);
-
+        Result<MiscEncounterDto> UpdateMiscEncounter(UnifiedEncounterDto encounter);
 
         // Retrieve Encounters
         Result<EncounterDto> GetByName(string name);
