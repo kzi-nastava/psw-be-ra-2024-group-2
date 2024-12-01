@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payment.API.Dtos;
+using Explorer.Payment.API.Internal;
 using Explorer.Payment.API.Public.Tourist;
 using Explorer.Payment.Core.Domain;
 using Explorer.Payment.Core.Domain.RepositoryInterfaces;
@@ -18,6 +19,7 @@ public class ShoppingCartService : IShoppingCartService
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly ICrudRepository<TourBundle> _tourBundleRepository;
     private readonly ICrudRepository<Wallet> _walletRepository;
+    private readonly ICouponTouristService _couponTouristService;
 
 
     public ShoppingCartService(
@@ -27,7 +29,8 @@ public class ShoppingCartService : IShoppingCartService
         IMapper mapper,
         IOrderItemRepository orderItemRepository,
         ICrudRepository<TourBundle> tourBundleRepository,
-        ICrudRepository<Wallet> walletRepository)
+        ICrudRepository<Wallet> walletRepository,
+        ICouponTouristService couponTouristService)
     {
         _shoppingCartRepository = shoppingCartRepository;
         _tourPurchaseTokenRepository = tourPurchaseTokenRepository;
@@ -36,6 +39,7 @@ public class ShoppingCartService : IShoppingCartService
         _orderItemRepository = orderItemRepository;
         _tourBundleRepository = tourBundleRepository;
         _walletRepository = walletRepository;
+        _couponTouristService = couponTouristService;
     }
 
     public Result<TourOrderItemDto> AddTourToCart(long userId, long tourId)
@@ -53,6 +57,7 @@ public class ShoppingCartService : IShoppingCartService
             Price = tour.Value.Price,
             TourId = tourId,
             TimeOfPurchase = DateTime.UtcNow,
+            AuthorId = tour.Value.UserId,
         };
 
         var cart = _shoppingCartRepository.GetByUserId(userId);
@@ -85,6 +90,7 @@ public class ShoppingCartService : IShoppingCartService
             TourId = tourId,
             Price = tour.Value.Price,
             UserId = userId,
+            AuthorId = tour.Value.UserId,
         };
 
         return orderItemDto;
@@ -203,36 +209,78 @@ public class ShoppingCartService : IShoppingCartService
         };
     }
 
-    public Result Checkout(long userId)
+    public Result Checkout(long userId, string couponCode)
     {
         var cart = _shoppingCartRepository.GetByUserId(userId);
         var wallet = _walletRepository.GetPaged(1, int.MaxValue).Results
-                      .FirstOrDefault(w => w.UserId == userId);
+                          .FirstOrDefault(w => w.UserId == userId);
 
-        if (wallet.AdventureCoinsBalance < cart.TotalPrice)
+        float totalPrice = 0;
+        long tourIdForDiscount = -10;
+        float discountPercentage = -10;
+
+        // Apply coupon if provided
+        if (couponCode != "empty")
+        {
+            var coupon = _couponTouristService.UseCoupon(couponCode).Value;
+            discountPercentage = (float)coupon.DiscountPercentage;
+
+            if (coupon != null)
+            {
+                var matchingTours = cart.Items
+                    .OfType<TourOrderItem>()
+                    .Where(item => item.AuthorId == coupon.AuthorId)
+                    .ToList();
+
+                if (matchingTours.Any())
+                {
+                    tourIdForDiscount = coupon.AllToursDiscount
+                        ? matchingTours.OrderByDescending(t => t.Price).First().TourId
+                        : matchingTours.First().TourId;
+                }
+            }
+        }
+
+        // Calculate total price with discount for applicable tours
+        totalPrice = cart.Items.Sum(item =>
+        {
+            if (item is TourOrderItem tourOrderItem)
+            {
+                return tourOrderItem.TourId == tourIdForDiscount
+                    ? (float)tourOrderItem.Price * ((100 - discountPercentage) / 100)
+                    : (float)tourOrderItem.Price;
+            }
+
+            return item is BundleOrderItem bundleOrderItem
+                ? (float)bundleOrderItem.Price
+                : 0;
+        });
+
+        // Check if user has enough Adventure Coins
+        if (wallet.AdventureCoinsBalance < totalPrice)
         {
             return Result.Fail("Not enough Adventure Coins to complete the purchase.");
         }
 
+        // Create purchase tokens for each item in cart
         foreach (var item in cart.Items)
         {
             if (item is TourOrderItem tourOrderItem)
             {
-                var purchaseToken = new TourPurchaseToken(userId, tourOrderItem.TourId, cart.TotalPrice, DateTime.UtcNow);
-                _tourPurchaseTokenRepository.Create(purchaseToken);
+                _tourPurchaseTokenRepository.Create(new TourPurchaseToken(userId, tourOrderItem.TourId, totalPrice, DateTime.UtcNow));
             }
 
             if (item is BundleOrderItem bundleOrderItem)
             {
                 foreach (var tourId in bundleOrderItem.TourIds)
                 {
-                    var purchaseToken = new TourPurchaseToken(userId, tourId, cart.TotalPrice, DateTime.UtcNow);
-                    _tourPurchaseTokenRepository.Create(purchaseToken);
+                    _tourPurchaseTokenRepository.Create(new TourPurchaseToken(userId, tourId, totalPrice, DateTime.UtcNow));
                 }
             }
         }
 
-        wallet.SubtractFunds(cart.TotalPrice);
+        // Deduct funds and update wallet and cart
+        wallet.SubtractFunds(totalPrice);
         _walletRepository.Update(wallet);
 
         cart.Items.Clear();
@@ -240,6 +288,7 @@ public class ShoppingCartService : IShoppingCartService
 
         return Result.Ok();
     }
+
 
     public double GetTotalPrice(long userId)
     {
@@ -281,6 +330,7 @@ public class ShoppingCartService : IShoppingCartService
                 Token = item.Token,
                 UserId = item.UserId,
                 Name = _tourService.GetById(item.TourId).Value.Name,
+                AuthorId = item.AuthorId,
             };
         }));
 

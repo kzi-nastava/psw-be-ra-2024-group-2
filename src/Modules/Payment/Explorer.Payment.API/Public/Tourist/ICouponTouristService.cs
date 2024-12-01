@@ -10,5 +10,5 @@ namespace Explorer.Payment.API.Public.Tourist;
 
 public interface ICouponTouristService
 {
-    public Result<CouponDto> UseCoupon(long authorId, long tourId, string code);
+    public Result<CouponDto> UseCoupon(string code);
 }

@@ -20,7 +20,7 @@ public class CouponTouristService : CrudService<CouponDto, Coupon>, ICouponTouri
     {
         _couponRepository = couponRepository;
     }
-    public Result<CouponDto> UseCoupon(long authorId, long tourId, string code)
+    public Result<CouponDto> UseCoupon(string code)
     {
 
         Coupon? coupon = _couponRepository.GetPaged(1, int.MaxValue).Results.FirstOrDefault(c => c.Code == code);
@@ -28,10 +28,6 @@ public class CouponTouristService : CrudService<CouponDto, Coupon>, ICouponTouri
         //404
         if (coupon == null)         
             return Result.Fail(FailureCode.NotFound).WithError("The coupon doesn't exist or has expired!");
-
-        //409
-        if((coupon.AllToursDiscount == false && (coupon.AuthorId != authorId || coupon.TourId != tourId)) || (coupon.AllToursDiscount != false && coupon.AuthorId != authorId))
-            return Result.Fail(FailureCode.Conflict).WithError("Coupon exists, but it can't be used with this tour!");
 
         return MapToDto(coupon);
     }
