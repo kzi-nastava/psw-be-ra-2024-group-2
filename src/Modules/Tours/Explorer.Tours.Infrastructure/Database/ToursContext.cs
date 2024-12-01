@@ -24,6 +24,7 @@ public class ToursContext : DbContext
     public DbSet<Event> Events { get; set; }
     public DbSet<PersonalDairy> PersonalDairies { get; set; }
     public DbSet<Chapter> Chapters { get; set; }
+    public DbSet<EventSubscription> EventsSubscription { get; set; }
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
