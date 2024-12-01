@@ -19,5 +19,6 @@ namespace Explorer.Payment.API.Dtos
         public TourStatus Status { get; set; }
         public double Price { get; set; }
         public List<int> Checkpoints { get; set; } = new List<int>();
+        public List<TourPricesDto> Prices { get; set; } = new List<TourPricesDto>();
     }
 }

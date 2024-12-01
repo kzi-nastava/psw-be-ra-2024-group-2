@@ -13,5 +13,4 @@ public interface ITourService_Internal
 {
     Result<PagedResult<TourDto>> GetPaged(int page, int pageSize);
     Result<TourDto> GetById(long tourId);
-
 }

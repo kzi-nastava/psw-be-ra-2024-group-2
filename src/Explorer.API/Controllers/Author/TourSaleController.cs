@@ -60,7 +60,7 @@ namespace Explorer.API.Controllers.Author
             return Ok(result.Value);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public ActionResult<bool> DeleteTourSale(long id)
         {
             var result = _tourSaleService.Delete(id);
@@ -70,6 +70,5 @@ namespace Explorer.API.Controllers.Author
             }
             return Ok(result.Value);
         }
-
     }
 }

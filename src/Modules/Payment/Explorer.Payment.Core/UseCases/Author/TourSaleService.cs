@@ -56,19 +56,18 @@ namespace Explorer.Payment.Core.UseCases.Author
                         Tag = tourDetails.Value.Tag,
                         Status = tourDetails.Value.Status,
                         Equipment = tourDetails.Value.Equipment,
-                        Checkpoints = tourDetails.Value.Checkpoints
-                    };
-                }).ToList(),
-                Prices = tourSale.Tours.Select(tour =>
+                        Checkpoints = tourDetails.Value.Checkpoints,
+                        Prices = new List<TourPricesDto>
                 {
-                    var tourDetails = _tourServiceInternal.GetById(tour.TourId);
-                    return new TourPricesDto
+                    new TourPricesDto
                     {
                         TourId = tourDetails.Value.Id,
                         OldPrice = tourDetails.Value.Price,
                         NewPrice = tourDetails.Value.Price * (1 - tourSale.DiscountPercentage / 100.0)
+                    }
+                }
                     };
-                }).ToList()
+                }).ToList(),
             }).ToList();
 
 

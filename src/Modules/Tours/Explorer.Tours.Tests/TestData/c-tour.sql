@@ -18,3 +18,11 @@ INSERT INTO tours."Tours"(
 INSERT INTO tours."Tours"(
 	"Id", "UserId", "Name", "Description", "Difficulty", "Tag", "Status", "Price")
 	VALUES (-5, -1, 'Testic', 'Sone', 1, 1, 0, 0);
+
+INSERT INTO tours."Tours"(
+	"Id", "UserId", "Name", "Description", "Difficulty", "Tag", "Status", "Price")
+	VALUES (-6, -1, 'Testic', 'Sone', 1, 1, 1, 0);
+
+INSERT INTO tours."Tours"(
+	"Id", "UserId", "Name", "Description", "Difficulty", "Tag", "Status", "Price")
+	VALUES (-7, -1, 'Testic', 'Sone', 1, 1, 1, 0);

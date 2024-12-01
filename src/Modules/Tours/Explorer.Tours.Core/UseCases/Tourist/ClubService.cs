@@ -25,7 +25,7 @@ namespace Explorer.Tours.Core.UseCases.Tourist
         {
             if (string.IsNullOrWhiteSpace(clubDto.Name))
             {
-                return Result.Fail(FailureCode.InvalidArgument).WithError("Name is required");
+                return Result.Fail(FailureCode.InvalidArgument).WithError("TourName is required");
             }
 
             try
@@ -55,7 +55,7 @@ namespace Explorer.Tours.Core.UseCases.Tourist
 
                 if (string.IsNullOrWhiteSpace(clubDto.Name))
                 {
-                    return Result.Fail(FailureCode.InvalidArgument).WithError("Name is required");
+                    return Result.Fail(FailureCode.InvalidArgument).WithError("TourName is required");
                 }
 
                 var existingClub = _clubRepository.Get(id);

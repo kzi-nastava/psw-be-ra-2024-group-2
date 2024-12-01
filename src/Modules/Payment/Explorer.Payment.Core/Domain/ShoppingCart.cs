@@ -19,16 +19,20 @@ public class ShoppingCart : Entity
         Items = new List<OrderItem>();
     }
 
-    public void AddItem(OrderItem item)
+    public void AddTourItem(TourOrderItem item)
     {
-
         Items.Add(item);
         CalculateTotalPrice();
     }
 
-    public void RemoveItem(OrderItem item)
+    public void AddBundleItem(BundleOrderItem orderItem)
     {
+        Items.Add(orderItem);
+        CalculateTotalPrice();
+    }
 
+    public void RemoveTourItem(OrderItem item)
+    {
         Items.Remove(item);
         CalculateTotalPrice();
     }

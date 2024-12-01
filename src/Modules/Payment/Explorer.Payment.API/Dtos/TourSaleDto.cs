@@ -15,6 +15,5 @@ namespace Explorer.Payment.API.Dtos
         public int UserId { get; set; }
         public double DiscountPercentage { get; set; }
         public List<TourDtoPayment> Tours { get; set; } = new List<TourDtoPayment>();
-        public List<TourPricesDto> Prices { get; set; } = new List<TourPricesDto>();
     }
 }
