@@ -9,10 +9,11 @@ namespace Explorer.Payment.Core.Domain.RepositoryInterfaces
 {
     public interface IAdventureCoinNotificationRepository
     {
-        Task<List<AdventureCoinNotification>> GetByTouristId(long touristId);
-        Task<AdventureCoinNotification?> GetById(long notificationId);
-        Task Add(AdventureCoinNotification notification);
-        Task Update(AdventureCoinNotification notification);
+        List<AdventureCoinNotification> GetByTouristId(long touristId);
+        AdventureCoinNotification GetById(long notificationId);
+        void Add(AdventureCoinNotification notification);
+
+        void Update(AdventureCoinNotification notification);
 
     }
 }

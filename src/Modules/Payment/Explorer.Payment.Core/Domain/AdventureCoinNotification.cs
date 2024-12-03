@@ -12,7 +12,7 @@ public class AdventureCoinNotification : Entity
         IsRead = false; 
         SentAt = DateTime.UtcNow;
     }
-
+    public AdventureCoinNotification() { }
     public void MarkAsRead()
     {
         IsRead = true;

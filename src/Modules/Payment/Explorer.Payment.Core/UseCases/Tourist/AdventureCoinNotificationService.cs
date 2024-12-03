@@ -19,9 +19,9 @@ namespace Explorer.Payment.Core.UseCases.Tourist
             _repository = repository;
         }
 
-        public async Task<List<ActivationCoinNotificationDto>> GetNotificationsForTourist(long touristId)
+        public List<ActivationCoinNotificationDto> GetNotificationsForTourist(long touristId)
         {
-            var notifications = await _repository.GetByTouristId(touristId);
+            var notifications = _repository.GetByTouristId(touristId);
             return notifications.Select(n => new ActivationCoinNotificationDto
             {
                 Id = n.Id,
