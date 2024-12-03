@@ -1,20 +1,25 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
-
-public class AdventureCoinNotification : Entity
+﻿namespace Explorer.Payment.Core.Domain
 {
-    public long TouristId { get; set; }
-    public bool IsRead { get; set; } 
-    public DateTime SentAt { get; set; } 
+    using Explorer.BuildingBlocks.Core.Domain;
 
-    public AdventureCoinNotification(long touristId)
+    public class AdventureCoinNotification : Entity
     {
-        TouristId = touristId;
-        IsRead = false; 
-        SentAt = DateTime.UtcNow;
-    }
-    public AdventureCoinNotification() { }
-    public void MarkAsRead()
-    {
-        IsRead = true;
+        public long TouristId { get; set; }
+        public bool IsRead { get; set; }
+        public DateTime SentAt { get; set; }
+
+        public AdventureCoinNotification(long touristId)
+        {
+            TouristId = touristId;
+            IsRead = false;
+            SentAt = DateTime.UtcNow;
+        }
+
+        public AdventureCoinNotification() { }
+
+        public void MarkAsRead()
+        {
+            IsRead = true;
+        }
     }
 }
