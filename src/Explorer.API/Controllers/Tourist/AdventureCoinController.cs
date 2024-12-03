@@ -35,25 +35,6 @@ namespace Explorer.API.Controllers.Tourist
             return Ok(notifications); // Return notifications
         }
 
-        // Method to mark a single notification as read
-        [HttpPost("mark-as-read/{notificationId}")]
-        public IActionResult MarkNotificationAsRead(long notificationId)
-        {
-            try
-            {
-                _notificationService.MarkNotificationAsRead(notificationId);
-                return NoContent();  // No content to return after marking as read
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound("Notification not found.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error occurred while updating the notification.");
-            }
-        }
-
         // New method to mark all notifications as read
         [HttpPost("mark-all-as-read")]
         public IActionResult MarkAllNotificationsAsRead()
