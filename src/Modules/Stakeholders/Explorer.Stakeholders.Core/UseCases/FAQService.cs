@@ -71,5 +71,39 @@ namespace Explorer.Stakeholders.Core.UseCases
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
+
+        public Result<FAQDto> Update(int faqId, long userId, FAQDto faq)
+        {
+            var person = _personService.GetAccount(userId);
+            if (person.Value.Role != UserRole.Administrator)
+            {
+                return Result.Fail(FailureCode.Conflict).WithError("Only admins can create FAQ entries.");
+            }
+
+            if (string.IsNullOrWhiteSpace(faq.Question) || string.IsNullOrWhiteSpace(faq.Answer))
+            {
+                return Result.Fail(FailureCode.Conflict).WithError("Question and Answer cannot be empty.");
+            }
+            try
+            {
+                var existingFAQ = _repository.Get(faqId);
+                if (existingFAQ == null)
+                {
+                    return Result.Fail(FailureCode.NotFound).WithError("FAQ not found.");
+                }
+
+                existingFAQ.UpdateQuestion(faq.Question);
+                existingFAQ.UpdateAnswer(faq.Answer);
+                existingFAQ.UpdateLastUpdatedDate(faq.LastUpdatedDate);
+
+                var updatedEntity = _repository.Update(existingFAQ);
+
+                return MapToDto(updatedEntity);
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
     }
 }

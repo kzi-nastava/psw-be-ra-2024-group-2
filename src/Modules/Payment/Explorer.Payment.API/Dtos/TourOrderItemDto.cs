@@ -9,6 +9,7 @@ namespace Explorer.Payment.API.Dtos;
 public class TourOrderItemDto : TourOrderItemBasicDto
 {
     public long TourId { get; set; }
+    public long AuthorId { get; set; }
 }
 
 public class BundleOrderItemDto1 : TourOrderItemBasicDto

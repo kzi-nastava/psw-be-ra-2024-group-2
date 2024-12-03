@@ -18,9 +18,9 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPost]
-        public ActionResult<CouponDto> UseCoupon([FromBody] CouponDto coupon)
+        public ActionResult<CouponDto> UseCoupon([FromQuery] string code)
         {
-            var theCoupon = _couponService.UseCoupon(coupon.AuthorId, coupon.TourId, coupon.Code);
+            var theCoupon = _couponService.UseCoupon(code);
             return CreateResponse(theCoupon);
         }
     }

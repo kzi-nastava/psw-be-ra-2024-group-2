@@ -9,7 +9,7 @@ public interface IShoppingCartService
     Result<BundleOrderItemDto> AddBundleToCart(long userId, long bundleId);
     Result<TourOrderItemDto> RemoveTourItemFromCart(long userId, long tourId);
     Result<BundleOrderItemDto> RemoveBundleItemFromCart(long userId, long bundleId);
-    Result Checkout(long userId);
+    Result Checkout(long userId, string couponCode);
     double GetTotalPrice(long userId);
     List<TourOrderItemBasicDto> GetOrderItems(long userId);
     IEnumerable<TourPaymentDto> GetPurchasedTours(long userId);

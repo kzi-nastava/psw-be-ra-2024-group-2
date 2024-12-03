@@ -32,5 +32,15 @@ public class PaymentProfile : Profile
                 src.Tours.Select(t => (int)t.TourId).ToList()))
             .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId ?? 0))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status ?? BundleStatus.Draft));
+
+        CreateMap<TourSaleTour, TourDtoPayment>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.TourId))
+            .ReverseMap();
+
+        CreateMap<TourSale, TourSaleDto>()
+            .ForMember(dest => dest.Tours, opt => opt.MapFrom(src => src.Tours))
+            .ReverseMap();
+
+        CreateMap<Coupon, CouponDto>().ReverseMap();
     }
 }

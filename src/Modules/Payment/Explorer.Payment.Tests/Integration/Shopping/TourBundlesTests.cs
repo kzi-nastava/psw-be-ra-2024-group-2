@@ -90,9 +90,10 @@ public class TourBundlesTests : BasePaymentIntegrationTest
         {
             Tours = new List<int>
             {
-                1
+                -5
             }
         };
+
         dbContext.TourBundles.Add(bundle);
         dbContext.SaveChanges();
 
@@ -100,7 +101,7 @@ public class TourBundlesTests : BasePaymentIntegrationTest
 
         // Assert - Response
         result.ShouldNotBeNull();
-        result.StatusCode.ShouldBe(500);
+        result.StatusCode.ShouldBe(400);
     }
 
     [Fact]

@@ -42,13 +42,13 @@ public class AuthenticationService : IAuthenticationService
         return _tokenGenerator.GenerateAccessToken(user, personId);
     }
 
-    public Result<AuthenticationTokensDto> RegisterTourist(AccountRegistrationDto account)
+    public Result<AuthenticationTokensDto> RegisterUser(AccountRegistrationDto account)
     {
         if(_userRepository.Exists(account.Username)) return Result.Fail(FailureCode.NonUniqueUsername);
 
         try
         {
-            var user = _userRepository.Create(new User(account.Username, account.Password, UserRole.Tourist, true));
+            var user = _userRepository.Create(new User(account.Username, account.Password, account.UserRole, true));
             var person = _personRepository.Create(new Person(user.Id, account.Name, account.Surname, account.Email));
             var wallet = _walletService.Create(user.Id);
 

@@ -47,9 +47,9 @@ public class ShoppingCartController : BaseApiController
     }
 
     [HttpGet("checkout")]
-    public ActionResult Checkout()
+    public ActionResult Checkout([FromQuery] string couponCode)
     {
-        var result = _shoppingCartService.Checkout(User.PersonId());
+        var result = _shoppingCartService.Checkout(User.PersonId(), couponCode);
         return CreateResponse(result);
     }
 

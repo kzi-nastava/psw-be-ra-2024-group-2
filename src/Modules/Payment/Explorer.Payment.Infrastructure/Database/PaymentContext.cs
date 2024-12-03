@@ -12,6 +12,8 @@ public class PaymentContext : DbContext
     public DbSet<Coupon> Coupons { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<AdventureCoinNotification> AdventureCoinNotifications { get; set; }
+    public DbSet<TourSale> TourSales {  get; set; }
+    public DbSet<TourSaleTour> TourSaleTours { get; set; }
     public PaymentContext(DbContextOptions<PaymentContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,6 +46,18 @@ public class PaymentContext : DbContext
             .Property(te => te.Tours)
             .HasColumnType("jsonb");
 
+        modelBuilder.Entity<TourSaleTour>()
+            .HasKey(tst => new { tst.TourSaleId, tst.TourId });
 
+        modelBuilder.Entity<TourSale>()
+            .HasMany(ts => ts.Tours)
+            .WithOne(tst => tst.TourSale)
+            .HasForeignKey(tst => tst.TourSaleId);
+
+
+        modelBuilder.Entity<TourSaleTour>()
+            .HasOne(tst => tst.TourSale)
+            .WithMany(ts => ts.Tours)
+            .HasForeignKey(tst => tst.TourSaleId);
     }
 }
