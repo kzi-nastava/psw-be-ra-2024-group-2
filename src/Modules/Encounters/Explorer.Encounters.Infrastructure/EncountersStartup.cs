@@ -30,12 +30,14 @@ namespace Explorer.Encounters.Infrastructure
 
         private static void SetupInfrastructure(IServiceCollection services)
         {
-            services.AddScoped<IEncounterService,EncounterService>();
+            services.AddScoped<IEncounterService, EncounterService>();
+            services.AddScoped<IUserLevelService, UserLevelService>();
         }
 
         private static void SetupCore(IServiceCollection services)
         {
             services.AddScoped<IEncounterRepository, EncounterRepository>();
+            services.AddScoped<IUserLevelRepository, UserLevelRepository>();
 
 
             services.AddDbContext<EncountersContext>(opt =>
