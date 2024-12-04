@@ -1,18 +1,12 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.Core.Domain;
+using Explorer.Payment.API.Internal;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Tourist;
-using Explorer.Tours.API.Public.Tourist.DTOs;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Explorer.Tours.Core.UseCases.Tourist
@@ -21,14 +15,14 @@ namespace Explorer.Tours.Core.UseCases.Tourist
     {
         private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly ICrudRepository<Tour> _tourRepository;
-        private readonly IShoppingCartRepository _shoppingCartRepository;
-        private readonly ICrudRepository<TourPurchaseToken> _tourPurchaseTokenRepository;
-        public TourExecutionService(ITourExecutionRepository tourExecutionRepository, IMapper mapper, ICrudRepository<Tour> tourRepository, IShoppingCartRepository shoppingCartRepository, ICrudRepository<TourPurchaseToken> tourPurchaseTokenRepository) : base(mapper)
+        private readonly ITourPurchaseTokenService_Internal _tourPurchaseTokenService;
+        private readonly IPersonalDairyRepository _personalDairyRepository;
+        public TourExecutionService(ITourExecutionRepository tourExecutionRepository, IMapper mapper, ICrudRepository<Tour> tourRepository, ITourPurchaseTokenService_Internal tourPurchaseTokenService, IPersonalDairyRepository personalDairyRepository) : base(mapper)
         {
             _tourExecutionRepository = tourExecutionRepository;
             _tourRepository = tourRepository;
-            _shoppingCartRepository = shoppingCartRepository;
-            _tourPurchaseTokenRepository = tourPurchaseTokenRepository;
+            _tourPurchaseTokenService = tourPurchaseTokenService;
+            _personalDairyRepository = personalDairyRepository;
         }
 
         public Result<TourExecutionDto> GetByUserId(int userId)
@@ -44,10 +38,15 @@ namespace Explorer.Tours.Core.UseCases.Tourist
 
         public Result<TourExecutionDto> Create(int tourId, int userId)
         {
-            var tokens = _tourPurchaseTokenRepository.GetPaged(1, int.MaxValue)
-                .Results
+            //var tokens = _tourPurchaseTokenRepository.GetPaged(1, int.MaxValue)
+            //    .Results
+            //    .Where(t => t.UserId == userId && t.TourId == tourId)
+            //    .ToList();
+
+            var tokens = _tourPurchaseTokenService.GetPaged(1, int.MaxValue).Value.Results
                 .Where(t => t.UserId == userId && t.TourId == tourId)
                 .ToList();
+
             if (tokens.Count == 0)
             {
                 return Result.Fail(FailureCode.Conflict).WithError("Tour is not bought");
@@ -110,12 +109,14 @@ namespace Explorer.Tours.Core.UseCases.Tourist
                 TourExecution tourExecution = _tourExecutionRepository.Get(dto.Id);
                 List<TourExecutionCheckpoint> checkpoints = tourExecution.TourExecutionCheckpoints.Select(x => new TourExecutionCheckpoint(x.CheckpointId, x.ArrivalAt)).ToList();
                 bool tourStatus = tourExecution.CheckCheckpoints(checkpoints);
-                tourExecution.ChangeEndStatusAndEndingTime(tourStatus);
+                tourExecution.ChangeEndStatusAndEndingTime(tourStatus); 
                 var result =  _tourExecutionRepository.Update(tourExecution);
-                
+
+
+                var personalDiary = _personalDairyRepository.GetByTourExecutionId((int)result.Id);
+                personalDiary.ClosedAt = result.SessionEndingTime;
+                _personalDairyRepository.Update(personalDiary);
                 return MapToDto(result);
-
-
             }
             catch (Exception)
             {

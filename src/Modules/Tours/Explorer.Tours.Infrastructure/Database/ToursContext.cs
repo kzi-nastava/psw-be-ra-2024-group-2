@@ -1,5 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,12 +19,12 @@ public class ToursContext : DbContext
     public DbSet<Checkpoint> Checkpoints { get; set; }
     public DbSet<TourPreference> TourPreferences { get; set; }
     public DbSet<TourPreferenceTag> PreferenceTags { get; set; }
-
     public DbSet<TourExecution> TourExecutions { get; set; }
-
-    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-    public DbSet<OrderItem> OrderItems { get; set; }
-    public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
+    public DbSet<TouristEquipment> TouristEquipments { get; set; }
+    public DbSet<Event> Events { get; set; }
+    public DbSet<PersonalDairy> PersonalDairies { get; set; }
+    public DbSet<Chapter> Chapters { get; set; }
+    public DbSet<EventSubscription> EventsSubscription { get; set; }
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
@@ -50,10 +49,20 @@ public class ToursContext : DbContext
             .HasForeignKey<TourReview>(s => s.ImageId)
             .OnDelete(DeleteBehavior.SetNull);
 
+        modelBuilder.Entity<Event>()
+            .HasOne(p => p.Image)
+            .WithOne()
+            .HasForeignKey<Event>(s => s.ImageId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<TourExecution>()
             .Property(te => te.TourExecutionCheckpoints)
             .HasColumnType("jsonb");
-
+       
+        modelBuilder.Entity<Event>()
+            .Property(e => e.EventAcceptances)
+            .HasColumnType("jsonb");
+        
         modelBuilder.Entity<Tour>()
             .Property(t => t.TourDurationByTransports)
             .HasColumnType("jsonb");
@@ -72,10 +81,24 @@ public class ToursContext : DbContext
             .HasForeignKey(t => t.TourIssueReportId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<ShoppingCart>()
-        .HasMany(s => s.Items)
-        .WithOne(i => i.ShoppingCart)
-        .HasForeignKey(i => i.ShoppingCartId);
+        modelBuilder.Entity<TouristEquipment>()
+            .Property(ue => ue.UserId)
+            .IsRequired();
 
+        modelBuilder.Entity<TouristEquipment>()
+            .Property(ue => ue.EquipmentId)
+            .IsRequired();
+
+        modelBuilder.Entity<PersonalDairy>()
+            .HasMany(d => d.Chapters)
+            .WithOne()
+            .HasForeignKey("PersonalDairyId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Chapter>()
+        .HasOne(c => c.Image)
+        .WithMany() 
+        .HasForeignKey("ImageId") 
+        .IsRequired(false);
     }
 }

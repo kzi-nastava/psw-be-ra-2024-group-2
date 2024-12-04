@@ -10,8 +10,8 @@ public interface IEquipmentService
     Result<EquipmentDto> Create(EquipmentDto equipment);
     Result<EquipmentDto> Update(EquipmentDto equipment);
     Result Delete(int id);
-    Result AddEquipmentTourist(long userId, long equipmentId);
-    Result RemoveEquipmentFromTourist(long userId, long equipmentId);
+    Result<EquipmentDto> AddEquipmentTourist(long userId, long equipmentId);
+    Result<EquipmentDto> RemoveEquipmentFromTourist(long userId, long equipmentId);
     public IList<EquipmentDto> GetEquipmentForTourist(long touristId);
 
 }

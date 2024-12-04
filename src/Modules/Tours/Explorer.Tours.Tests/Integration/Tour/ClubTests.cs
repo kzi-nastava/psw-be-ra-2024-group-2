@@ -135,7 +135,7 @@ namespace Explorer.Tours.Tests.Integration.Tour
             var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
             var updateEntity = new ClubDto()
             {
-                Name = "Valid Name",
+                Name = "Valid TourName",
                 Description = "Valid Description",
                 ImageId = 1,
                 OwnerId = 1

@@ -3,6 +3,7 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.UseCases;
 using Explorer.Stakeholders.Infrastructure.Authentication;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers.Tourist
@@ -13,10 +14,12 @@ namespace Explorer.API.Controllers.Tourist
     {
 
         private readonly IRatingApplicationService _ratingApplicationService;
+        private readonly IPersonService _personService;
 
-        public RatingApplicationTouristController(IRatingApplicationService ratingApplicationService)
+        public RatingApplicationTouristController(IRatingApplicationService ratingApplicationService, IPersonService personService)
         {
             _ratingApplicationService = ratingApplicationService;
+            _personService = personService;
         }
 
         [HttpPost]
@@ -30,7 +33,22 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<RatingApplicationDto> Get()
         {
             var rating = _ratingApplicationService.Get(User.PersonId());
-            return CreateResponse(rating);
+
+            if (rating.IsFailed || rating.Value == null)
+            {
+                return BadRequest(rating.Errors);
+            }
+
+            var user = _personService.GetAccountImage(rating.Value.UserId);
+
+            RatingWithUserDto ratingWithUserDto = new RatingWithUserDto()
+            {
+                RatingApplication = rating.Value,
+                Account = user.Value
+            };
+
+            var result = Result.Ok(ratingWithUserDto);
+            return CreateResponse(result);
         }
     }
 }

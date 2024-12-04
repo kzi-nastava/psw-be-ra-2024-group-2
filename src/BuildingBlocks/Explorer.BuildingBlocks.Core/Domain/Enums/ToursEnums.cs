@@ -66,3 +66,21 @@ public enum TourIssueNotificationStatus
     Read,
     Unread
 }
+public enum EventNotificationStatus
+{
+    Read,
+    Unread
+}  
+public enum DairyStatus
+{
+    InProgress,
+    Completed
+}
+public enum EventCategory
+{
+    Concert,
+    MusicFestival,
+    FilmFestival,
+    FootballMatch,
+    BasketballMatch
+}

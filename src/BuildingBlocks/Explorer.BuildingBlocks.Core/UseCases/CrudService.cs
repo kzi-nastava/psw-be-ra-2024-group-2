@@ -24,6 +24,12 @@ public abstract class CrudService<TDto, TDomain> : BaseService<TDto, TDomain> wh
         return MapToDto(result);
     }
 
+    public Result<PagedResult<TDto>> GetAll()
+    {
+        var result = GetPaged(1, int.MaxValue);
+        return result;
+    }
+
     public Result<TDto> Get(int id)
     {
         try

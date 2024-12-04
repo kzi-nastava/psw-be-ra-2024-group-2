@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Stakeholders.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Tours.Core.Domain
 {
@@ -26,7 +20,7 @@ namespace Explorer.Tours.Core.Domain
 
         private void Validate()
         {
-            if(string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name");
+            if(string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid TourName");
             if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description");
             if(ImageId <= 0) throw new ArgumentException("Invalid Image");
             if (OwnerId == 0) throw new ArgumentException("Club must have an Owner");

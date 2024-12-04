@@ -1,20 +1,12 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.Core.Domain;
+using Explorer.Payment.API.Internal;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Explorer.Tours.Core.UseCases.Administration
 {
@@ -25,16 +17,16 @@ namespace Explorer.Tours.Core.UseCases.Administration
         private readonly ICrudRepository<Tour> _tourRepository;
         private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly ITransactionRepository _transactionRepository;
-        private readonly ICrudRepository<TourPurchaseToken> _tourPurchaseTokenRepository;
+        private readonly ITourPurchaseTokenService_Internal _tourPurchaseTokenService;
 
-        public TourReviewService(ICrudRepository<TourPurchaseToken> purchaseRepository, ICrudRepository<TourReview> repository, ITransactionRepository _transactionRepository, IMapper mapper, IImageRepository imageRepository, 
-                                    ICrudRepository<TourReview> reviewRepository, ICrudRepository<Tour> tourRepository, ITourExecutionRepository tourExecutionRepository) : base(repository, mapper)
+        public TourReviewService(ICrudRepository<TourReview> repository, ITransactionRepository _transactionRepository, IMapper mapper, IImageRepository imageRepository,
+                                    ICrudRepository<TourReview> reviewRepository, ICrudRepository<Tour> tourRepository, ITourExecutionRepository tourExecutionRepository, ITourPurchaseTokenService_Internal tourPurchaseTokenService) : base(repository, mapper)
         {
             _imageRepository = imageRepository;
             _reviewRepository = reviewRepository;
             _tourRepository = tourRepository;
             _tourExecutionRepository = tourExecutionRepository;
-            _tourPurchaseTokenRepository = purchaseRepository;
+            _tourPurchaseTokenService = tourPurchaseTokenService;
         }
 
         public Result<PagedResult<TourReviewDto>> GetPagedByTourId(int tourId, int page, int pageSize)
@@ -119,8 +111,9 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         private bool IsPurchased(long tourId, long userId)
         {
-            var tokens = _tourPurchaseTokenRepository.GetPaged(1, int.MaxValue);
-            foreach (TourPurchaseToken token in tokens.Results)
+            //var tokens = _tourPurchaseTokenRepository.GetPaged(1, int.MaxValue);
+            var tokens = _tourPurchaseTokenService.GetPaged(1, int.MaxValue).Value;
+            foreach (var token in tokens.Results)
             {
                 if (token.TourId == tourId && token.UserId == userId)
                     return true;

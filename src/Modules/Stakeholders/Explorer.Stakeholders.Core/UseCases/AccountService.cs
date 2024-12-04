@@ -36,7 +36,7 @@ public class AccountService : CrudService<AccountDto, Person>, IAccountService
             UserId = person.UserId,
             Username = person.User.Username,
             Email = person.Email,
-            Role = (int)person.User.Role,
+            Role = person.User.Role,
             IsBlocked = person.User.IsBlocked
         }).ToList();
         var filteredPagedResult = new PagedResult<AccountDto>(mappedResults, pagedResult.TotalCount);
@@ -78,6 +78,43 @@ public class AccountService : CrudService<AccountDto, Person>, IAccountService
 
             person.User.IsBlocked = true;
             user.IsBlocked = true;
+
+            var newPerson = _personRepository.Update(person);
+            _userRepository.Update(user);
+
+            if (newPerson.Id != personId)
+            {
+                throw new ArgumentException("PersonId does not match the updated person");
+            }
+
+            _transactionRepository.CommitTransaction();
+            return MapToDto(newPerson);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+        catch (ArgumentException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+    }
+
+    public Result<AccountDto> Unblock(long personId)
+    {
+        try
+        {
+            var person = _personRepository.Get(personId);
+            if (person.User == null)
+            {
+                throw new ArgumentException("User associated with person not found");
+            }
+            var user = person.User;
+
+            _transactionRepository.BeginTransaction();
+
+            person.User.IsBlocked = false;
+            user.IsBlocked = false;
 
             var newPerson = _personRepository.Update(person);
             _userRepository.Update(user);
