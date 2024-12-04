@@ -20,20 +20,20 @@ namespace Explorer.Encounters.Infrastructure.Database.Repositories
         // Get a UserLevel by ID
         public UserLevel GetById(long id)
         {
-            return _context.userLevels.Find(id);
+            return _context.UserLevels.Find(id);
         }
 
         // Add a new UserLevel
         public void AddUserLevel(UserLevel userLevel)
         {
-            _context.userLevels.Add(userLevel);
+            _context.UserLevels.Add(userLevel);
             _context.SaveChanges();
         }
 
         // Update an existing UserLevel
         public void UpdateUserLevel(UserLevel userLevel)
         {
-            var existingUserLevel = _context.userLevels.Find(userLevel.Id);
+            var existingUserLevel = _context.UserLevels.Find(userLevel.Id);
             if (existingUserLevel != null)
             {
                 _context.Entry(existingUserLevel).CurrentValues.SetValues(userLevel);
@@ -48,7 +48,7 @@ namespace Explorer.Encounters.Infrastructure.Database.Repositories
         // Get all UserLevels
         public List<UserLevel> GetAllUserLevels()
         {
-            return _context.userLevels.ToList();
+            return _context.UserLevels.ToList();
         }
     }
 }

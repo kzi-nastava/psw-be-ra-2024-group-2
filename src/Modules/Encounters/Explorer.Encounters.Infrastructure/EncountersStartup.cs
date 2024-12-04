@@ -38,6 +38,7 @@ namespace Explorer.Encounters.Infrastructure
         {
             services.AddScoped<IEncounterRepository, EncounterRepository>();
             services.AddScoped<IUserLevelRepository, UserLevelRepository>();
+            services.AddScoped<IImageRepository, ImageRepository<EncountersContext>>();
 
 
             services.AddDbContext<EncountersContext>(opt =>

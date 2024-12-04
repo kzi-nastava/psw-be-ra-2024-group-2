@@ -10,8 +10,8 @@ namespace Explorer.Encounters.Infrastructure.Database
 {
     public class EncountersContext : DbContext
     {
-        public DbSet<Encounter> encounters { get; set; }
-        public DbSet<UserLevel> userLevels { get; set; }  
+        public DbSet<Encounter> Encounters { get; set; }
+        public DbSet<UserLevel> UserLevels { get; set; }  
         public EncountersContext(DbContextOptions<EncountersContext> options) : base(options){}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
