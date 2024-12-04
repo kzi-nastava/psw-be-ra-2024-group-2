@@ -48,6 +48,7 @@ namespace Explorer.API.Controllers.User
             return CreateResponse(result);
         }
 
+
         // Create Hidden Location Encounter
         [HttpPost("hidden-location")]
         public ActionResult<HiddenLocationEncounterDto> CreateHiddenLocationEncounter([FromBody] HiddenLocationEncounterDto encounterDto)
@@ -66,15 +67,21 @@ namespace Explorer.API.Controllers.User
 
         // Update Social Encounter
         [HttpPut("social")]
-        public ActionResult<SocialEncounterDto> UpdateSocialEncounter([FromBody] SocialEncounterDto encounterDto)
+        public ActionResult<SocialEncounterDto> UpdateSocialEncounter([FromBody] UnifiedEncounterDto encounterDto)
         {
             var result = _encounterService.UpdateSocialEncounter(encounterDto);
+            return CreateResponse(result);
+        }
+        [HttpPut("removesocial")]
+        public ActionResult<SocialEncounterDto> UpdateSocialEncounter([FromBody] int id)
+        {
+            var result = _encounterService.RemoveFromSocialEncounters(id);
             return CreateResponse(result);
         }
 
         // Update Hidden Location Encounter
         [HttpPut("hidden-location")]
-        public ActionResult<HiddenLocationEncounterDto> UpdateHiddenLocationEncounter([FromBody] HiddenLocationEncounterDto encounterDto)
+        public ActionResult<HiddenLocationEncounterDto> UpdateHiddenLocationEncounter([FromBody] UnifiedEncounterDto encounterDto)
         {
             var result = _encounterService.UpdateHiddenLocationEncounter(encounterDto);
             return CreateResponse(result);
@@ -82,7 +89,7 @@ namespace Explorer.API.Controllers.User
 
         // Update Misc Encounter
         [HttpPut("misc")]
-        public ActionResult<MiscEncounterDto> UpdateMiscEncounter([FromBody] MiscEncounterDto encounterDto)
+        public ActionResult<MiscEncounterDto> UpdateMiscEncounter([FromBody] UnifiedEncounterDto encounterDto)
         {
             var result = _encounterService.UpdateMiscEncounter(encounterDto);
             return CreateResponse(result);

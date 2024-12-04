@@ -12,7 +12,7 @@ namespace Explorer.Encounters.Core.Mappers
 {
     public class EncountersProfile : Profile
     {
-        public EncountersProfile() 
+        public EncountersProfile()
         {
 
             CreateMap<Encounter, EncounterDto>().ReverseMap();
@@ -27,7 +27,9 @@ namespace Explorer.Encounters.Core.Mappers
             .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data))
             .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
-            
+
+            CreateMap<UserLevel, UserLevelDto>().ReverseMap();
+
 
         }
     }

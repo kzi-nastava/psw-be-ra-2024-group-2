@@ -21,21 +21,21 @@ namespace Explorer.Encounters.Infrastructure.Database.Repositories
         // Retrieve all Encounters
         public List<Encounter> GetAll()
         {
-           return _context.encounters.ToList();    
+           return _context.Encounters.ToList();    
         }
 
 
         // Add a new Encounter (for each type, use specific methods)
         public void AddEncounter(Encounter encounter)
         {
-            _context.encounters.Add(encounter);
+            _context.Encounters.Add(encounter);
             _context.SaveChanges();
         }
 
 
         public void UpdateEncounter(Encounter encounter)
         {
-            var existingItem = _context.encounters.Find(encounter.Id);
+            var existingItem = _context.Encounters.Find(encounter.Id);
             if (existingItem != null)
             {
                 _context.Entry(existingItem).CurrentValues.SetValues(encounter);
@@ -50,7 +50,7 @@ namespace Explorer.Encounters.Infrastructure.Database.Repositories
         // Delete an Encounter by Id (generic method)
         public void Delete(long id)
         {
-            var encounter = _context.encounters.Find(id);
+            var encounter = _context.Encounters.Find(id);
             if (encounter != null)
             {
                 _context.Set<Encounter>().Remove(encounter);
@@ -65,7 +65,7 @@ namespace Explorer.Encounters.Infrastructure.Database.Repositories
         // Retrieve an Encounter by its Name
         public Encounter? GetByName(string name)
         {
-            return _context.encounters.FirstOrDefault(e => e.Name == name);
+            return _context.Encounters.FirstOrDefault(e => e.Name == name);
         }
 
         // Retrieve specific Encounter by Id
