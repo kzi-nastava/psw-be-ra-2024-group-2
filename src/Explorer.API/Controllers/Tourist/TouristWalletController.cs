@@ -1,9 +1,12 @@
-﻿using Explorer.Payment.API.Internal;
+﻿using Explorer.Payment.API.Dtos;
+using Explorer.Payment.API.Internal;
 using Explorer.Payment.API.Public.Tourist;
+using Explorer.Payment.Infrastructure.Database;
 using Explorer.Stakeholders.Infrastructure.Authentication;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Tourist;
 
@@ -28,3 +31,6 @@ public class TouristWalletController : BaseApiController
     }
 
 }
+
+
+

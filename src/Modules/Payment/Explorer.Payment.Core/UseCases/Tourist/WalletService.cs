@@ -4,6 +4,7 @@ using Explorer.Payment.API.Dtos;
 using Explorer.Payment.API.Internal;
 using Explorer.Payment.API.Public.Tourist;
 using Explorer.Payment.Core.Domain;
+using Explorer.Payment.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace Explorer.Payment.Core.UseCases.Tourist;
 public class WalletService : CrudService<WalletDto, Wallet>, IWalletService_Internal, IWalletService
 {
     private readonly ICrudRepository<Wallet> _walletRepository;
+    private readonly IAdventureCoinNotificationRepository _adventureCoinNotificationRepository;
 
-    public WalletService(ICrudRepository<Wallet> walletRepository, IMapper mapper) : base(walletRepository, mapper)
+    public WalletService(ICrudRepository<Wallet> walletRepository, IAdventureCoinNotificationRepository adventureCoinNotificationRepository, IMapper mapper) : base(walletRepository, mapper)
     {
         _walletRepository = walletRepository;
+        _adventureCoinNotificationRepository = adventureCoinNotificationRepository;
     }
 
     public Result<WalletDto>Create(long userId)
@@ -61,7 +64,7 @@ public class WalletService : CrudService<WalletDto, Wallet>, IWalletService_Inte
         }
 
         var wallet = _walletRepository.GetPaged(1, int.MaxValue).Results
-                      .FirstOrDefault(w => w.UserId == userId);
+                          .FirstOrDefault(w => w.UserId == userId);
 
         if (wallet == null)
         {
@@ -71,6 +74,11 @@ public class WalletService : CrudService<WalletDto, Wallet>, IWalletService_Inte
         wallet.AddFunds(amount);
         _walletRepository.Update(wallet);
 
+        var adventureCoinNotification = new AdventureCoinNotification(userId);
+        _adventureCoinNotificationRepository.Add(adventureCoinNotification);
+
         return Result.Ok();
     }
+
+
 }
