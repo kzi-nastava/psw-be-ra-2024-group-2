@@ -19,6 +19,7 @@ namespace Explorer.Payment.Core.UseCases.Tourist
             _repository = repository;
         }
 
+        // Method to get notifications for a tourist
         public List<ActivationCoinNotificationDto> GetNotificationsForTourist(long touristId)
         {
             var notifications = _repository.GetByTouristId(touristId);
@@ -31,7 +32,29 @@ namespace Explorer.Payment.Core.UseCases.Tourist
             }).ToList();
         }
 
-        
-    }
+        // Method to mark a notification as read
+        public void MarkNotificationAsRead(long notificationId)
+        {
+            var notification = _repository.GetById(notificationId);
+            if (notification != null)
+            {
+                notification.IsRead = true;
+                _repository.Update(notification);
+            }
+            else
+            {
+                throw new Exception("Notification not found");
+            }
+        }
 
+        public void MarkAllNotificationsAsRead(long touristId)
+        {
+            var notifications = _repository.GetByTouristId(touristId);
+            foreach (var notification in notifications)
+            {
+                notification.IsRead = true;
+                _repository.Update(notification); 
+            }
+        }
+    }
 }

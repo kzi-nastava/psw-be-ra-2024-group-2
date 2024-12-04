@@ -10,5 +10,8 @@ namespace Explorer.Payment.API.Public.Tourist
     public interface IAdventureCoinNotificationService
     {
         List<ActivationCoinNotificationDto> GetNotificationsForTourist(long touristId);
+        void MarkNotificationAsRead(long notificationId);
+        void MarkAllNotificationsAsRead(long touristId);
     }
+
 }
