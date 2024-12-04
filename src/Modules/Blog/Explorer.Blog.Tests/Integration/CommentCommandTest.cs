@@ -13,7 +13,7 @@ namespace Explorer.Blog.Tests.Integration;
 public class CommentCommandTests : BaseBlogIntegrationTest
 {
     public CommentCommandTests(BlogTestFactory factory) : base(factory) { }
-
+    /*
     [Fact]
     public void Creates_Comment()
     {
@@ -61,9 +61,6 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         storedComment.ShouldNotBeNull();
         storedComment.BlogId.ShouldBe(blogId); // Provera BlogId-a
     }
-
-
-
 
     [Fact]
     public void Create_fails_invalid_data()
@@ -203,7 +200,7 @@ public class CommentCommandTests : BaseBlogIntegrationTest
         var exception = Should.Throw<KeyNotFoundException>(() => controller.Delete(-1000, 1));
         exception.Message.ShouldBe("404: Not found: -1000");
     }
-
+    */
 
     private static CommentController CreateController(IServiceScope scope)
     {

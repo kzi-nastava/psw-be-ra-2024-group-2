@@ -10,7 +10,7 @@ public class Equipment : Entity
 
     public Equipment(string name, string? description)
     {
-        if(string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Invalid Name.");
+        if(string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Invalid TourName.");
         Name = name;
         Description = description;
     }

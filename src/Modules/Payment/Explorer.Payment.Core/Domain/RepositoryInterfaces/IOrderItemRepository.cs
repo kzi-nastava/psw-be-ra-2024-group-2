@@ -1,13 +1,16 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Explorer.Payment.Core.Domain.RepositoryInterfaces;
 
-namespace Explorer.Payment.Core.Domain.RepositoryInterfaces;
-
-public interface IOrderItemRepository : ICrudRepository<OrderItem>
+public interface IOrderItemRepository
 {
-    OrderItem GetByShoppingCartId(long shoppingCartId);
+    BundleOrderItem? GetBundle(long bundleId);
+    List<BundleOrderItem> GetAllBundles();
+
+    TourOrderItem? GetTour(long id);
+    List<TourOrderItem> GetAllTours();
+
+    List<OrderItem> GetAll();
+    
+    void Add(OrderItem orderItem);
+    void Update(OrderItem orderItem);
+    void Delete(long id);
 }

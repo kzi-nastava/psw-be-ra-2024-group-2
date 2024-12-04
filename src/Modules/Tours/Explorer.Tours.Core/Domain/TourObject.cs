@@ -53,7 +53,7 @@ namespace Explorer.Tours.Core.Domain
 
         private void Validate()
         {
-            if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name.");
+            if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid TourName.");
             if (!Enum.IsDefined(typeof(ObjectCategory), Category)) throw new ArgumentException("Invalid object category.");
             if (double.IsNaN(Longitude)) throw new ArgumentException("Invalid location.");
             if (double.IsNaN(Latitude)) throw new ArgumentException("Invalid location");

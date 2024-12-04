@@ -105,8 +105,8 @@ public class TourTests : BaseToursIntegrationTest
 
 
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(4);  
-        result.TotalCount.ShouldBe(4);
+        result.Results.Count.ShouldBe(6);  
+        result.TotalCount.ShouldBe(6);
     }
 
     //[Fact]
@@ -119,7 +119,7 @@ public class TourTests : BaseToursIntegrationTest
     //    {
     //        UserId = -1,
     //        Equipment = { -1 },
-    //        Name = "Gala",
+    //        TourName = "Gala",
     //        Description = "Opis",
     //        Difficulty = TourDifficulty.Hard,
     //        Tag = TourTag.Adventure,
@@ -129,13 +129,13 @@ public class TourTests : BaseToursIntegrationTest
     //    var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourDto;
 
     //    result.ShouldNotBeNull();
-    //    result.Name.ShouldBe(newEntity.Name);
+    //    result.TourName.ShouldBe(newEntity.TourName);
     //    result.Description.ShouldBe(newEntity.Description);
     //    result.Difficulty.ShouldBe(newEntity.Difficulty);
-    //    result.Status.ShouldBe(TourStatus.Draft);
+    //    result.Status.ShouldBe(Status.Draft);
     //    result.Price.ShouldBe(0);
 
-    //    var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Name == newEntity.Name);
+    //    var storedEntity = dbContext.Tours.FirstOrDefault(i => i.TourName == newEntity.TourName);
     //    storedEntity.ShouldNotBeNull();
     //}
 

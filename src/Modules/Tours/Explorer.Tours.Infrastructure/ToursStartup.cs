@@ -45,6 +45,7 @@ public static class ToursStartup
         services.AddScoped<ITourExecutionService, TourExecutionService>();
         services.AddScoped<IPersonalDairyService, PersonalDairyService>();
         services.AddScoped<IEventService, EventService>();
+        services.AddScoped<IEventSubscriptionService, EventSubscriptionService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -76,7 +77,7 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<PersonalDairy>), typeof(CrudDatabaseRepository<PersonalDairy, ToursContext>));
         services.AddScoped(typeof(IPersonalDairyRepository), typeof(PersonalDairyRepository<ToursContext>));
-
+        services.AddScoped(typeof(ICrudRepository<EventSubscription>), typeof(CrudDatabaseRepository<EventSubscription, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<Event>), typeof(CrudDatabaseRepository<Event, ToursContext>));
 
         services.AddDbContext<ToursContext>(opt =>

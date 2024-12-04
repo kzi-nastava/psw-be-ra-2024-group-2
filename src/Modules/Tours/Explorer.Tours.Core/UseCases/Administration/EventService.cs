@@ -93,15 +93,15 @@ namespace Explorer.Tours.Core.UseCases.Administration
             return new PagedResult<EventDto>(eventsInRange, eventsInRange.Count());
         }
 
-        public Result SubscribeToEvent(EventDto eventDto, int userId)
+        public Result <EventDto> SubscribeToEvent(EventDto eventDto, int userId)
         {
 
             Event e = _eventRepository.Get(eventDto.Id);
 
 
             e.EventAcceptances.Add(new EventAcception(userId, DateTime.UtcNow));
-            _eventRepository.Update(e);
-            return Result.Ok();
+            var result = _eventRepository.Update(e);
+            return MapToDto(result);
             
         }
 
@@ -178,6 +178,34 @@ namespace Explorer.Tours.Core.UseCases.Administration
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 
             return R * c;
+        }
+
+        public PagedResult<EventDto> FindAllByCategories(List<EventCategory> categories)
+        {
+            var allEvents = _eventRepository.GetPaged(1, int.MaxValue);
+
+
+            var events = allEvents.Results
+                              .Select(obj => MapToDto(obj))
+                              .ToList();
+
+
+            var today = DateTime.UtcNow.Date;
+            var next7Days = today.AddDays(7);
+
+            var filteredEvents = events
+                .Where(e =>
+                    categories.Contains((EventCategory)Enum.Parse(typeof(EventCategory), e.Category)) &&
+                    (
+                        (e.StartDate >= today && e.StartDate <= next7Days) || (e.EndDate >= today && e.StartDate <= next7Days)      
+                    )
+                )
+                .ToList();
+            return new PagedResult<EventDto>(filteredEvents, filteredEvents.Count());
+
+
+
+
         }
     }
 }

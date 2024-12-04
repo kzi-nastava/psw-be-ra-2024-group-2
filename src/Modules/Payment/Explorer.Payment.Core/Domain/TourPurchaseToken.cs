@@ -11,10 +11,13 @@ public class TourPurchaseToken : Entity
 {
     public long UserId { get; private set; }
     public long TourId { get; private set; }
-
-    public TourPurchaseToken(long userId, long tourId)
+    public double Price { get; private set; }
+    public DateTime PurchaseTime { get; private set; }
+    public TourPurchaseToken(long userId, long tourId, double price, DateTime purchaseTime)
     {
         UserId = userId;
         TourId = tourId;
+        Price = price;
+        PurchaseTime = purchaseTime;
     }
 }
