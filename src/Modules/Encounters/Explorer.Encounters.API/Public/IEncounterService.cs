@@ -17,8 +17,8 @@ namespace Explorer.Encounters.API.Public
         Result<MiscEncounterDto> CreateMiscEncounter(MiscEncounterDto encounter);
 
         // Update Encounter methods
-        Result<SocialEncounterDto> UpdateSocialEncounter(SocialEncounterDto encounter);
-        Result<HiddenLocationEncounterDto> UpdateHiddenLocationEncounter(HiddenLocationEncounterDto encounter);
+        Result<SocialEncounterDto> UpdateSocialEncounter(UnifiedEncounterDto encounter);
+        Result<HiddenLocationEncounterDto> UpdateHiddenLocationEncounter(UnifiedEncounterDto encounter);
         Result<MiscEncounterDto> UpdateMiscEncounter(UnifiedEncounterDto encounter);
 
         // Retrieve Encounters
@@ -27,8 +27,7 @@ namespace Explorer.Encounters.API.Public
         Result<EncounterDto> GetById(long id);
 
         Result<List<UnifiedEncounterDto>> GetAll();
-
-        // Delete Encounter
         Result Delete(long id);
+        Result<string> RemoveFromSocialEncounters(int id);
     }
 }

@@ -67,15 +67,21 @@ namespace Explorer.API.Controllers.User
 
         // Update Social Encounter
         [HttpPut("social")]
-        public ActionResult<SocialEncounterDto> UpdateSocialEncounter([FromBody] SocialEncounterDto encounterDto)
+        public ActionResult<SocialEncounterDto> UpdateSocialEncounter([FromBody] UnifiedEncounterDto encounterDto)
         {
             var result = _encounterService.UpdateSocialEncounter(encounterDto);
+            return CreateResponse(result);
+        }
+        [HttpPut("removesocial")]
+        public ActionResult<SocialEncounterDto> UpdateSocialEncounter([FromBody] int id)
+        {
+            var result = _encounterService.RemoveFromSocialEncounters(id);
             return CreateResponse(result);
         }
 
         // Update Hidden Location Encounter
         [HttpPut("hidden-location")]
-        public ActionResult<HiddenLocationEncounterDto> UpdateHiddenLocationEncounter([FromBody] HiddenLocationEncounterDto encounterDto)
+        public ActionResult<HiddenLocationEncounterDto> UpdateHiddenLocationEncounter([FromBody] UnifiedEncounterDto encounterDto)
         {
             var result = _encounterService.UpdateHiddenLocationEncounter(encounterDto);
             return CreateResponse(result);
