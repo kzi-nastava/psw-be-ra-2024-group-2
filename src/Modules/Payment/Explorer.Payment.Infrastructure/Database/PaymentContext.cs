@@ -11,6 +11,7 @@ public class PaymentContext : DbContext
     public DbSet<TourBundle> TourBundles { get; set; }
     public DbSet<Coupon> Coupons { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
+    public DbSet<AdventureCoinNotification> AdventureCoinNotifications { get; set; }
     public DbSet<TourSale> TourSales {  get; set; }
     public DbSet<TourSaleTour> TourSaleTours { get; set; }
     public PaymentContext(DbContextOptions<PaymentContext> options) : base(options) { }
