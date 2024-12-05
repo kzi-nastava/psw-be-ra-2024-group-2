@@ -19,7 +19,7 @@ public class ImageRepository<TContext> : CrudDatabaseRepository<Image, TContext>
 
         public bool Exists(string data)
         {
-            return DbContext.Set<Image>().Any(i => i.Data == data);
+            return false;
         }
 
         public Image? GetByData(string data)
