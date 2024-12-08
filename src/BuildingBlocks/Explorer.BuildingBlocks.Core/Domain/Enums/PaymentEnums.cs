@@ -6,3 +6,10 @@ public enum BundleStatus
     Published,
     Archived
 };
+
+public enum SouvenirStatus
+{
+    Draft = 0,
+    Published,
+    Archived
+};

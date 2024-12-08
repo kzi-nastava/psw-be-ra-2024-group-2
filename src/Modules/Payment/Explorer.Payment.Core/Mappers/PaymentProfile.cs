@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.Payment.API.Dtos;
 using Explorer.Payment.Core.Domain;
@@ -42,5 +43,13 @@ public class PaymentProfile : Profile
             .ReverseMap();
 
         CreateMap<Coupon, CouponDto>().ReverseMap();
+
+        CreateMap<TourSouvenir, TourSouvenirDto>()
+            .ForMember(dest => dest.ImageDto, opt => opt.MapFrom(src => src.Image));
+
+        CreateMap<Image, PaymentImageDto>()
+            .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data))
+            .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.UploadedAt))
+            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.GetMimeTypeNormalized));
     }
 }

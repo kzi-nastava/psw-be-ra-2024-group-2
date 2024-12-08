@@ -85,17 +85,13 @@ namespace Explorer.Blog.Core.UseCases
             try
             {
                 var blog = _mapper.Map<Core.Domain.Blog>(blogDto);
+
                 blog.AuthorId = userId;
+
+                blog.Images = blogDto.Images.Select(i => _mapper.Map<Explorer.BuildingBlocks.Core.Domain.Image>(i)).ToList();
 
                 var createdBlog = _blogCrudRepository.Create(blog);
 
-                if (blogDto.Images != null && blogDto.Images.Any())
-                {
-                    foreach (var image in blogDto.Images)
-                    {
-                        _imageRepository.Create(image);
-                    }
-                }
                 return Result.Ok(_mapper.Map<BlogDto>(createdBlog));
             }
             catch (Exception ex)

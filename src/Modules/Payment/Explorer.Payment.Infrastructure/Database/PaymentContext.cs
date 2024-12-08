@@ -1,4 +1,5 @@
-﻿using Explorer.Payment.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Payment.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Payment.Infrastructure.Database;
@@ -14,6 +15,8 @@ public class PaymentContext : DbContext
     public DbSet<AdventureCoinNotification> AdventureCoinNotifications { get; set; }
     public DbSet<TourSale> TourSales {  get; set; }
     public DbSet<TourSaleTour> TourSaleTours { get; set; }
+    public DbSet<TourSouvenir> TourSouvenirs { get; set; }
+    public DbSet<Image> Images { get; set; }
     public PaymentContext(DbContextOptions<PaymentContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -54,10 +57,14 @@ public class PaymentContext : DbContext
             .WithOne(tst => tst.TourSale)
             .HasForeignKey(tst => tst.TourSaleId);
 
-
         modelBuilder.Entity<TourSaleTour>()
             .HasOne(tst => tst.TourSale)
             .WithMany(ts => ts.Tours)
             .HasForeignKey(tst => tst.TourSaleId);
+
+        modelBuilder.Entity<TourSouvenir>()
+            .HasOne(t => t.Image)
+            .WithOne()
+            .HasForeignKey<TourSouvenir>(t => t.ImageId);
     }
 }

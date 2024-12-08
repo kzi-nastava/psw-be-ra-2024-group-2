@@ -18,7 +18,7 @@ namespace Explorer.Blog.Core.Domain
         public DateTime Date { get; set; }
         public Status Status { get; private set; }
         public int AuthorId { get; set; }
-        public List<Image> Images { get; private set; } = new List<Image>();
+        public List<Image> Images { get; set; } = new List<Image>();
         public List<Comment>? Comments { get; private set; } = new List<Comment>();
         public List<Rating>? Ratings { get; private set; } = new List<Rating>();
 
