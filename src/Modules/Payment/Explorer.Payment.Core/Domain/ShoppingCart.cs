@@ -31,9 +31,9 @@ public class ShoppingCart : Entity
         CalculateTotalPrice();
     }
 
-    public void RemoveTourItem(OrderItem item)
+    public void AddSouvenirItem(SouvenirOrderItem orderItem)
     {
-        Items.Remove(item);
+        Items.Add(orderItem);
         CalculateTotalPrice();
     }
 

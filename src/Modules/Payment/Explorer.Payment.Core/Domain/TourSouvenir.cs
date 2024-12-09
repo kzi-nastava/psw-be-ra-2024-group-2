@@ -69,4 +69,9 @@ public sealed class TourSouvenir : Entity
         SouvenirStatus = souvenirStatus;
         ImageId = id;
     }
+
+    public void DecreaseCount(int count)
+    {
+        Count -= count;
+    }
 }

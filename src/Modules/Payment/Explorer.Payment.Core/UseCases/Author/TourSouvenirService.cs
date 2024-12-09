@@ -87,6 +87,24 @@ public sealed class TourSouvenirService : BaseService<TourSouvenirDto, TourSouve
         }
     }
 
+    public Result<PagedResult<TourSouvenirDto>> GetAll()
+    {
+        try
+        {
+            var souvenirs = _tourSouvenirRepository.GetPaged(1, int.MaxValue).Results;
+
+            var souvenirsDto = souvenirs.Select(MapToDto).ToList();
+
+            var pagedResult = new PagedResult<TourSouvenirDto>(souvenirsDto, souvenirsDto.Count);
+
+            return pagedResult;
+        }
+        catch
+        {
+            return Result.Fail(FailureCode.Internal).WithError("An error occurred while getting the souvenirs");
+        }
+    }
+
     public Result<PagedResult<TourSouvenirDto>> GetMySouvenirs(int userId)
     {
         try

@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Explorer.Payment.Core.UseCases.Tourist;
 
-public class TourPurchaseTokenService : CrudService<TourPurchaseTokenDto, TourPurchaseToken>, ITourPurchaseTokenService_Internal
+public class TourPurchaseTokenService : CrudService<TourPurchaseTokenDto, PurchaseToken>, ITourPurchaseTokenService_Internal
 {
-    private readonly ICrudRepository<TourPurchaseToken> _tourPurchaseTokenRepository;
+    private readonly ICrudRepository<PurchaseToken> _tourPurchaseTokenRepository;
     private readonly IMapper mapper;
 
-    public TourPurchaseTokenService(ICrudRepository<TourPurchaseToken> tourPurchaseTokenRepository, IMapper mapper) : base(tourPurchaseTokenRepository, mapper)
+    public TourPurchaseTokenService(ICrudRepository<PurchaseToken> tourPurchaseTokenRepository, IMapper mapper) : base(tourPurchaseTokenRepository, mapper)
     {
         _tourPurchaseTokenRepository = tourPurchaseTokenRepository;
         this.mapper = mapper;

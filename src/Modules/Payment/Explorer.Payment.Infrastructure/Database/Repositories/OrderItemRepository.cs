@@ -30,6 +30,12 @@ public class OrderItemRepository : IOrderItemRepository
         return paymentContext.OrderItems.OfType<TourOrderItem>().ToList();
     }
 
+    // Retrieve all souvenirs
+    public List<SouvenirOrderItem> GetAllSouvenirs()
+    {
+        return paymentContext.OrderItems.OfType<SouvenirOrderItem>().ToList();
+    }
+
     // Add a new OrderItem
     public void Add(OrderItem orderItem)
     {
@@ -75,5 +81,10 @@ public class OrderItemRepository : IOrderItemRepository
     public TourOrderItem? GetTour(long id)
     {
         return paymentContext.OrderItems.OfType<TourOrderItem>().FirstOrDefault(o => o.Id == id);
+    }
+
+    public SouvenirOrderItem? GetSouvenir(long id)
+    {
+        return paymentContext.OrderItems.OfType<SouvenirOrderItem>().FirstOrDefault(o => o.Id == id);
     }
 }

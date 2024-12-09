@@ -32,6 +32,13 @@ public class ShoppingCartController : BaseApiController
         return CreateResponse(result);
     }
 
+    [HttpPost("add-souvenir/{souvenirId:long}")]
+    public ActionResult<SouvenirOrderItemDto> AddSouvenirToCart(long souvenirId)
+    {
+        var result = _shoppingCartService.AddSouvenirToCart(User.PersonId(), souvenirId);
+        return CreateResponse(result);
+    }
+
     [HttpDelete("remove/{tourId:long}")]
     public ActionResult<TourOrderItemDto> RemoveItemFromCart(long tourId)
     {
@@ -43,6 +50,13 @@ public class ShoppingCartController : BaseApiController
     public ActionResult<BundleOrderItemDto> RemoveBundleFromCart(long bundleId)
     {
         var result = _shoppingCartService.RemoveBundleItemFromCart(User.PersonId(), bundleId);
+        return CreateResponse(result);
+    }
+
+    [HttpDelete("remove-souvenir/{souvenirId:long}")]
+    public ActionResult<SouvenirOrderItemDto> RemoveSouvenirFromCart(long souvenirId)
+    {
+        var result = _shoppingCartService.RemoveSouvenirItemFromCart(User.PersonId(), souvenirId);
         return CreateResponse(result);
     }
 
@@ -72,6 +86,14 @@ public class ShoppingCartController : BaseApiController
     {
         var userId = User.PersonId();
         var result = _shoppingCartService.GetPurchasedTours(userId);
+        return Ok(result);
+    }
+
+    [HttpGet("purchasedSouvenirs")]
+    public ActionResult<IEnumerable<TourSouvenirDto>> GetPurchasedSouvenirs()
+    {
+        var userId = User.PersonId();
+        var result = _shoppingCartService.GetPurchasedSouvenirs(userId);
         return Ok(result);
     }
 }

@@ -14,30 +14,32 @@ public class ShoppingCartService : IShoppingCartService
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
     private readonly ITourService_Internal _tourService;
-    private readonly ICrudRepository<TourPurchaseToken> _tourPurchaseTokenRepository;
+    private readonly ICrudRepository<PurchaseToken> _purchaseTokenRepository;
     private readonly IMapper _mapper;
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly ICrudRepository<TourBundle> _tourBundleRepository;
+    private readonly ICrudRepository<TourSouvenir> _tourSouvenirRepository;
     private readonly ICrudRepository<Wallet> _walletRepository;
     private readonly ICouponTouristService _couponTouristService;
 
-
     public ShoppingCartService(
         IShoppingCartRepository shoppingCartRepository,
-        ICrudRepository<TourPurchaseToken> tourPurchaseTokenRepository,
+        ICrudRepository<PurchaseToken> tourPurchaseTokenRepository,
         ITourService_Internal tourService,
         IMapper mapper,
         IOrderItemRepository orderItemRepository,
         ICrudRepository<TourBundle> tourBundleRepository,
+        ICrudRepository<TourSouvenir> tourSouvenirRepository,
         ICrudRepository<Wallet> walletRepository,
         ICouponTouristService couponTouristService)
     {
         _shoppingCartRepository = shoppingCartRepository;
-        _tourPurchaseTokenRepository = tourPurchaseTokenRepository;
+        _purchaseTokenRepository = tourPurchaseTokenRepository;
         _tourService = tourService;
         _mapper = mapper;
         _orderItemRepository = orderItemRepository;
         _tourBundleRepository = tourBundleRepository;
+        this._tourSouvenirRepository = tourSouvenirRepository;
         _walletRepository = walletRepository;
         _couponTouristService = couponTouristService;
     }
@@ -166,6 +168,51 @@ public class ShoppingCartService : IShoppingCartService
         return orderItemDto;
     }
 
+    public Result<SouvenirOrderItemDto> AddSouvenirToCart(long userId, long souvenirId)
+    {
+        var souvenir = _tourSouvenirRepository.Get(souvenirId);
+
+        if (souvenir is null)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError("Souvenir item not found.");
+        }
+
+        var orderItem = new SouvenirOrderItem
+        {
+            UserId = userId,
+            TimeOfPurchase = DateTime.UtcNow,
+            Price = souvenir.Price,
+            SouvenirId = souvenirId,
+        };
+
+        var cart = _shoppingCartRepository.GetByUserId(userId);
+
+        if (cart is null)
+        {
+            cart = new ShoppingCart(userId);
+            cart.AddSouvenirItem(orderItem);
+
+            _shoppingCartRepository.Create(cart);
+        }
+        else
+        {
+            if (cart.Items.Any(i => i is SouvenirOrderItem s && s.SouvenirId == souvenirId))
+                return Result.Fail(FailureCode.Conflict).WithError("Souvenir already in cart.");
+
+            cart.AddSouvenirItem(orderItem);
+            _shoppingCartRepository.Update(cart);
+        }
+
+        var orderItemDto = new SouvenirOrderItemDto
+        {
+            SouvenirId = souvenirId,
+            Price = souvenir.Price,
+            UserId = userId,
+        };
+
+        return orderItemDto;
+    }
+
     public Result<TourOrderItemDto> RemoveTourItemFromCart(long userId, long tourId)
     {
         var cart = _shoppingCartRepository.GetByUserId(userId);
@@ -205,6 +252,27 @@ public class ShoppingCartService : IShoppingCartService
             BundleId = order.BundleId,
             Price = order.Price,
             TourIds = order.TourIds,
+            UserId = userId,
+        };
+    }
+
+    public Result<SouvenirOrderItemDto> RemoveSouvenirItemFromCart(long userId, long souvenirId)
+    {
+        var cart = _shoppingCartRepository.GetByUserId(userId);
+
+        var allItems = _orderItemRepository.GetAllSouvenirs();
+
+        var order = allItems.FirstOrDefault(o => o.SouvenirId == souvenirId && o.ShoppingCartId == cart.Id);
+
+        if (order is null)
+            return Result.Fail(FailureCode.NotFound).WithError("Souvenir item not found.");
+
+        _orderItemRepository.Delete(order.Id);
+
+        return new SouvenirOrderItemDto
+        {
+            SouvenirId = order.SouvenirId,
+            Price = order.Price,
             UserId = userId,
         };
     }
@@ -251,9 +319,17 @@ public class ShoppingCartService : IShoppingCartService
                     : (float)tourOrderItem.Price;
             }
 
-            return item is BundleOrderItem bundleOrderItem
-                ? (float)bundleOrderItem.Price
-                : 0;
+            if(item is BundleOrderItem bundleOrderitem)
+            {
+                return (float)bundleOrderitem.Price;
+            }
+
+            if (item is SouvenirOrderItem souvenirOrderItem)
+            {
+                return (float)souvenirOrderItem.Price;
+            }
+
+            return 0f;
         });
 
         // Check if user has enough Adventure Coins
@@ -267,15 +343,26 @@ public class ShoppingCartService : IShoppingCartService
         {
             if (item is TourOrderItem tourOrderItem)
             {
-                _tourPurchaseTokenRepository.Create(new TourPurchaseToken(userId, tourOrderItem.TourId, totalPrice, DateTime.UtcNow));
+                _purchaseTokenRepository.Create(new TourPurchaseToken(userId, tourOrderItem.TourId, tourOrderItem.Price, DateTime.UtcNow));
             }
 
             if (item is BundleOrderItem bundleOrderItem)
             {
                 foreach (var tourId in bundleOrderItem.TourIds)
                 {
-                    _tourPurchaseTokenRepository.Create(new TourPurchaseToken(userId, tourId, totalPrice, DateTime.UtcNow));
+                    _purchaseTokenRepository.Create(new TourPurchaseToken(userId, tourId, bundleOrderItem.Price, DateTime.UtcNow));
                 }
+            }
+
+            if (item is SouvenirOrderItem souvenirOrderItem)
+            {
+                _purchaseTokenRepository.Create(new SouvenirPurchaseToken(userId, souvenirOrderItem.SouvenirId, souvenirOrderItem.Price, DateTime.UtcNow));
+
+                var souvenir = _tourSouvenirRepository.Get(souvenirOrderItem.SouvenirId);
+
+                souvenir.DecreaseCount(1);
+
+                _tourSouvenirRepository.Update(souvenir);
             }
         }
 
@@ -288,7 +375,6 @@ public class ShoppingCartService : IShoppingCartService
 
         return Result.Ok();
     }
-
 
     public double GetTotalPrice(long userId)
     {
@@ -317,6 +403,14 @@ public class ShoppingCartService : IShoppingCartService
         {
             if (item is BundleOrderItem bundleOrderItem)
                 bundleItems.Add(bundleOrderItem);
+        }
+        
+        var souvenirItems = new List<SouvenirOrderItem>();
+
+        foreach (var item in cart.Items)
+        {
+            if (item is SouvenirOrderItem souvenirOrderItem)
+                souvenirItems.Add(souvenirOrderItem);
         }
 
         var orderItems = new List<TourOrderItemBasicDto>();
@@ -347,23 +441,52 @@ public class ShoppingCartService : IShoppingCartService
             };
         }));
 
+        orderItems.AddRange(souvenirItems.Select(item =>
+        {
+            return new TourOrderItemBasicDto
+            {
+                SouvenirId = item.SouvenirId,
+                Price = item.Price,
+                TimeOfPurchase = item.TimeOfPurchase,
+                Token = item.Token,
+                UserId = item.UserId,
+                Name = _tourSouvenirRepository.Get(item.SouvenirId).Name,
+            };
+        }));
+
         return orderItems;
     }
 
     public IEnumerable<TourPaymentDto> GetPurchasedTours(long userId)
     {
         // Pronađi sve TourPurchaseTokene za zadati userId
-        var tokens = _tourPurchaseTokenRepository.GetPaged(1, int.MaxValue).Results
+        var tokens = _purchaseTokenRepository.GetPaged(1, int.MaxValue).Results
             .Where(token => token.UserId == userId)
             .ToList();
 
         // Ekstraktuj sve tourId vrednosti iz tih tokena
-        var tourIds = tokens.Select(token => token.TourId).Distinct();
+        var tourIds = tokens.Select(token => token is TourPurchaseToken tourToken ? tourToken.TourId : -1).ToList();
         var tours = _tourService.GetPaged(1, int.MaxValue).Value.Results
                       .Where(tour => tourIds.Contains(tour.Id)).ToList();
 
         // Mapiraj ture na DTOs i vrati ih
         var tourDtos = _mapper.Map<IEnumerable<TourPaymentDto>>(tours);
         return tourDtos;
+    }
+
+    public IEnumerable<TourSouvenirDto> GetPurchasedSouvenirs(long userId)
+    {
+        var tokens = _purchaseTokenRepository.GetPaged(1, int.MaxValue).Results
+            .Where(token => token.UserId == userId)
+            .ToList();
+
+        var souvenirIds = tokens.Select(token => token is SouvenirPurchaseToken souvenirToken ? souvenirToken.SouvenirId : -1).ToList();
+
+        var souvenirs = _tourSouvenirRepository.GetPaged(1, int.MaxValue).Results
+                          .Where(souvenir => souvenirIds.Contains(souvenir.Id)).ToList();
+
+        var souvenirDtos = _mapper.Map<IEnumerable<TourSouvenirDto>>(souvenirs);
+
+        return souvenirDtos;
     }
 }

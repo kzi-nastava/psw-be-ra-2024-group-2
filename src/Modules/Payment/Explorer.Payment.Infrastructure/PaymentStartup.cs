@@ -24,8 +24,6 @@ public static class PaymentStartup
         SetupInfrastructure(services);
         return services;
     }
-
-
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IShoppingCartService, ShoppingCartService>();
@@ -38,21 +36,19 @@ public static class PaymentStartup
         services.AddScoped<IAdventureCoinNotificationService, AdventureCoinNotificationService>();
         services.AddScoped<ITourSaleService, TourSaleService>();
         services.AddScoped<ITourSouvenirService, TourSouvenirService>();
-
     }
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 
         services.AddScoped(typeof(IOrderItemRepository), typeof(OrderItemRepository));
-        services.AddScoped(typeof(ICrudRepository<TourPurchaseToken>), typeof(CrudDatabaseRepository<TourPurchaseToken, PaymentContext>));
+        services.AddScoped(typeof(ICrudRepository<PurchaseToken>), typeof(CrudDatabaseRepository<PurchaseToken, PaymentContext>));
         services.AddScoped(typeof(ICrudRepository<TourBundle>), typeof(CrudDatabaseRepository<TourBundle, PaymentContext>));
         services.AddScoped(typeof(ICrudRepository<Coupon>), typeof(CrudDatabaseRepository<Coupon, PaymentContext>));
         services.AddScoped(typeof(ICrudRepository<Wallet>), typeof(CrudDatabaseRepository<Wallet, PaymentContext>));
         services.AddScoped(typeof(IAdventureCoinNotificationRepository), typeof(AdventureCoinNotificationRepository));
         services.AddScoped(typeof(ICrudRepository<TourSale>), typeof(CrudDatabaseRepository<TourSale, PaymentContext>));
         services.AddScoped(typeof(ICrudRepository<OrderItem>), typeof(CrudDatabaseRepository<OrderItem, PaymentContext>));
-        services.AddScoped(typeof(ICrudRepository<TourPurchaseToken>), typeof(CrudDatabaseRepository<TourPurchaseToken, PaymentContext>));
         services.AddScoped(typeof(ICrudRepository<TourSouvenir>), typeof(CrudDatabaseRepository<TourSouvenir, PaymentContext>));
 
         services.AddScoped<ITourSaleRepository, TourSaleRepository>();

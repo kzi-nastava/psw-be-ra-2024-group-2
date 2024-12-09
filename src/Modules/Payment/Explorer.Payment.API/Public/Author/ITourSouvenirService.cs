@@ -7,6 +7,7 @@ public interface ITourSouvenirService
 {
     Result<TourSouvenirDto> CreateSouvenir(int authorId, TourSouvenirDto souvenir);
     Result<TourSouvenirDto> DeleteSouvenir(int authorId, long id);
+    Result<PagedResult<TourSouvenirDto>> GetAll();
     Result<PagedResult<TourSouvenirDto>> GetMySouvenirs(int authorId);
     Result<TourSouvenirDto> PublishSouvenir(int authorId, long id);
     Result<TourSouvenirDto> UpdateSouvenir(int authorId, TourSouvenirDto souvenir);

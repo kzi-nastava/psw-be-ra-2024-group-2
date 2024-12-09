@@ -8,6 +8,9 @@ public interface IOrderItemRepository
     TourOrderItem? GetTour(long id);
     List<TourOrderItem> GetAllTours();
 
+    SouvenirOrderItem? GetSouvenir(long id);
+    List<SouvenirOrderItem> GetAllSouvenirs();
+
     List<OrderItem> GetAll();
     
     void Add(OrderItem orderItem);

@@ -8,7 +8,7 @@ public class PaymentContext : DbContext
 {
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
-    public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
+    public DbSet<PurchaseToken> TourPurchaseTokens { get; set; }
     public DbSet<TourBundle> TourBundles { get; set; }
     public DbSet<Coupon> Coupons { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
@@ -29,13 +29,21 @@ public class PaymentContext : DbContext
             .WithOne(i => i.ShoppingCart)
             .HasForeignKey(i => i.ShoppingCartId);
 
+        // Configure TPH mapping for PurchaseToken and its derived types
+        modelBuilder.Entity<PurchaseToken>()
+            .HasDiscriminator<string>("Discriminator")
+            .HasValue<PurchaseToken>("PurchaseToken")
+            .HasValue<TourPurchaseToken>("TourPurchaseToken")
+            .HasValue<SouvenirPurchaseToken>("SouvenirPurchaseToken");
+
         // Configure TPH mapping for OrderItem and its derived types
         modelBuilder.Entity<OrderItem>()
-            .ToTable("OrderItems")                          // Shared table for TPH
-            .HasDiscriminator<string>("Discriminator")      // Discriminator column
-            .HasValue<OrderItem>("OrderItem")               // Base type
-            .HasValue<TourOrderItem>("TourOrderItem")       // Derived type
-            .HasValue<BundleOrderItem>("BundleOrderItem");  // Derived type
+            .ToTable("OrderItems")                              // Shared table for TPH
+            .HasDiscriminator<string>("Discriminator")          // Discriminator column
+            .HasValue<OrderItem>("OrderItem")                   // Base type
+            .HasValue<TourOrderItem>("TourOrderItem")           // Derived type
+            .HasValue<BundleOrderItem>("BundleOrderItem")       // Derived type
+            .HasValue<SouvenirOrderItem>("SouvenirOrderItem");  // Derived type
 
         modelBuilder.Entity<TourOrderItem>()
             .Property(t => t.TourId)
@@ -43,6 +51,10 @@ public class PaymentContext : DbContext
 
         modelBuilder.Entity<BundleOrderItem>()
             .Property(b => b.BundleId)
+            .IsRequired();
+
+        modelBuilder.Entity<SouvenirOrderItem>()
+            .Property(s => s.SouvenirId)
             .IsRequired();
 
         modelBuilder.Entity<TourBundle>()
