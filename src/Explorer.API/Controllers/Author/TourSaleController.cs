@@ -48,7 +48,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPut("{id}")]
-        public ActionResult<TourSaleDto> UpdateTourSale(int id, [FromBody] TourSaleDto dto)
+        public ActionResult<TourSaleDto> UpdateTourSale(long id, [FromBody] TourSaleDto dto)
         {
             var result = _tourSaleService.Update(id, dto);
 
