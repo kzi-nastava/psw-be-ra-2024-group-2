@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
+using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases.Author
 {
@@ -49,5 +50,20 @@ namespace Explorer.Tours.Core.UseCases.Author
 
             return new PagedResult<CheckpointDto>(filteredcheckpoints, filteredcheckpoints.Count());
         }
+
+        public Result<PagedResult<CheckpointDto>> GetAllByTourId(long tourId)
+        {
+            var tour = _tourRepository.Get(tourId);
+            if (tour == null)
+            {
+                throw new KeyNotFoundException($"Tour with ID {tourId} not found.");
+            }
+
+            var checkpointDtos = tour.Checkpoints.Select(checkpoint => MapToDto(checkpoint)).ToList();
+            var filteredCheckpointsResult = new PagedResult<CheckpointDto>(checkpointDtos, checkpointDtos.Count);
+            return Result.Ok(filteredCheckpointsResult);
+        }
+
+
     }
 }
