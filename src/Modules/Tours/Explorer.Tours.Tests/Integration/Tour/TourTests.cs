@@ -75,7 +75,13 @@ public class TourTests : BaseToursIntegrationTest
         {
             Id = -3,
             UserId = -2,
-            Equipment = { }
+            Equipment = { },
+            Name = "Kusla",
+            Description = "Opis",
+            Difficulty = 0,
+            Tag = 0,
+            Status = 0,
+            Price = 0
 
         };
 
