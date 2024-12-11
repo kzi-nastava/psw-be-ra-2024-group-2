@@ -17,6 +17,7 @@ public class PaymentContext : DbContext
     public DbSet<TourSaleTour> TourSaleTours { get; set; }
     public DbSet<TourSouvenir> TourSouvenirs { get; set; }
     public DbSet<Image> Images { get; set; }
+    public DbSet<TouristBonus> TouristBonuses { get; set; }
     public PaymentContext(DbContextOptions<PaymentContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,6 +29,10 @@ public class PaymentContext : DbContext
             .HasMany(s => s.Items)
             .WithOne(i => i.ShoppingCart)
             .HasForeignKey(i => i.ShoppingCartId);
+
+        modelBuilder.Entity<TouristBonus>()
+            .ToTable("TouristBonuses")
+            .HasKey(tb => new { tb.TouristId, tb.CouponCode });
 
         // Configure TPH mapping for PurchaseToken and its derived types
         modelBuilder.Entity<PurchaseToken>()

@@ -36,6 +36,7 @@ public static class PaymentStartup
         services.AddScoped<IAdventureCoinNotificationService, AdventureCoinNotificationService>();
         services.AddScoped<ITourSaleService, TourSaleService>();
         services.AddScoped<ITourSouvenirService, TourSouvenirService>();
+        services.AddScoped<ITouristBonusService, TouristBonusService>();
     }
     private static void SetupInfrastructure(IServiceCollection services)
     {
@@ -50,6 +51,7 @@ public static class PaymentStartup
         services.AddScoped(typeof(ICrudRepository<TourSale>), typeof(CrudDatabaseRepository<TourSale, PaymentContext>));
         services.AddScoped(typeof(ICrudRepository<OrderItem>), typeof(CrudDatabaseRepository<OrderItem, PaymentContext>));
         services.AddScoped(typeof(ICrudRepository<TourSouvenir>), typeof(CrudDatabaseRepository<TourSouvenir, PaymentContext>));
+        services.AddScoped(typeof(ICrudRepository<TouristBonus>), typeof(CrudDatabaseRepository<TouristBonus, PaymentContext>));
 
         services.AddScoped<ITourSaleRepository, TourSaleRepository>();
         services.AddDbContext<PaymentContext>(opt =>

@@ -13,7 +13,7 @@ namespace Explorer.Tours.API.Public.Administration
     {
         Result<PagedResult<CheckpointDto>> GetPaged(int page, int pageSize);
         PagedResult <CheckpointDto> GetAllById(List<long> ids);
-
+        Result<PagedResult<CheckpointDto>> GetAllByTourId(long tourId);
         List<TourExecutionCheckpointDto> CheckDistance(List<TourExecutionCheckpointDto> execCheckpoints, double lon, double lat);
 
 
