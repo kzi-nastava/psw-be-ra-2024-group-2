@@ -45,7 +45,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
                     equipment.Add(newEquipment);
                 }
 
-                tour.UpdateTour(tourDto.Status,tourDto.Price,equipment);
+                tour.UpdateTour(tourDto.Name, tourDto.Description, tourDto.Status,tourDto.Price,equipment);
 
                 _tourRepository.Update(tour);
                 _transactionRepository.CommitTransaction();
