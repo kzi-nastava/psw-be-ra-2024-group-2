@@ -23,5 +23,11 @@ namespace Explorer.API.Controllers.Tourist
             var theCoupon = _couponService.UseCoupon(code);
             return CreateResponse(theCoupon);
         }
+        [HttpGet("{code}")]
+        public ActionResult<CouponDto> GetCoupon(string code)
+        {
+            var theCoupon = _couponService.GetCoupon(code);
+            return CreateResponse(theCoupon);
+        }
     }
 }
