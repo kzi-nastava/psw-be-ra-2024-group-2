@@ -22,6 +22,8 @@ namespace Explorer.Encounters.Core.UseCases
 
         private readonly IImageRepository _imageRepository;
         private readonly IUserLevelRepository _userLevelRepository;
+        private readonly IMapper _mapper;
+
 
         public EncounterService(IEncounterRepository encounterRepository, IImageRepository imageRepository, IUserLevelRepository userLevelRepository)
         {
@@ -30,7 +32,6 @@ namespace Explorer.Encounters.Core.UseCases
             _userLevelRepository = userLevelRepository;
         }
 
-        // Add encounter methods
         public Result<SocialEncounterDto> CreateSocialEncounter(SocialEncounterDto encounterDto)
         {
             try
@@ -43,12 +44,11 @@ namespace Explorer.Encounters.Core.UseCases
                     RequiredPeople = encounterDto.RequiredPeople,
                     Lattitude = encounterDto.Lattitude,
                     Longitude = encounterDto.Longitude,
-
+                    TouristsInRange = new List<int>()
                 };
 
                 _encounterRepository.AddEncounter(encounter);
 
-                // Return success result
                 return Result.Ok(new SocialEncounterDto
                 {
                     Id = encounter.Id,
@@ -73,15 +73,14 @@ namespace Explorer.Encounters.Core.UseCases
                 Image image = new Image(encounterDto.Image.Data, encounterDto.Image.UploadedAt, encounterDto.Image.MimeType);
                 var newImage = _imageRepository.Create(image);
 
-
                 var encounter = new HiddenLocationEncounter(
                     encounterDto.Name,
                     encounterDto.Description,
                     newImage,
                     encounterDto.Lattitude,
                     encounterDto.Longitude,
-                    encounterDto.Lattitude,     //encounterDto.TargetLatitude,
-                    encounterDto.Longitude,     //encounterDto.TargetLongitude,
+                    encounterDto.Lattitude,
+                    encounterDto.Longitude,
                     encounterDto.RangeInMeters);
 
                 _encounterRepository.AddEncounter(encounter);
@@ -95,7 +94,7 @@ namespace Explorer.Encounters.Core.UseCases
                     TargetLatitude = encounter.TargetLatitude,
                     Lattitude = encounter.Lattitude,
                     Longitude = encounter.Longitude,
-                    // Map other properties
+                    RangeInMeters = encounter.RangeInMeters,
                 });
             }
             catch (Exception ex)
@@ -136,47 +135,51 @@ namespace Explorer.Encounters.Core.UseCases
         }
 
 
-        // Update encounter methods
         public Result<SocialEncounterDto> UpdateSocialEncounter(UnifiedEncounterDto encounterDto)
         {
-            SocialEncounterDto socialEncounterDto = new SocialEncounterDto();
-            if (encounterDto.SocialRangeInMeters != null)
-            {
-                socialEncounterDto.RangeInMeters = encounterDto.SocialRangeInMeters.Value;
-                socialEncounterDto.RequiredPeople = encounterDto.RequiredPeople.Value;
-                socialEncounterDto.Description = encounterDto.Description;
-                socialEncounterDto.Name = encounterDto.Name;
-                socialEncounterDto.TouristIds = encounterDto.TouristIds;
-                socialEncounterDto.Lattitude = encounterDto.Latitude;
-                socialEncounterDto.Longitude = encounterDto.Longitude;
-            }
             var existingEncounter = (SocialEncounter)_encounterRepository.GetById(encounterDto.Id);
             if (existingEncounter == null)
             {
                 return Result.Fail("Social encounter not found.");
             }
+                existingEncounter.RangeInMeters = encounterDto.SocialRangeInMeters.Value;
+                existingEncounter.RequiredPeople = encounterDto.RequiredPeople.Value;
+                existingEncounter.Description = encounterDto.Description;
+                existingEncounter.Name = encounterDto.Name;
+                existingEncounter.Lattitude = encounterDto.Latitude;
+                existingEncounter.Longitude = encounterDto.Longitude;
+                existingEncounter.TouristIds = encounterDto.TouristIds;
+                existingEncounter.TouristsInRange = encounterDto.TouristsInRange;
 
-            existingEncounter.Name = socialEncounterDto.Name;
-            existingEncounter.Description = socialEncounterDto.Description;
-            existingEncounter.RangeInMeters = socialEncounterDto.RangeInMeters;
-            existingEncounter.RequiredPeople = socialEncounterDto.RequiredPeople;
-            existingEncounter.TouristIds = socialEncounterDto.TouristIds;
-            existingEncounter.Lattitude = socialEncounterDto.Lattitude;
-            existingEncounter.Longitude = socialEncounterDto.Longitude;
-
-            if (existingEncounter.TouristIds.Count > 9)
+            if (existingEncounter.TouristsInRange.Count == existingEncounter.RequiredPeople)
             {
+                var userLevelsDict = _userLevelRepository.GetAllUserLevels().ToDictionary(t => t.UserId);
+
                 foreach (var touristId in existingEncounter.TouristIds)
                 {
-                    var tourist = _userLevelRepository.GetById(touristId);
-                    if (tourist == null)
+                    if (!userLevelsDict.TryGetValue(touristId, out var tourist))
                     {
                         _userLevelRepository.AddUserLevel(new UserLevel(touristId, 1, 0));
                     }
-                    if (tourist?.Level < 5)
+                    else if (tourist.Level < 5)
                     {
-                        _userLevelRepository.UpdateUserLevel(new UserLevel(touristId, tourist.Level, tourist.Xp + 10));
+                        var userLevel = userLevelsDict[touristId];
+                        if (userLevel != null)
+                        {
+                            if (userLevel.Xp < 90)
+                            {
+                                userLevel.Xp += 10;
+                                _userLevelRepository.UpdateUserLevel(new UserLevel(touristId, tourist.Level, tourist.Xp + 10));
+                            }
+                            else
+                            {
+                                userLevel.Level += 1;
+                                userLevel.Xp = 0;
+                                _userLevelRepository.UpdateUserLevel(new UserLevel(touristId, tourist.Level + 1, 0));
+                            }
+                        }
                     }
+
                 }
             }
             _encounterRepository.UpdateEncounter(existingEncounter);
@@ -190,8 +193,38 @@ namespace Explorer.Encounters.Core.UseCases
                 RequiredPeople = existingEncounter.RequiredPeople,
                 Lattitude = existingEncounter.Lattitude,
                 Longitude = existingEncounter.Longitude,
+                TouristsInRange = existingEncounter.TouristsInRange
             });
         }
+
+        public Result<List<int>> AddTouristToSocialEncounter(int touristId, long encounterId)
+        {
+            try
+            {
+                var encounter = _encounterRepository.GetById(encounterId) as SocialEncounter;
+                if (encounter == null)
+                {
+                    return Result.Fail<List<int>>("Social encounter not found.");
+                }
+
+                var completedTouristIds = encounter.AddTouristInRange(touristId);
+
+                _encounterRepository.UpdateEncounter(encounter);
+
+                if (completedTouristIds != null)
+                {
+                    return Result.Ok(completedTouristIds);
+                }
+
+                // Challenge not completed yet
+                return Result.Ok(new List<int>());
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<List<int>>($"Failed to add tourist to social encounter: {ex.Message}");
+            }
+        }
+
         public Result<HiddenLocationEncounterDto> UpdateHiddenLocationEncounter(UnifiedEncounterDto encounterDto)
         {
             try
@@ -411,20 +444,76 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
-        public Result<string> RemoveFromSocialEncounters(int id)
+        public Result<string> RemoveFromSocialEncounters(int touristId)
         {
-            var list = _encounterRepository.GetAll();
-            var socialEncounter = list.OfType<SocialEncounter>().Where(x => x.TouristIds.Contains(id));
-            if (socialEncounter == null)
+            var encounters = _encounterRepository.GetAll();
+            var socialEncounters = encounters.OfType<SocialEncounter>().Where(e => e.TouristsInRange.Contains(touristId));
+
+            foreach (var encounter in socialEncounters)
             {
-                return Result.Fail("Social encounter not found.");
-            }
-            foreach (var encounter in socialEncounter)
-            {
-                encounter.TouristIds.Remove(id);
+                encounter.TouristsInRange.Remove(touristId);
                 _encounterRepository.UpdateEncounter(encounter);
             }
-            return Result.Ok("Fixed the list ");
+
+            return Result.Ok("Removed tourist from all relevant social encounters.");
         }
+
+
+        public Result<string> UpdateTouristsInRange(long socialEncounterId, int touristId, bool isInRange)
+        {
+            try
+            {
+                var encounter = _encounterRepository.GetById(socialEncounterId) as SocialEncounter;
+
+                if (encounter == null)
+                {
+                    return Result.Fail("Social encounter not found.");
+                }
+
+                if (isInRange)
+                {
+                    if (!encounter.TouristsInRange.Contains(touristId))
+                    {
+                        encounter.TouristsInRange.Add(touristId);
+                    }
+                }
+                else
+                {
+                    encounter.TouristsInRange.Remove(touristId);
+                }
+
+                _encounterRepository.UpdateEncounter(encounter);
+                return Result.Ok("Tourist list updated.");
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail($"Failed to update tourist list: {ex.Message}");
+            }
+        }
+        public Result<string> MarkEncounterAsCompleted(long encounterId, int touristId)
+        {
+            try
+            {
+                var encounter = _encounterRepository.GetById(encounterId);
+
+                if (encounter == null)
+                {
+                    return Result.Fail("Encounter not found.");
+                }
+
+                if (!encounter.TouristIds.Contains(touristId))
+                {
+                    encounter.TouristIds.Add(touristId);
+                    _encounterRepository.UpdateEncounter(encounter);
+                }
+
+                return Result.Ok("Encounter marked as completed for the tourist.");
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail($"Failed to mark encounter as completed: {ex.Message}");
+            }
+        }
+
     }
 }

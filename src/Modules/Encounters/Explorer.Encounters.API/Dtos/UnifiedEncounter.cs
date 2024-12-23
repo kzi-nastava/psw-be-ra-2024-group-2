@@ -13,6 +13,7 @@ namespace Explorer.Encounters.API.Dtos
         public string Description { get; set; } = string.Empty;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        public List<int> TouristIds { get; set; } = new List<int>();
 
         // Common to all encounters
         public string EncounterType { get; set; } = string.Empty; // "Social", "HiddenLocation", "Misc"
@@ -20,7 +21,7 @@ namespace Explorer.Encounters.API.Dtos
         // Properties for Social Encounter
         public int? RequiredPeople { get; set; } // Nullable because it's specific to Social encounters
         public double? SocialRangeInMeters { get; set; } // Nullable because it's specific to Social encounters
-        public List<int> TouristIds { get; set; } = new List<int>(); // Nullable as it's specific to Social encounters
+        public List<int> TouristsInRange { get; set; } = new List<int>(); // Nullable because it's specific to Social encounters
 
         // Properties for Hidden Location Encounter
         public EncounterImageDto? Image { get; set; } // Nullable because it's specific to Hidden Location encounters

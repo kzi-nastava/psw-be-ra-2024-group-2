@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace Explorer.Encounters.API.Dtos
     {
         public int RequiredPeople { get; set; }
         public double RangeInMeters { get; set; } // Radius in meters
+        public List<int> TouristsInRange { get; set; } = new List<int>();
     }
 
     // Hidden Location Encounter DTO
