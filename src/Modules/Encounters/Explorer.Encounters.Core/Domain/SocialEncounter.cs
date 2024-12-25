@@ -13,8 +13,8 @@ namespace Explorer.Encounters.Core.Domain
         public double RangeInMeters { get; set; } // The radius (in meters) within which the tourists need to be
         public List<int> TouristsInRange { get; set; } = new List<int>();
 
-        public SocialEncounter(string name, string description, int requiredPeople, double rangeInMeters, double lattitude, double longitude)
-            : base(name, description, lattitude, longitude)
+        public SocialEncounter(string name, string description, int requiredPeople, double rangeInMeters, double lattitude, double longitude, bool isForTour, long? tourId)
+            :   base(name, description, lattitude, longitude, isForTour, tourId)
         {
             RequiredPeople = requiredPeople;
             RangeInMeters = rangeInMeters;

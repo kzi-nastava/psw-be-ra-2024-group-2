@@ -81,7 +81,9 @@ namespace Explorer.Encounters.Core.UseCases
                     encounterDto.Longitude,
                     encounterDto.Lattitude,
                     encounterDto.Longitude,
-                    encounterDto.RangeInMeters);
+                    encounterDto.RangeInMeters
+                    ,encounterDto.IsForTour
+                    ,encounterDto.TourId);
 
                 _encounterRepository.AddEncounter(encounter);
 

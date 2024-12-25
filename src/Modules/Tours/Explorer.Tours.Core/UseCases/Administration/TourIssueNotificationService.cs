@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
@@ -12,10 +13,14 @@ namespace Explorer.Tours.Core.UseCases.Administration
     {
         ICrudRepository<TourIssueNotification> repository;
         ITransactionRepository transactionRepository;
-        public TourIssueNotificationService(ICrudRepository<TourIssueNotification> tourIssueRepository,ITransactionRepository transactionRepository, IMapper mapper) : base(tourIssueRepository, mapper)
+
+        private readonly IProfileService_Internal _personService;
+
+        public TourIssueNotificationService(ICrudRepository<TourIssueNotification> tourIssueRepository,ITransactionRepository transactionRepository, IProfileService_Internal _personService, IMapper mapper) : base(tourIssueRepository, mapper)
         {
             repository = tourIssueRepository;
             this.transactionRepository = transactionRepository;
+            this._personService = _personService;
         }
         Result<TourIssueNotificationDto> Create(TourIssueNotificationDto tourIssueNotificationDto)
         {
@@ -37,6 +42,12 @@ namespace Explorer.Tours.Core.UseCases.Administration
             List<TourIssueNotificationDto> dtos = list.Select(obj=>MapToDto(obj)).ToList();
             dtos = dtos.Where(t => t.Status == TourIssueNotificationStatus.Unread).ToList();
             dtos= dtos.Where(t=>t.ToUserId == userId).ToList();
+            //_personService
+            foreach(var dto in dtos)
+            {
+                dto.fromUsername = _personService.GetAccount(dto.FromUserId).Value.Username;
+                dto.toUsername = _personService.GetAccount(dto.ToUserId).Value.Username;
+            }
             var result = new PagedResult<TourIssueNotificationDto>(dtos.ToList(), dtos.Count);
             return result;
         }

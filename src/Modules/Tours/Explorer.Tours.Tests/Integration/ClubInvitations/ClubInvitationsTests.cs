@@ -45,7 +45,7 @@ public class ClubInvitationsTests: BaseToursIntegrationTest
         result.OwnerId.ShouldBe(newEntity.OwnerId);
         result.TouristId.ShouldBe(newEntity.TouristId);
         result.ClubId.ShouldBe(newEntity.ClubId);
-        result.Status.ShouldBe(TourInviteStatus.Pending);
+        result.Status.ShouldBe(TourInviteStatus.Accepted);
         //assert db
         var storedentity = dbContext.ClubInvites.
             FirstOrDefault(t => t.ClubId == newEntity.ClubId

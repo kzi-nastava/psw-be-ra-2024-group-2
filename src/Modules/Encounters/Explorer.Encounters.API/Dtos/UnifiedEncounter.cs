@@ -14,6 +14,8 @@ namespace Explorer.Encounters.API.Dtos
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public List<int> TouristIds { get; set; } = new List<int>();
+        public bool IsForTour { get; set; }
+        public long TourId { get; set; }
 
         // Common to all encounters
         public string EncounterType { get; set; } = string.Empty; // "Social", "HiddenLocation", "Misc"
