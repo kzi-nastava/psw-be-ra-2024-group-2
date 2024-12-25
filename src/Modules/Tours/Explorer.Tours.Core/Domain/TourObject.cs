@@ -34,6 +34,17 @@ namespace Explorer.Tours.Core.Domain
             Latitude = latitude;
             Validate();
         }
+        public TourObject(string name, string description, ObjectCategory category, double longitude, double latitude, Image image)
+        {
+            Name = name;
+            Description = description;
+            Category = category;
+            Longitude = longitude;
+            Latitude = latitude;
+            Image = image;
+            Validate();
+            
+        }
 
         public string GetObjectCategoryNormalized => Category switch
         {
