@@ -34,6 +34,18 @@ namespace Explorer.Tours.Core.Domain
             EndDate = end;
             Validate();
         }
+        public Event(string name, string description, EventCategory category, double longitude, double latitude, DateTime start, DateTime end, Image image)
+        {
+            Name = name;
+            Description = description;
+            Category = category;
+            Longitude = longitude;
+            Latitude = latitude;
+            StartDate = start;
+            EndDate = end;
+            Image = image;
+            Validate();
+        }
 
         public string GetEventCategoryNormalized => Category switch
         {
