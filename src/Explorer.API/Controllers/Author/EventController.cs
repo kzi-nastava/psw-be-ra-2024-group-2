@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Infrastructure.Authentication;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Microsoft.AspNetCore.Authorization;
@@ -46,6 +47,20 @@ namespace Explorer.API.Controllers.Author
         {
             var nearTours = _eventService.GetNearTours(eventId);
             return nearTours;
+        }
+
+        [HttpDelete("{eventId}")]
+        public ActionResult Delete(long eventId)
+        {
+            var result = _eventService.Delete(eventId);
+            return CreateResponse(result);
+        }
+        [HttpPut("update")]
+
+        public ActionResult<EventDto> UpdateEvent([FromBody] EventDto tourEvent)
+        {
+            var result = _eventService.Update(tourEvent, User.UserId());
+            return CreateResponse(result);
         }
     }
     }
