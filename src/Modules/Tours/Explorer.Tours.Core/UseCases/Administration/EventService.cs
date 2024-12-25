@@ -127,7 +127,44 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
             return new PagedResult<EventDto>(events, events.Count());
         }
-        public PagedResult<TourDto> GetNearTours(long eventId)
+
+
+        public Result Delete(long id)
+        {
+            try
+            {
+                _eventRepository.Delete(id);
+                return Result.Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
+
+        public Result Update(EventDto dto, int userId)
+        {
+
+            var tourEvent = _eventRepository.Get(dto.Id);
+            if (tourEvent == null)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError("Event not found!");
+            }
+
+            tourEvent.StartDate = dto.StartDate.ToUniversalTime();
+            tourEvent.EndDate = dto.EndDate.ToUniversalTime();
+
+            tourEvent.Name = dto.Name;
+            tourEvent.Description = dto.Description;
+            tourEvent.Category = Enum.Parse<EventCategory>(dto.Category);
+
+  
+            _eventRepository.Update(tourEvent);
+            return Result.Ok();
+        }
+
+
+            public PagedResult<TourDto> GetNearTours(long eventId)
         {
             var tours = _tourRepository.GetPaged(1, int.MaxValue).Results;
             var eventt = _eventRepository.Get(eventId);
