@@ -114,8 +114,11 @@ namespace Explorer.Tours.Core.UseCases.Tourist
 
 
                 var personalDiary = _personalDairyRepository.GetByTourExecutionId((int)result.Id);
-                personalDiary.ClosedAt = result.SessionEndingTime;
-                _personalDairyRepository.Update(personalDiary);
+                if(personalDiary != null)
+                {
+                    personalDiary.ClosedAt = result.SessionEndingTime;
+                    _personalDairyRepository.Update(personalDiary);
+                }
                 return MapToDto(result);
             }
             catch (Exception)
