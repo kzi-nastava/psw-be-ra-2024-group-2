@@ -45,30 +45,14 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             try
             {
+                var category = (EventCategory)Enum.Parse(typeof(EventCategory), dto.Category, true);
                 dto.StartDate.ToUniversalTime();
                 dto.EndDate.ToUniversalTime();
-                Event tourEvent = MapToDomain(dto);
-                tourEvent.StartDate = dto.StartDate.ToUniversalTime();
-                tourEvent.EndDate = dto.EndDate.ToUniversalTime();
-
-                if (dto.Image != null && !_imageRepository.Exists(dto.Image.Data))
-                {
-                    var newImage = new Image(
-                        dto.Image.Data,
-                        dto.Image.UploadedAt,
-                        dto.Image.MimeType
-                    );
-                    _imageRepository.Create(newImage);
-
-                    tourEvent.ImageId = newImage.Id;
-                    tourEvent.Image = newImage;
-                }
-                else if (dto.Image != null && _imageRepository.Exists(dto.Image.Data))
-                {
-                    return Result.Fail(FailureCode.Conflict).WithError("Image already exists!");
-                }
-                _eventRepository.Create(tourEvent);
-                return MapToDto(tourEvent);
+                var ev = new Event(dto.Name, dto.Description, category, dto.Longitude, dto.Latitude, dto.StartDate.ToUniversalTime(), dto.EndDate.ToUniversalTime(),
+                    new Image(dto.Image.Data, dto.Image.UploadedAt, dto.Image.MimeType));
+                
+                var res = _eventRepository.Create(ev);
+                return MapToDto(res);
             }
             catch (ArgumentException e)
             {
