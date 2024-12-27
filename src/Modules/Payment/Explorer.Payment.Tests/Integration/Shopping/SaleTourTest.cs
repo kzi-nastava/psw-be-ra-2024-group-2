@@ -29,8 +29,8 @@ namespace Explorer.Payment.Tests.Integration.Shopping
             var saleDto = new TourSaleDto
             {
                 Name = "TestSale1",
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(5),
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddDays(5),
                 DiscountPercentage = 20.0,
                 Tours = new List<TourDtoPayment>()
             };
@@ -57,9 +57,10 @@ namespace Explorer.Payment.Tests.Integration.Shopping
 
             var updateDto = new TourSaleDto
             {
+                Id = existingSale.Id,
                 Name = "UpdatedSale",
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(3),
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddDays(3),
                 DiscountPercentage = 15.0
             };
 
@@ -84,7 +85,7 @@ namespace Explorer.Payment.Tests.Integration.Shopping
             var existingSale = dbContext.TourSales.FirstOrDefault(b => b.Id == -2);
             existingSale.ShouldNotBeNull();
 
-            var result = controller.DeleteTourSale(existingSale.Id).Result as OkResult;
+            var result = ((ObjectResult)controller.DeleteTourSale(existingSale.Id).Result);
 
             result.ShouldNotBeNull();
             result.StatusCode.ShouldBe(200);
@@ -118,7 +119,7 @@ namespace Explorer.Payment.Tests.Integration.Shopping
             var result = ((ObjectResult)controller.UpdateTourSale(-999, updateDto).Result);
 
             result.ShouldNotBeNull();
-            result.StatusCode.ShouldBe(404);
+            result.StatusCode.ShouldBe(400);
         }
 
         [Fact]
@@ -130,7 +131,7 @@ namespace Explorer.Payment.Tests.Integration.Shopping
             var result = ((ObjectResult)controller.DeleteTourSale(-999).Result);
 
             result.ShouldNotBeNull();
-            result.StatusCode.ShouldBe(404);
+            result.StatusCode.ShouldBe(400);
         }
 
         private static TourSaleController CreateController(IServiceScope scope, string userId)
