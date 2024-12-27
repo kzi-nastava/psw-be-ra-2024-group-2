@@ -9,6 +9,7 @@ using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Explorer.Stakeholders.Infrastructure.Authentication;
+using System.Linq;
 
 namespace Explorer.API.Controllers.Author
 {
@@ -48,12 +49,17 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPut("{id}")]
-        public ActionResult<TourSaleDto> UpdateTourSale(int id, [FromBody] TourSaleDto dto)
+        public ActionResult<TourSaleDto> UpdateTourSale(long id, [FromBody] TourSaleDto dto)
         {
             var result = _tourSaleService.Update(id, dto);
 
             if (!result.IsSuccess)
             {
+                if (result.Errors.Any(error => error.Message == "Sale not found"))
+                {
+                    return NotFound(new { Message = "The specified sale was not found." });
+                }
+
                 return BadRequest(result.Errors);
             }
 

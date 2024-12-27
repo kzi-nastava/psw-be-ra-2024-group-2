@@ -1,4 +1,5 @@
-﻿DELETE FROM payment."TourSouvenirs";
+﻿DELETE FROM payment."TourSales";
+DELETE FROM payment."TourSouvenirs";
 DELETE FROM payment."TourBundles";
 DELETE FROM payment."OrderItems";
 DELETE FROM payment."ShoppingCarts";
