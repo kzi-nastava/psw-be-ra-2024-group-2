@@ -52,7 +52,7 @@ namespace Explorer.Payment.Tests.Integration.Shopping
             var controller = CreateController(scope, "-1");
             var dbContext = scope.ServiceProvider.GetRequiredService<PaymentContext>();
 
-            var existingSale = dbContext.TourSales.FirstOrDefault(b => b.Id == -1);
+            var existingSale = dbContext.TourSales.FirstOrDefault(b => b.Id == -2);
             existingSale.ShouldNotBeNull();
 
             var updateDto = new TourSaleDto

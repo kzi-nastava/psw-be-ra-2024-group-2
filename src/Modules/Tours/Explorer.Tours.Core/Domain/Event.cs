@@ -10,9 +10,9 @@ namespace Explorer.Tours.Core.Domain
 {
     public class Event : Entity
     {
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        public EventCategory Category { get; private set; }
+        public string Name { get;  set; }
+        public string Description { get;  set; }
+        public EventCategory Category { get;  set; }
         public long? ImageId { get; set; }
         public Image? Image { get; set; }
         public double Longitude { get; set; }
@@ -32,6 +32,18 @@ namespace Explorer.Tours.Core.Domain
             Latitude = latitude;
             StartDate = start;
             EndDate = end;
+            Validate();
+        }
+        public Event(string name, string description, EventCategory category, double longitude, double latitude, DateTime start, DateTime end, Image image)
+        {
+            Name = name;
+            Description = description;
+            Category = category;
+            Longitude = longitude;
+            Latitude = latitude;
+            StartDate = start;
+            EndDate = end;
+            Image = image;
             Validate();
         }
 

@@ -19,6 +19,10 @@ namespace Explorer.Tours.API.Public.Administration
         public PagedResult<EventDto> GetSortedByAcceptance();
         public PagedResult<EventDto> GetTopThree();
         public PagedResult<TourDto> GetNearTours(long eventId);
+
+        public Result Delete(long id);  
+
         PagedResult<EventDto> FindAllByCategories(List<EventCategory> categories);
+        Result Update(EventDto tourEvent, int v);
     }
 }

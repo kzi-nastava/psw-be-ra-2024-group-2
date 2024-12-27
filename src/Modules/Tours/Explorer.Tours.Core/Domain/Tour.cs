@@ -54,8 +54,10 @@ public class Tour  : Entity
         Checkpoints.AddRange(checkpoints);
     }
    
-    public void UpdateTour(TourStatus status, double price, List<Equipment> _equipment)
+    public void UpdateTour(string name, string description, TourStatus status, double price, List<Equipment> _equipment)
     {
+        Name = name;
+        Description = description;
         Status = status;
         Price = price;
         Equipment = _equipment;

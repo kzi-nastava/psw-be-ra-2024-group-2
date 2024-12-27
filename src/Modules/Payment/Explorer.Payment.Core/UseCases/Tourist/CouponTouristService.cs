@@ -31,4 +31,14 @@ public class CouponTouristService : CrudService<CouponDto, Coupon>, ICouponTouri
 
         return MapToDto(coupon);
     }
+    public Result<CouponDto> GetCoupon(string code)
+    {
+
+        Coupon? coupon = _couponRepository.GetPaged(1, int.MaxValue).Results.FirstOrDefault(c => c.Code == code);
+
+        if (coupon == null)
+            return Result.Fail(FailureCode.NotFound).WithError("The coupon doesn't exist or has expired!");
+
+        return MapToDto(coupon);
+    }
 }
