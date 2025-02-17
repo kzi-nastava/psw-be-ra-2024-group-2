@@ -19,7 +19,21 @@ public class UserDatabaseRepository : IUserRepository
 
     public User? GetActiveByName(string username)
     {
-        return _dbContext.Users.FirstOrDefault(user => user.Username == username && user.IsActive);
+        //return _dbContext.Users.FirstOrDefault(user => user.Username == username && user.IsActive);
+        var y = Exists(username);
+
+        Console.WriteLine($"Exist: {y}");
+
+        var x = _dbContext.Users.FirstOrDefault(user => user.Username == username);
+        if (x != null)
+        {
+            Console.WriteLine($"Username: {x.Username}, Role: {x.Role}, IsActive: {x.IsActive}");
+        }
+        else
+        {
+            Console.WriteLine("User not found.");
+        }
+        return _dbContext.Users.FirstOrDefault(user => user.Username == username);
     }
 
     public User Create(User user)

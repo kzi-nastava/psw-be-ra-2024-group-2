@@ -28,6 +28,7 @@ public static class CorsConfiguration
             corsOrigins = File.ReadAllLines(corsOriginsPath);
         }
 
+        //corsOrigins = new[] { "http://localhost:4200" };
         return corsOrigins;
     }
 }

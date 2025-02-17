@@ -2,7 +2,7 @@
 
 public abstract class Entity
 {
-    public long Id { get; protected set; }
+    public long Id { get; protected set; }    
 
     public override bool Equals(object? obj)
     {

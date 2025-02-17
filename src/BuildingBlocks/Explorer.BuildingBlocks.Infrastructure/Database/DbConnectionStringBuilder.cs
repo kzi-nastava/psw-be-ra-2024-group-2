@@ -17,3 +17,4 @@ public static class DbConnectionStringBuilder
             $"Server={server};Port={port};Database={database};SearchPath={schema};User ID={user};Password={password};Integrated Security={integratedSecurity};Pooling={pooling};";
     }
 }
+

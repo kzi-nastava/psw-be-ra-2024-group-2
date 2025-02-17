@@ -22,7 +22,14 @@ public class AuthenticationService : IAuthenticationService
 
     public Result<AuthenticationTokensDto> Login(CredentialsDto credentials)
     {
+        Console.WriteLine($"Username: {credentials.Username}");
+
+
         var user = _userRepository.GetActiveByName(credentials.Username);
+        
+        Console.WriteLine($"Username: {user?.Username}");
+
+
         if (user == null || credentials.Password != user.Password) return Result.Fail(FailureCode.NotFound);
 
         long personId;
@@ -43,7 +50,10 @@ public class AuthenticationService : IAuthenticationService
 
         try
         {
-            var user = _userRepository.Create(new User(account.Username, account.Password, UserRole.Tourist, true));
+            Console.WriteLine("Username: " + account.Username);
+            Console.WriteLine("Password: " + account.Password);
+
+            var user = _userRepository.Create(new User(account.Username, account.Password, UserRole.Author, true));
             var person = _personRepository.Create(new Person(user.Id, account.Name, account.Surname, account.Email));
 
             return _tokenGenerator.GenerateAccessToken(user, person.Id);
