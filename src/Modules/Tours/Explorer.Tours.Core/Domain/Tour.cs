@@ -28,6 +28,11 @@ namespace Explorer.Tours.Core.Domain
             Validate();
         }
 
+        public void UpdateTourStatus(TourStatus newStatus)
+        {
+            this.Status = newStatus;
+        }
+
         public void UpdateTour(Tour updatedTour)
         {
             // Ensure that the current tour is not null

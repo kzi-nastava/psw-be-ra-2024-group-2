@@ -10,6 +10,7 @@ using Explorer.Tours.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Explorer.Tours.Infrastructure;
 
@@ -21,12 +22,19 @@ public static class ToursStartup
         services.AddAutoMapper(typeof(ToursProfile).Assembly);
         SetupCore(services);
         SetupInfrastructure(services);
+
+        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<ITourService, TourService>();
+
+        services.AddTransient<IHostedService, EmailReminderService>();
         return services;
     }
     
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<ITourService, TourService>();
+
+        //services.AddScoped<IUserService, UserService>();
 
         //services.AddScoped<IEquipmentService, EquipmentService>();
     }

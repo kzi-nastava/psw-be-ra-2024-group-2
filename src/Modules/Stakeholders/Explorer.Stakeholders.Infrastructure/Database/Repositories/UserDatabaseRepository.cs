@@ -17,6 +17,20 @@ public class UserDatabaseRepository : IUserRepository
         return _dbContext.Users.Any(user => user.Username == username);
     }
 
+    public Wallet CreateWallet(long userId)
+    {
+        Wallet newWallet = new Wallet(userId);
+        _dbContext.Wallets.Add(newWallet);
+        _dbContext.SaveChanges();
+        return newWallet;
+    }
+
+    public Wallet? GetWallet(long userId)
+    {
+        return _dbContext.Wallets.FirstOrDefault(w => w.UserId == userId);
+    }
+
+
     public User? GetActiveByName(string username)
     {
         //return _dbContext.Users.FirstOrDefault(user => user.Username == username && user.IsActive);

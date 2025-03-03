@@ -27,4 +27,14 @@ public class AuthenticationController : BaseApiController
         var result = _authenticationService.Login(credentials);
         return CreateResponse(result);
     }
+
+    [HttpGet("GetWallet/{userId}")]
+    public ActionResult<WalletDto> GetWallet(long userId)
+    {
+        var result = _authenticationService.GetUserWallet(userId);
+        //if (result.IsFailure) return NotFound(result.Error);
+
+        return CreateResponse(result);
+    }
+
 }

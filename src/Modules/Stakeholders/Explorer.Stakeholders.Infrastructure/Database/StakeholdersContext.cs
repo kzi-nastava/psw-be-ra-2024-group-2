@@ -7,6 +7,7 @@ public class StakeholdersContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Person> People { get; set; }
+    public DbSet<Wallet> Wallets { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
 
@@ -39,7 +40,11 @@ public class StakeholdersContext : DbContext
         modelBuilder.Entity<User>()
             .Property(u => u.Role)
             .HasColumnName("role");
-            
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.BonusPoints)
+            .HasColumnName("BonusPoints");
+
 
         Console.WriteLine("On Model Creating role");
 
@@ -52,6 +57,7 @@ public class StakeholdersContext : DbContext
         Console.WriteLine("On Model Creating id");
 
         ConfigureStakeholder(modelBuilder);
+        ConfigureWallet(modelBuilder);
     }
 
     private static void ConfigureStakeholder(ModelBuilder modelBuilder)
@@ -98,6 +104,28 @@ public class StakeholdersContext : DbContext
         Console.WriteLine("Stakeholders userID");
     }
 
-    
+    private static void ConfigureWallet(ModelBuilder modelBuilder)
+    {        
+        modelBuilder.Entity<Wallet>()
+            .ToTable("Wallet", "stakeholders");  // Explicitly mention schema and table
+
+        modelBuilder.Entity<Person>()
+            .Property(wallet => wallet.Id)
+            .HasColumnName("id");
+
+        modelBuilder.Entity<Wallet>()
+            .Property(wallet => wallet.UserId)
+            .HasColumnName("userid");
+
+        modelBuilder.Entity<Wallet>()
+            .Property(wallet => wallet.Balance)
+            .HasColumnName("balance");
+
+        modelBuilder.Entity<Wallet>()
+            .Property(wallet => wallet.BonusPoints)
+            .HasColumnName("bonuspoints");
+    }
+
+
 
 }

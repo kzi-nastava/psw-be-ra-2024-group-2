@@ -8,6 +8,8 @@ public class ToursContext : DbContext
     public DbSet<Equipment> Equipment { get; set; }
     public DbSet<Tour> Tours { get; set; }
     public DbSet<KeyPoint> KeyPoints { get; set; }
+    public DbSet<UserTourPurchase> Purchases { get; set; }
+    public DbSet<TourRate> TourRates { get; set; }
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
@@ -17,6 +19,8 @@ public class ToursContext : DbContext
 
         ConfigureTour(modelBuilder);
         ConfigureKeyPoints(modelBuilder);
+        ConfigurePurchase(modelBuilder);
+        ConfigureTourRate(modelBuilder);
     }
 
     private static void ConfigureTour(ModelBuilder modelBuilder)
@@ -87,5 +91,68 @@ public class ToursContext : DbContext
             .Property(kp => kp.TourId)
             .HasColumnName("tourid");
     }
+
+    
+    private static void ConfigurePurchase(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UserTourPurchase>()
+            .ToTable("UserTourPurchase", "public");  // Ensure the table name and schema are correct
+
+        modelBuilder.Entity<UserTourPurchase>()
+        .HasKey(utp => new { utp.UserId, utp.TourId });
+
+        modelBuilder.Entity<UserTourPurchase>()
+            .Property(p => p.UserId)
+            .HasColumnName("userId");
+
+        modelBuilder.Entity<UserTourPurchase>()
+            .Property(p => p.TourId)
+            .HasColumnName("tourId");
+
+        modelBuilder.Entity<UserTourPurchase>()
+            .Property(p => p.Date)
+            .HasColumnName("Date");
+
+        modelBuilder.Entity<UserTourPurchase>()
+            .Property(p => p.Status)
+            .HasColumnName("Status");
+
+        modelBuilder.Entity<UserTourPurchase>()
+            .Property(p => p.UserEmail)
+            .HasColumnName("UserEmail");
+    }
+
+    private static void ConfigureTourRate(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TourRate>()
+            .Property(tr => tr.Id)
+            .HasColumnName("id");
+
+        modelBuilder.Entity<TourRate>()
+            .HasKey(tr => tr.Id);  // Setting the primary key for TourRate
+
+        modelBuilder.Entity<TourRate>()
+            .Property(tr => tr.TourId)
+            .HasColumnName("tour_id");
+
+        modelBuilder.Entity<TourRate>()
+            .Property(tr => tr.TouristId)
+            .HasColumnName("tourist_id");
+
+        modelBuilder.Entity<TourRate>()
+            .Property(tr => tr.Rating)
+            .HasColumnName("rating");
+
+        modelBuilder.Entity<TourRate>()
+            .Property(tr => tr.Comment)
+            .HasColumnName("comment");
+
+        modelBuilder.Entity<TourRate>()
+            .Property(tr => tr.TouristUsername)
+            .HasColumnName("TouristUsername");
+    }
+
+
+
 
 }

@@ -8,6 +8,7 @@ public class User : Entity
     public string Password { get; private set; }
     public UserRole Role { get; private set; }
     public bool IsActive { get; set; }
+    public decimal BonusPoints { get; private set; }
 
     public User(string username, string password, UserRole role, bool isActive)
     {
@@ -15,6 +16,17 @@ public class User : Entity
         Password = password;
         Role = role;
         IsActive = isActive;
+        BonusPoints = 0;
+        Validate();
+    }
+
+    public User(string username, string password, UserRole role, bool isActive, decimal bonusPoints)
+    {
+        Username = username;
+        Password = password;
+        Role = role;
+        IsActive = isActive;
+        BonusPoints = bonusPoints;
         Validate();
     }
 

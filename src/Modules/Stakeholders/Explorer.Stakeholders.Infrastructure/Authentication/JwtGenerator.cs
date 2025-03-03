@@ -3,6 +3,7 @@ using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.UseCases;
 using FluentResults;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -24,10 +25,11 @@ public class JwtGenerator : ITokenGenerator
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new("id", user.Id.ToString()),
             new("username", user.Username),
-            new("personId", personId.ToString()),
+            new("bonusPoints", user.BonusPoints.ToString(CultureInfo.InvariantCulture)),
+            new("personId", personId.ToString()),            
             new(ClaimTypes.Role, user.GetPrimaryRoleName())
         };
-            
+        
         var jwt = CreateToken(claims, 60*24);
         authenticationResponse.Id = user.Id;
         authenticationResponse.AccessToken = jwt;

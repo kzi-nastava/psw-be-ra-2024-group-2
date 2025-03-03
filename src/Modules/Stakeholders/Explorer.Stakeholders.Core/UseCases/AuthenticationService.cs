@@ -55,6 +55,7 @@ public class AuthenticationService : IAuthenticationService
 
             var user = _userRepository.Create(new User(account.Username, account.Password, UserRole.Author, true));
             var person = _personRepository.Create(new Person(user.Id, account.Name, account.Surname, account.Email));
+            _userRepository.CreateWallet(user.Id);
 
             return _tokenGenerator.GenerateAccessToken(user, person.Id);
         }
@@ -64,4 +65,15 @@ public class AuthenticationService : IAuthenticationService
             // There is a subtle issue here. Can you find it?
         }
     }
+
+    public Result<WalletDto> GetUserWallet(long userId)
+    {
+        var wallet = _userRepository.GetWallet(userId);
+        if (wallet == null) return Result.Fail(FailureCode.NotFound);
+
+        WalletDto dto = new WalletDto(wallet.UserId, wallet.Balance, wallet.BonusPoints);
+
+        return Result.Ok(dto);
+    }
+
 }
