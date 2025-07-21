@@ -14,5 +14,7 @@ namespace Explorer.Tours.API.Dtos
         public long ToUserId { get; set; }
         public TourIssueNotificationStatus Status { get; set; }
         public long TourIssueReportId { get; set; }
+        public string? fromUsername { get; set; }
+        public string?toUsername { get; set; }
     }
 }

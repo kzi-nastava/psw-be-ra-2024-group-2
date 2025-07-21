@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain.Enums;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
@@ -25,6 +26,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
             {
                 return Result.Fail(FailureCode.Conflict).WithError("Invite to this club already exists.");
             }
+            dto.Status = TourInviteStatus.Accepted;
             ClubInvite invite = _crudClubInviteRepository.Create(MapToDomain(dto));
             //dodati u klub kada kolega napravi repo za klub
             return MapToDto(invite);

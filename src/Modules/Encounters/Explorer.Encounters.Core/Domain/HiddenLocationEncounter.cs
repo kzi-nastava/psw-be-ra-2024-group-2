@@ -14,8 +14,8 @@ namespace Explorer.Encounters.Core.Domain
         public double TargetLongitude { get; set; } // Longitude of the location
         public double RangeInMeters { get; set; } // Radius (in meters) within which the challenge can be activated
 
-        public HiddenLocationEncounter(string name, string description, Image image, double lattitude, double longitude, double targetLatitude, double targetLongitude, double rangeInMeters)
-            : base(name, description, lattitude, longitude)
+        public HiddenLocationEncounter(string name, string description, Image image, double lattitude, double longitude, double targetLatitude, double targetLongitude, double rangeInMeters, bool isForTour,long? tourId)
+            : base(name, description, lattitude, longitude,isForTour,tourId)
         {
             Image = image;
             TargetLatitude = targetLatitude;
