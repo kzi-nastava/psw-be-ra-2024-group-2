@@ -2,6 +2,7 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payment.API.Dtos;
 using Explorer.Payment.API.Internal;
+using Explorer.Payment.API.Public.Author;
 using Explorer.Payment.API.Public.Tourist;
 using Explorer.Payment.Core.Domain;
 using Explorer.Payment.Core.Domain.RepositoryInterfaces;
@@ -21,6 +22,7 @@ public class ShoppingCartService : IShoppingCartService
     private readonly ICrudRepository<TourSouvenir> _tourSouvenirRepository;
     private readonly ICrudRepository<Wallet> _walletRepository;
     private readonly ICouponTouristService _couponTouristService;
+    private readonly ITourSaleService _tourSaleService;
 
     public ShoppingCartService(
         IShoppingCartRepository shoppingCartRepository,
@@ -31,6 +33,7 @@ public class ShoppingCartService : IShoppingCartService
         ICrudRepository<TourBundle> tourBundleRepository,
         ICrudRepository<TourSouvenir> tourSouvenirRepository,
         ICrudRepository<Wallet> walletRepository,
+        ITourSaleService tourSaleService,
         ICouponTouristService couponTouristService)
     {
         _shoppingCartRepository = shoppingCartRepository;
@@ -42,11 +45,14 @@ public class ShoppingCartService : IShoppingCartService
         this._tourSouvenirRepository = tourSouvenirRepository;
         _walletRepository = walletRepository;
         _couponTouristService = couponTouristService;
+        _tourSaleService = tourSaleService;
     }
 
     public Result<TourOrderItemDto> AddTourToCart(long userId, long tourId)
     {
         var tour = _tourService.GetById(tourId);
+
+        var salesResult = _tourSaleService.GetAll();
 
         if (tour.IsFailed)
         {
@@ -81,6 +87,22 @@ public class ShoppingCartService : IShoppingCartService
             {
                 if (item is BundleOrderItem bundleOrderItem && bundleOrderItem.TourIds.Contains((int)tourId))
                     return Result.Fail(FailureCode.Conflict).WithError("Tour already in cart.");
+            }
+
+            var sales = salesResult.Value;
+            foreach (var sale in sales)
+            {
+                if (sale.Tours.Any(t => t.Id == tourId))
+                {
+                    var discountRate = sale.DiscountPercentage / 100.0;
+
+                    var priceAsDouble = (double)orderItem.Price;
+                    var discountedPriceDouble = priceAsDouble * (1.0 - discountRate);
+
+                    orderItem.Price = discountedPriceDouble;
+
+                    break;
+                }
             }
 
             cart.AddTourItem(orderItem);

@@ -133,7 +133,7 @@ namespace Explorer.Payment.Core.UseCases.Author
             }
         }
 
-        public Result<TourSaleDto> Update(int id, TourSaleDto tourSaleDto)
+        public Result<TourSaleDto> Update(long id, TourSaleDto tourSaleDto)
         {
             try
             {
