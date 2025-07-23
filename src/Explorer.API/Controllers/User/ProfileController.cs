@@ -37,5 +37,23 @@ namespace Explorer.API.Controllers
             var profiles = _profileService.GetAllUsers();
             return Ok(profiles);
         }
+
+        [HttpGet("{id:long}")]
+        public ActionResult<ProfileDto> GetById(long id)
+        {
+            var profile = _profileService.Get(id);
+            return CreateResponse(profile);
+        }
+
+        [HttpGet("all-raw")]
+        public ActionResult<List<ProfileDto>> GetAllProfilesRaw()
+        {
+            var result = _profileService.GetAllUsers();
+
+            if (result.IsFailed) return BadRequest(result.Reasons);
+
+            return result.Value;
+        }
+
     }
 }
