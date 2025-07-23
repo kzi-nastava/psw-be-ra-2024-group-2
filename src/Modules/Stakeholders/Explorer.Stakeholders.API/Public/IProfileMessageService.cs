@@ -11,5 +11,7 @@ namespace Explorer.Stakeholders.API.Public
     public interface IProfileMessageService
     {
         Result<ProfileMessageDto> Create(ProfileMessageDto message, long userId);
+        Result<List<ProfileMessageDto>> GetConversation(long userId1, long userId2);
+
     }
 }

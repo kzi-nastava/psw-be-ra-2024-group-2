@@ -63,5 +63,18 @@ namespace Explorer.Stakeholders.Core.UseCases
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
+
+        public Result<List<ProfileMessageDto>> GetConversation(long userId1, long userId2)
+        {
+            var messages = _profileMessageRepository.GetPaged(1, int.MaxValue).Results
+                .Where(m =>
+                    (m.SenderId == userId1 && m.RecipientId == userId2) ||
+                    (m.SenderId == userId2 && m.RecipientId == userId1))
+                .OrderBy(m => m.SentAt)
+                .ToList();
+
+            return Result.Ok(messages.Select(MapToDto).ToList());
+        }
+
     }
 }

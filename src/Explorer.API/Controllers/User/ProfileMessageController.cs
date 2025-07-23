@@ -26,5 +26,14 @@ namespace Explorer.API.Controllers.User
             var result = _profileMessageService.Create(profileMessage, User.PersonId());
             return CreateResponse(result);
         }
+
+        [HttpGet("conversation/{otherUserId}")]
+        public ActionResult<List<ProfileMessageDto>> GetConversation(long otherUserId)
+        {
+            var currentUserId = User.PersonId();
+            var result = _profileMessageService.GetConversation(currentUserId, otherUserId);
+            return CreateResponse(result);
+        }
+
     }
 }
