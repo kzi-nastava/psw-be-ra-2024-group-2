@@ -1,5 +1,6 @@
 ﻿using Explorer.Stakeholders.Core.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Explorer.Stakeholders.Infrastructure.Database;
 
@@ -22,6 +23,18 @@ public class StakeholdersContext : DbContext
         modelBuilder.Entity<User>()
             .Property(u => u.Username)
             .HasColumnName("username");
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.Interests)
+            .HasColumnName("interests")
+            .HasConversion(
+                v => string.Join(",", v), // Convert list of interests to a comma-separated string
+                v => v.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(e => Enum.Parse<TourCategory>(e)).ToList(), // Convert string back to list
+                new ValueComparer<List<TourCategory>>(
+                    (c1, c2) => c1.SequenceEqual(c2), // Compare the lists
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())), // Generate hash code for the list
+                    c => c.ToList()) // Create a copy of the list
+            );
 
         Console.WriteLine("On Model Creating username");
 

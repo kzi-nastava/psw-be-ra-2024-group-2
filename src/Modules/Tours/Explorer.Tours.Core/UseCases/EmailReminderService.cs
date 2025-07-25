@@ -4,6 +4,11 @@ using System.Threading.Tasks;
 using Explorer.Tours.API.Public.Administration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+
 
 public class EmailReminderService : IHostedService
 {
@@ -12,9 +17,9 @@ public class EmailReminderService : IHostedService
     private Timer _testTimer;  // New timer for the test function
     private readonly IServiceScopeFactory _scopeFactory;
 
-    public EmailReminderService(IServiceScopeFactory scopeFactory)
+    public EmailReminderService(IServiceScopeFactory scopeFactory, HttpClient httpClient)
     {
-        _scopeFactory = scopeFactory;
+        _scopeFactory = scopeFactory;        
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -100,8 +105,7 @@ public class EmailReminderService : IHostedService
             Console.WriteLine("Best guideid: " + bestGuideOfTheMonthID);
             Console.WriteLine("Most sales: " + mostSales);
         }
-    }
-
+    }    
 
     public Task StopAsync(CancellationToken cancellationToken)
     {

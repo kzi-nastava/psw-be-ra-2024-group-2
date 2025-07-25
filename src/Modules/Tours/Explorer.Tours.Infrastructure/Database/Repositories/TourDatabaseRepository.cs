@@ -8,6 +8,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
     public class TourDatabaseRepository : ITourRepository
     {
         private readonly ToursContext _dbContext;
+        
 
         public TourDatabaseRepository(ToursContext dbContext)
         {

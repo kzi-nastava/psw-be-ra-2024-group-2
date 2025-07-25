@@ -27,7 +27,8 @@ public class JwtGenerator : ITokenGenerator
             new("username", user.Username),
             new("bonusPoints", user.BonusPoints.ToString(CultureInfo.InvariantCulture)),
             new("personId", personId.ToString()),            
-            new(ClaimTypes.Role, user.GetPrimaryRoleName())
+            new(ClaimTypes.Role, user.GetPrimaryRoleName()),
+            new("interests", string.Join(",", user.Interests.Select(i => i.ToString()))) // ✅ Add this
         };
         
         var jwt = CreateToken(claims, 60*24);

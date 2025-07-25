@@ -10,7 +10,7 @@
         public decimal Price { get; set; }
         public DateTime Date { get; set; }
         public long guideId { get; set; }
-        public string Status { get; set; }
+        public string? Status { get; set; }
         public List<KeyPointDto>? KeyPoints { get; set; }
         public double? AverageRating { get; set; }
     }

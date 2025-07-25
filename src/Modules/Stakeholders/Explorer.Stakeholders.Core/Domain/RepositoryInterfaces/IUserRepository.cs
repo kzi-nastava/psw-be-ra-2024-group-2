@@ -1,4 +1,6 @@
-﻿namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+﻿using FluentResults;
+
+namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 
 public interface IUserRepository
 {
@@ -8,4 +10,6 @@ public interface IUserRepository
     long GetPersonId(long userId);
     Wallet CreateWallet(long userId);
     Wallet? GetWallet(long userId);
+    public List<string> GetUsersWithMatchingInterests(string interestsInput);
+
 }

@@ -1,5 +1,6 @@
 ﻿using Explorer.Tours.Core.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Explorer.Tours.Infrastructure.Database;
 
@@ -42,8 +43,16 @@ public class ToursContext : DbContext
             .HasColumnName("difficulty");
 
         modelBuilder.Entity<Tour>()
-            .Property(t => t.Category)
-            .HasColumnName("category");
+            .Property(u => u.Category)
+            .HasColumnName("category")
+            .HasConversion(
+                v => string.Join(",", v), // Convert list of interests to a comma-separated string
+                v => v.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(e => Enum.Parse<TourCategory>(e)).ToList(), // Convert string back to list
+                new ValueComparer<List<TourCategory>>(
+                    (c1, c2) => c1.SequenceEqual(c2), // Compare the lists
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())), // Generate hash code for the list
+                    c => c.ToList()) // Create a copy of the list
+            );
 
         modelBuilder.Entity<Tour>()
             .Property(t => t.Price)

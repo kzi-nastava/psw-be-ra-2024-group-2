@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.AspNetCore.Authorization;
 
 using Explorer.Stakeholders.Core.UseCases;
+using Explorer.Stakeholders.Core.Domain;
 
 namespace Explorer.API.Controllers;
 
@@ -15,22 +16,38 @@ namespace Explorer.API.Controllers;
 public class TourController : BaseApiController
 {
     private readonly ITourService _tourService;
+    private readonly IEmailService _emailService;
     //private readonly IUserService _userService;
 
-    public TourController(ITourService tourService)
+    public TourController(ITourService tourService, IEmailService emailService)
     {
         _tourService = tourService;
+        _emailService = emailService;
     }
 
 
     // this is also used for updating tour
     [HttpPost]
     [Authorize(Policy = "authorPolicy")]
-    public ActionResult<TourCreateDto> CreateTour([FromBody] TourCreateDto tourCreate)
+    public async Task<ActionResult<TourCreateDto>> CreateTourAsync([FromBody] TourCreateDto tourCreate)
     {
         if (tourCreate.Id == null)
         {
             var createResult = _tourService.Create(tourCreate);
+
+            // send recommendation to tourists
+            
+            var guideUsername = User.FindFirst("Username")?.Value;
+
+
+            var usersWithInterestData = await _emailService.GetUserEmailsByInterestsAsync(tourCreate.Category);
+            // email*name*surname
+            Console.WriteLine("create tour emails: " + usersWithInterestData);
+            if(usersWithInterestData != null)
+            {
+                _emailService.SendTourRecommendationEmails(usersWithInterestData, guideUsername, createResult.Value);
+            }
+            
             return CreateResponse(createResult);
         }
 
@@ -108,7 +125,7 @@ public class TourController : BaseApiController
         return Ok("Tours purchased successfully.");
     }
 
-
+    /*
     [HttpGet("getById/{tourId}")]
     [Authorize(Policy = "touristOrAuthorPolicy")]
     public ActionResult<Tour> getTourById(long tourId)
@@ -121,7 +138,23 @@ public class TourController : BaseApiController
         }
 
         return Ok(tour);  // Return 200 OK with the tours
+    }*/
+    [HttpGet("getById/{tourId}")]
+    [Authorize(Policy = "touristOrAuthorPolicy")]
+    public ActionResult<TourCreateDto> getTourById(long tourId)
+    {
+        var tour = _tourService.GetTourById(tourId);
+
+        if (tour == null)
+        {
+            return NotFound();  // Return 404 if no tour is found
+        }
+
+        //var tourDto = tour.CreateDto();
+
+        return Ok(tour);  // Return the DTO
     }
+
 
     /*
     [HttpGet("sendTestEmail")]

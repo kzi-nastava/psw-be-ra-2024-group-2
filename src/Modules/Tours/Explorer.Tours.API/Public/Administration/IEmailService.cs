@@ -14,4 +14,9 @@ public interface IEmailService
 
     public void SendTestEmail();
 
+    Task<List<string>> GetUserEmailsByInterestsAsync(string interests);
+
+    public void SendTourRecommendationEmails(List<string> touristEmails, string guideUsername, TourCreateDto tourDto);
+
+
 }

@@ -1,4 +1,6 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
+﻿using System.Security.Principal;
+using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Tours.API.Dtos;
 
 namespace Explorer.Tours.Core.Domain
 {
@@ -7,14 +9,14 @@ namespace Explorer.Tours.Core.Domain
         public string Name { get; private set; }  // 'naziv ture'
         public string Description { get; private set; }  // 'opis'
         public int Difficulty { get; private set; }  // 'težinu ture' (difficulty of the tour)
-        public TourCategory Category { get; private set; }  // 'kategoriju ture' (category of the tour)
+        public List<TourCategory> Category { get; private set; }  // 'kategoriju ture' (category of the tour)
         public decimal Price { get; private set; }  // 'cenu' (price)
         public DateTime Date { get; private set; }  // 'datum održavanja ture' (tour date)
         public long GuideId { get; protected set; }
         public TourStatus Status { get; private set; }
         public List<KeyPoint> KeyPoints { get; private set; }
 
-        public Tour(string name, string description, int difficulty, TourCategory category, decimal price, DateTime date, long guideId)
+        public Tour(string name, string description, int difficulty, List<TourCategory> category, decimal price, DateTime date, long guideId)
         {
             Name = name;
             Description = description;
@@ -27,6 +29,55 @@ namespace Explorer.Tours.Core.Domain
             KeyPoints = new List<KeyPoint>();
             Validate();
         }
+
+        public Tour(string name, string description, int difficulty, string category, decimal price, DateTime date, long guideId)
+        {
+            Name = name;
+            Description = description;
+            Difficulty = difficulty;           
+            Price = price;
+            Date = date;
+            GuideId = guideId;
+            Status = TourStatus.Draft;
+            KeyPoints = new List<KeyPoint>();
+            Category = string.IsNullOrEmpty(category)
+            ? new List<TourCategory>()
+                : category
+                    .Split(",")
+                    .Select(e => Enum.Parse<TourCategory>(e))
+                    .ToList();
+            
+            Validate();
+        }
+
+        /*
+        public TourCreateDto CreateDto()
+        {
+            var tourDto = new TourCreateDto
+            {
+                Name = Name,
+                Description = Description,
+                Difficulty = Difficulty,
+                Category = Category.ToString(), // Convert the category enum to a string
+                Price = Price,
+                Date = Date,
+                Id = Id,
+                Status = Status.ToString(),
+                guideId = GuideId,
+                // If tour.KeyPoints is not null, map it to a list of KeyPointDto objects
+                KeyPoints = KeyPoints != null
+                        ? KeyPoints.Select(kp => new KeyPointDto
+                        {
+                            Latitude = kp.Latitude,
+                            Longitude = kp.Longitude,
+                            Name = kp.Name,
+                            Description = kp.Description
+                        }).ToList()
+                        : new List<KeyPointDto>() // Return an empty list if KeyPoints is null
+            };
+            return tourDto;
+        }*/
+
 
         public void UpdateTourStatus(TourStatus newStatus)
         {
@@ -88,7 +139,11 @@ namespace Explorer.Tours.Core.Domain
         Cultural,
         Adventure,
         Nature,
-        CityTour
+        CityTour,     
+        Art,         // Umetnost
+        Sports,      // Sport
+        Shopping,    // Šoping
+        Food         // Hrana
     }
 
     public enum TourStatus

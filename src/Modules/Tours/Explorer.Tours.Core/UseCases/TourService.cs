@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Net.Http;
+using System.Net.Http.Json;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-
+using System.Threading.Tasks;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 
 
 
@@ -15,6 +20,7 @@ namespace Explorer.Tours.Core.UseCases
 	public class TourService : ITourService
 	{
         private readonly ITourRepository _tourRepository;
+        
         //private readonly IUserRepository userRepository;
 
         public TourService(ITourRepository tourRepository)
@@ -30,7 +36,7 @@ namespace Explorer.Tours.Core.UseCases
         public List<long> GetAllGuides()
         {
             return _tourRepository.GetAllGuides();
-        }
+        }        
 
         /*
         public void SendTourReminderEmails()
@@ -460,7 +466,8 @@ namespace Explorer.Tours.Core.UseCases
                 Name = tour.Name,
                 Description = tour.Description,
                 Difficulty = tour.Difficulty,
-                Category = tour.Category.ToString(), // Convert the category enum to a string
+                //Category = tour.Category.ToString(), // Convert the category enum to a string
+                Category = string.Join(", ", tour.Category.Select(c => c.ToString())), // Join each category as a string
                 Price = tour.Price,
                 Date = tour.Date,
                 Id = tour.Id,
@@ -499,7 +506,8 @@ namespace Explorer.Tours.Core.UseCases
                 Name = tour.Name,
                 Description = tour.Description,
                 Difficulty = tour.Difficulty,
-                Category = tour.Category.ToString(), // Convert the category enum to a string
+                //Category = tour.Category.ToString(), // Convert the category enum to a string
+                Category = string.Join(", ", tour.Category.Select(c => c.ToString())), // Join each category as a string
                 Price = tour.Price,
                 Date = tour.Date,
                 Id = tour.Id,
@@ -523,17 +531,18 @@ namespace Explorer.Tours.Core.UseCases
 
         public Result<TourCreateDto> Create(TourCreateDto tourDto)
         {
+            /*
             if (!Enum.TryParse<TourCategory>(tourDto.Category, true, out var category))
             {
                 // Handle invalid category (e.g., throw an exception or return an error)
                 throw new ArgumentException($"Invalid category: {tourDto.Category}");
-            }
+            }*/
 
             Tour newTour = new Tour(
                 tourDto.Name,
                 tourDto.Description,
                 tourDto.Difficulty,
-                category,   // category now is of type TourCategory
+                tourDto.Category,   // category now is of type TourCategory
                 tourDto.Price,
                 tourDto.Date.ToUniversalTime(),
                 tourDto.guideId
@@ -553,7 +562,7 @@ namespace Explorer.Tours.Core.UseCases
                 }
             }
 
-
+            
             return tourDto;
             //throw new NotImplementedException();
         }
@@ -581,14 +590,15 @@ namespace Explorer.Tours.Core.UseCases
                 return Result.Fail<TourCreateDto>($"Tour with ID {tourId} not found");
             }
 
+            /*
             // Ensure category is valid
             if (!Enum.TryParse<TourCategory>(tourDto.Category, true, out var category))
             {
                 // Handle invalid category
                 return Result.Fail<TourCreateDto>($"Invalid category: {tourDto.Category}");
-            }
+            }*/
 
-            Tour updatedTourFromDTO = new Tour(tourDto.Name, tourDto.Description, tourDto.Difficulty, category, tourDto.Price, tourDto.Date.ToUniversalTime(), tourDto.guideId);
+            Tour updatedTourFromDTO = new Tour(tourDto.Name, tourDto.Description, tourDto.Difficulty, tourDto.Category, tourDto.Price, tourDto.Date.ToUniversalTime(), tourDto.guideId);
 
             existingTour.UpdateTour(updatedTourFromDTO);
 

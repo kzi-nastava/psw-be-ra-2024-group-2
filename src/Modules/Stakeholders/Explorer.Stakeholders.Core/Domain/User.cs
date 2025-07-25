@@ -9,6 +9,7 @@ public class User : Entity
     public UserRole Role { get; private set; }
     public bool IsActive { get; set; }
     public decimal BonusPoints { get; private set; }
+    public List<TourCategory> Interests { get; private set; }
 
     public User(string username, string password, UserRole role, bool isActive)
     {
@@ -20,6 +21,17 @@ public class User : Entity
         Validate();
     }
 
+    public User(string username, string password, UserRole role, bool isActive, List<TourCategory> interests)
+    {
+        Username = username;
+        Password = password;
+        Role = role;
+        IsActive = isActive;
+        BonusPoints = 0;
+        Interests = interests;
+        Validate();
+    }
+
     public User(string username, string password, UserRole role, bool isActive, decimal bonusPoints)
     {
         Username = username;
@@ -28,6 +40,16 @@ public class User : Entity
         IsActive = isActive;
         BonusPoints = bonusPoints;
         Validate();
+    }
+
+    public static List<TourCategory> ConvertStringToTourCategories(string interestsString)
+    {
+        return interestsString
+            .Split(',', StringSplitOptions.RemoveEmptyEntries) // Split by comma
+            .Select(s => Enum.TryParse<TourCategory>(s, out var category) ? category : (TourCategory?)null) // Convert to Enum
+            .Where(c => c.HasValue) // Filter valid values
+            .Select(c => c.Value) // Convert Nullable<TourCategory> to TourCategory
+            .ToList();
     }
 
     private void Validate()
@@ -47,4 +69,13 @@ public enum UserRole
     Administrator,
     Author,
     Tourist
+}
+
+public enum TourCategory
+{
+    Nature,      // Priroda
+    Art,         // Umetnost
+    Sports,      // Sport
+    Shopping,    // Šoping
+    Food         // Hrana
 }

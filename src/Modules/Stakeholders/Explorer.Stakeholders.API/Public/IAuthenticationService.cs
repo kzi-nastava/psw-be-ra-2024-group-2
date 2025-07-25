@@ -8,5 +8,6 @@ public interface IAuthenticationService
     Result<AuthenticationTokensDto> Login(CredentialsDto credentials);
     Result<AuthenticationTokensDto> RegisterTourist(AccountRegistrationDto account);
     Result<WalletDto> GetUserWallet(long userId);
+    Result<List<string>> GetUsersWithMatchingInterests(string interestsInput);
 
 }

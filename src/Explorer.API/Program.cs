@@ -9,6 +9,7 @@ builder.Services.ConfigureCors(corsPolicy);
 builder.Services.ConfigureAuth();
 
 builder.Services.RegisterModules();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

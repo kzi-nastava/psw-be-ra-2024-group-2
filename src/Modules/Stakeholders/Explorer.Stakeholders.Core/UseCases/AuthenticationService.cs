@@ -53,9 +53,15 @@ public class AuthenticationService : IAuthenticationService
             Console.WriteLine("Username: " + account.Username);
             Console.WriteLine("Password: " + account.Password);
 
-            var user = _userRepository.Create(new User(account.Username, account.Password, UserRole.Author, true));
+            var interestsList = string.IsNullOrEmpty(account.Interests)
+                ? new List<TourCategory>()
+                : account.Interests
+                    .Split(",")
+                    .Select(e => Enum.Parse<TourCategory>(e))
+                    .ToList();
+            var user = _userRepository.Create(new User(account.Username, account.Password, UserRole.Author, true, interestsList));
             var person = _personRepository.Create(new Person(user.Id, account.Name, account.Surname, account.Email));
-            _userRepository.CreateWallet(user.Id);
+            //_userRepository.CreateWallet(user.Id);
 
             return _tokenGenerator.GenerateAccessToken(user, person.Id);
         }
@@ -65,6 +71,14 @@ public class AuthenticationService : IAuthenticationService
             // There is a subtle issue here. Can you find it?
         }
     }
+
+    public Result<List<string>> GetUsersWithMatchingInterests(string interestsInput)
+    {
+        Console.Write("Get User emails");
+        var x = _userRepository.GetUsersWithMatchingInterests(interestsInput);
+        return x;
+    }
+
 
     public Result<WalletDto> GetUserWallet(long userId)
     {
